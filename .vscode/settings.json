@@ -5,6 +5,7 @@
     "param-type-mismatch",
     "lowercase-global",
     "missing-parameter",
-    "inject-field"
+    "inject-field",
+    "undefined-field"
   ]
 }

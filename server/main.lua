@@ -139,10 +139,21 @@ lib.callback.register("vadmin:clist", function(source)
   return PlayerCache
 end)
 
+lib.callback.register("vadmin:getPermissions", function(source)
+  if not AdminData[tonumber(source)] then
+    return Config.DefaultPermissions
+  end
+
+  return AdminData[tonumber(source)]
+end)
+
 RegisterNetEvent("VAdmin:Server:K", function(data)
   local xPlayer = ESX.GetPlayerFromId(source)
+  local sourcePerms = AdminData[tonumber(source)]
 
-  if not exports["Legacy"]:HasPermission(source, "Kick") then
+  if not sourcePerms then return end
+
+  if not sourcePerms["Kick"] then
     return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
   end
 
@@ -241,15 +252,23 @@ RegisterNetEvent("vadmin:server:options", function(data)
   })
 
   if data.clearChat then
-    if not exports["Legacy"]:HasPermission(source, "Clear Chat") then
-      return DropPlayer(xPlayer.source, "Cheating")
+    local sourcePerms = AdminData[tonumber(source)]
+
+    if not sourcePerms then return end
+
+    if not sourcePerms["Clear Chat"] then
+      return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
     end
     TriggerClientEvent("chat:clear", -1)
     return
   end
 
   if data.carWipe then
-    if not exports["Legacy"]:HasPermission(source, "Car Wipe") then
+    local sourcePerms = AdminData[tonumber(source)]
+
+    if not sourcePerms then return end
+
+    if not sourcePerms["Car Wipe"] then
       return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
     end
     TriggerClientEvent('chat:addMessage', -1, {
@@ -310,10 +329,13 @@ end)
 RegisterNetEvent("VAdmin:Server:B", function(data)
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  -- if not exports["Legacy"]:HasPermission(source, "Ban") then
-  --   return DropPlayer(source, Lang:t("cheating_kick_message"))
-  -- end
+  local sourcePerms = AdminData[tonumber(source)]
 
+  if not sourcePerms then return end
+
+  if not sourcePerms["Ban"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+  end
 
   local target = ESX.GetPlayerFromId(data.target_id)
 
@@ -445,8 +467,12 @@ end)
 
 RegisterNetEvent("vadmin:server:tp", function(info)
   local xPlayer = ESX.GetPlayerFromId(source)
-  if not exports["Legacy"]:HasPermission(source, "Teleport") then
-    return xPlayer.showNotification("Unsure how you triggered this event without perms hmm :O")
+  local sourcePerms = AdminData[tonumber(source)]
+
+  if not sourcePerms then return end
+
+  if not sourcePerms["Teleport"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
   end
 
   local xPlayer = ESX.GetPlayerFromId(source)
@@ -488,14 +514,24 @@ RegisterNetEvent("vadmin:server:tp", function(info)
 end)
 
 RegisterNetEvent("vadmin:server:rev", function(data)
-  if not exports["Legacy"]:HasPermission(source, "Revive") then return end
+  local sourcePerms = AdminData[tonumber(source)]
+
+  if not sourcePerms then return end
+
+  if not sourcePerms["Revive"] then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
   exports["Legacy"]:RevivePlayer(data.ID)
 end)
 
 RegisterNetEvent("vadmin:server:frz", function(data)
   local xPlayer = ESX.GetPlayerFromId(source)
-  if not exports["Legacy"]:HasPermission(source, "Frozen") then
-    return xPlayer.showNotification("Unsure how you triggered this event without perms hmm :O")
+  local sourcePerms = AdminData[tonumber(source)]
+
+  if not sourcePerms then return end
+
+  if not sourcePerms["Freeze"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
   end
 
   discordLog({
@@ -554,10 +590,13 @@ end)
 RegisterNetEvent("vadmin:server:offlineban", function(data)
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  if not exports["Legacy"]:HasPermission(source, "Offline Ban") then
-    return xPlayer.showNotification("Unsure how you triggered this event without perms hmm :O")
-  end
+  local sourcePerms = AdminData[tonumber(source)]
 
+  if not sourcePerms then return end
+
+  if not sourcePerms["Freeze"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+  end
   local BanOsTime = os.time()
   local UnbanOsTime = (BanOsTime + (BanLengths[data.length]))
   local banList = LoadBanList()
@@ -663,8 +702,12 @@ end)
 
 RegisterNetEvent("vadmin:server:spectate", function(data)
   local xPlayer = ESX.GetPlayerFromId(source)
-  if not exports["Legacy"]:HasPermission(source, "Spectate") then
-    return xPlayer.showNotification("Unsure how you triggered this event without perms hmm :O")
+  local sourcePerms = AdminData[tonumber(source)]
+
+  if not sourcePerms then return end
+
+  if not sourcePerms["Spectate"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
   end
 
   local targetPed = GetPlayerPed(data.ID)
@@ -709,8 +752,12 @@ end)
 
 RegisterNetEvent("vadmin:server:spectate:end", function()
   local xPlayer = ESX.GetPlayerFromId(source)
-  if not exports["Legacy"]:HasPermission(source, "Spectate") then
-    return xPlayer.showNotification("Unsure how you triggered this event without perms hmm :O")
+  local sourcePerms = AdminData[tonumber(source)]
+
+  if not sourcePerms then return end
+
+  if not sourcePerms["Spectate"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
   end
   local sourcePlayerStateBag = Player(source).state
 
@@ -724,8 +771,12 @@ end)
 RegisterNetEvent("vadmin:server:unban", function(banID)
   local xPlayer = ESX.GetPlayerFromId(source)
 
-  if not exports["Legacy"]:HasPermission(source, "Unban") then
-    return xPlayer.showNotification("Unsure how you triggered this event without perms hmm :O")
+  local sourcePerms = AdminData[tonumber(source)]
+
+  if not sourcePerms then return end
+
+  if not sourcePerms["Unban"] then
+    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
   end
 
   if not banID then
@@ -873,6 +924,7 @@ end)
 
 
 RegisterCommand("unban", function(source, args, _rawCommand)
+  -- Only the console can execute this command for now.
   if tonumber(source) ~= 0 then
     return print("This command can only be executed by the console!")
   end

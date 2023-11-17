@@ -1,39 +1,39 @@
 local ESX = exports['es_extended']:getSharedObject()
 
 Permissions = {
-  ["Set Job"] = true,
-  ["Car Wipe"] = true,
-  ["Player Names"] = true,
-  ["Community Service"] = true,
-  Ban = true,
-  Kick = true,
-  Report = true,
-  ["Delete Car"] = true,
-  Teleport = true,
-  Spectate = true,
-  ["Give Car"] = true,
-  ["Clear Chat"] = true,
-  ["Give Account Money"] = true,
-  Revive = true,
-  Announce = true,
-  Unban = true,
-  Frozen = true,
-  ["Offline Ban"] = true,
-  ["Give Item"] = true,
-  Skin = true,
-  Armor = true,
-  ["Set Gang"] = true,
-  ["Clear Loadout"] = true,
-  ["Copy Coords"] = true,
-  Menu = true,
-  ["Set Account Money"] = true,
-  ["Go Back"] = true,
-  ["Flip Car"] = true,
-  Health = true,
-  ["Clear Inventory"] = true,
-  NoClip = true,
-  ["Give Weapon"] = true,
-  ["Spawn Car"] = true,
+  -- ["Set Job"] = true,
+  -- ["Car Wipe"] = true,
+  -- ["Player Names"] = true,
+  -- ["Community Service"] = true,
+  -- Ban = true,
+  -- Kick = true,
+  -- Report = true,
+  -- ["Delete Car"] = true,
+  -- Teleport = true,
+  -- Spectate = true,
+  -- ["Give Car"] = true,
+  -- ["Clear Chat"] = true,
+  -- ["Give Account Money"] = true,
+  -- Revive = true,
+  -- Announce = true,
+  -- Unban = true,
+  -- Frozen = true,
+  -- ["Offline Ban"] = true,
+  -- ["Give Item"] = true,
+  -- Skin = true,
+  -- Armor = true,
+  -- ["Set Gang"] = true,
+  -- ["Clear Loadout"] = true,
+  -- ["Copy Coords"] = true,
+  -- Menu = true,
+  -- ["Set Account Money"] = true,
+  -- ["Go Back"] = true,
+  -- ["Flip Car"] = true,
+  -- Health = true,
+  -- ["Clear Inventory"] = true,
+  -- NoClip = true,
+  -- ["Give Weapon"] = true,
+  -- ["Spawn Car"] = true,
 }
 
 State = {
@@ -57,7 +57,7 @@ end
 RegisterCommand('adminmenu', function()
   UIMessage("nui:adminperms", Permissions)
   if not next(Permissions) then
-    local srcPermissions = lib.callback.await('admin:adminData', false)
+    local srcPermissions = lib.callback.await('vadmin:getPermissions', false)
 
     if not next(srcPermissions) then
       return Debug("(Error) (command:adminmenu) srcPermissions is null, returning.")
@@ -67,12 +67,14 @@ RegisterCommand('adminmenu', function()
     Permissions = srcPermissions
 
 
-    if not Permissions.Report then
+    if not Permissions.Menu then
       return ESX.ShowNotification("What the fluff dude, you don't have perms :o", "ban")
     end
+
+    UIMessage("nui:adminperms", Permissions)
   end
 
-  if not Permissions.Report then
+  if not Permissions.Menu then
     return ESX.ShowNotification("What the fluff dude, you don't have perms :o", "ban")
   end
 
@@ -112,6 +114,10 @@ end)
 
 
 RegisterNUICallback("vadmin:client:offlineban", function(data, cb)
+  if not next(data) then
+    return Debug("(Error) [nuiCallback:vadmin:client:offlineban] first param is nil/null, returning.")
+  end
+
   TriggerServerEvent("vadmin:server:offlineban", data)
   cb({})
 end)

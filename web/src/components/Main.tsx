@@ -148,6 +148,24 @@ interface PlayerMenuPermission {
   "Spawn Car": boolean;
 }
 
+interface PlayerMenuPermissionV2 {
+  "Car Wipe": boolean;
+  Armor: boolean;
+  "Player Names": boolean;
+  Spectate: boolean;
+  Heal: boolean;
+  "Clear Chat": boolean;
+  Kick: boolean;
+  Freeze: boolean;
+  Unban: boolean;
+  Revive: boolean;
+  Menu: boolean;
+  "Offline Ban": boolean;
+  Ban: boolean;
+  Teleport: boolean;
+  NoClip: boolean;
+}
+
 type selectedOptions = {
   health: boolean;
   armor: boolean;
@@ -160,40 +178,22 @@ const debugMode = false;
 
 const Main: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [sourcePerms, setSourcePerms] = useState<PlayerMenuPermission>({
-    "Set Job": false,
+  const [sourcePerms, setSourcePerms] = useState<PlayerMenuPermissionV2>({
     "Car Wipe": false,
-    "Player Names": false,
-    "Community Service": false,
-    Ban: false,
-    Kick: false,
-    Report: false,
-    "Delete Car": false,
-    Teleport: false,
-    Spectate: false,
-    "Give Car": false,
-    "Clear Chat": false,
-    "Give Account Money": false,
-    Revive: false,
-    Announce: false,
-    Unban: false,
-    Frozen: false,
-    "Offline Ban": false,
-    "Give Item": false,
-    Skin: false,
     Armor: false,
-    "Set Gang": false,
-    "Clear Loadout": false,
-    "Copy Coords": false,
+    "Player Names": false,
+    Spectate: false,
+    Heal: false,
+    "Clear Chat": false,
+    Kick: false,
+    Freeze: false,
+    Unban: false,
+    Revive: false,
     Menu: false,
-    "Set Account Money": false,
-    "Go Back": false,
-    "Flip Car": false,
-    Health: false,
-    "Clear Inventory": false,
+    "Offline Ban": false,
+    Ban: false,
+    Teleport: false,
     NoClip: false,
-    "Give Weapon": false,
-    "Spawn Car": false,
   });
 
   const [currentTab, setCurrentTab] = useState<Tabs>({
@@ -287,44 +287,26 @@ const Main: React.FC = () => {
     setPlayers(data);
   });
 
-  useNuiEvent<PlayerMenuPermission>("nui:adminperms", async (perms) => {
+  useNuiEvent<PlayerMenuPermissionV2>("nui:adminperms", async (perms) => {
     try {
-      sourcePerms.Announce = perms.Announce;
-      sourcePerms.Armor = perms.Armor;
-      sourcePerms.Ban = perms.Ban;
-      sourcePerms["Car Wipe"] = perms["Car Wipe"];
-      sourcePerms["Clear Chat"] = perms["Clear Chat"];
-      sourcePerms["Clear Inventory"] = perms["Clear Inventory"];
-      sourcePerms["Clear Loadout"] = perms["Clear Loadout"];
-      sourcePerms["Community Service"] = perms["Community Service"];
-      sourcePerms["Copy Coords"] = perms["Copy Coords"];
-      sourcePerms["Delete Car"] = perms["Delete Car"];
-      sourcePerms["Flip Car"] = perms["Flip Car"];
-      sourcePerms.Frozen = perms.Frozen;
-      sourcePerms["Give Account Money"] = perms["Give Account Money"];
-      sourcePerms["Give Car"] = perms["Give Car"];
-      sourcePerms["Give Item"] = perms["Give Item"];
-      sourcePerms["Give Weapon"] = perms["Give Weapon"];
-      sourcePerms["Go Back"] = perms["Go Back"];
-      sourcePerms.Health = perms.Health;
-      sourcePerms.Kick = perms.Kick;
-      sourcePerms.Menu = perms.Menu;
-      sourcePerms.NoClip = perms.NoClip;
-      sourcePerms["Offline Ban"] = perms["Offline Ban"];
-      sourcePerms["Player Names"] = perms["Player Names"];
-      sourcePerms.Report = perms.Report;
-      sourcePerms.Revive = perms.Revive;
-      sourcePerms["Set Account Money"] = perms["Set Account Money"];
-      sourcePerms["Set Gang"] = perms["Set Gang"];
-      sourcePerms["Set Job"] = perms["Set Job"];
-      sourcePerms.Skin = perms.Skin;
-      sourcePerms["Spawn Car"] = perms["Spawn Car"];
-      sourcePerms.Spectate = perms.Spectate;
-      sourcePerms.Teleport = perms.Teleport;
-      sourcePerms.Unban = perms.Unban;
+      // sourcePerms.Armor = perms.Armor;
+      // sourcePerms.Ban = perms.Ban;
+      // sourcePerms["Car Wipe"] = perms["Car Wipe"];
+      // sourcePerms["Clear Chat"] = perms["Clear Chat"];
+      // sourcePerms.Freeze = perms.Freeze;
+      // sourcePerms.Heal = perms.Heal;
+      // sourcePerms.Kick = perms.Kick;
+      // sourcePerms.Menu = perms.Menu;
+      // sourcePerms.NoClip = perms.NoClip;
+      // sourcePerms["Offline Ban"] = perms["Offline Ban"];
+      // sourcePerms["Player Names"] = perms["Player Names"];
+      // sourcePerms.Revive = perms.Revive;
+      // sourcePerms.Spectate = perms.Spectate;
+      // sourcePerms.Teleport = perms.Teleport;
+      // sourcePerms.Unban = perms.Unban;
 
       // Unsure how just using this doesn't actually update it, spaghetti code all the way, i need to re-write most of this.
-      // setSourcePerms(perms);
+      setSourcePerms(perms);
 
       console.log(
         `Source Perms State: ${JSON.stringify(
@@ -694,7 +676,7 @@ const Main: React.FC = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="text-xs"
-                      disabled={!sourcePerms.Health}
+                      disabled={!sourcePerms.Heal}
                       onSelect={(e) => {
                         selectedOptions.health = true;
                         fetchClient();
@@ -892,18 +874,18 @@ const Main: React.FC = () => {
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                      <AlertDialogCancel className="rounded">
+                                      {/* <AlertDialogCancel className="rounded">
                                         Cancel
-                                      </AlertDialogCancel>
+                                      </AlertDialogCancel> */}
                                       <AlertDialogAction className="rounded">
-                                        Continue
+                                        Close
                                       </AlertDialogAction>
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
                                 </AlertDialog>
                                 <DropdownMenuItem
                                   className="rounded"
-                                  disabled={!sourcePerms.Frozen}
+                                  disabled={!sourcePerms.Freeze}
                                   onSelect={() => {
                                     fetchFreeze(player);
                                   }}
@@ -1188,7 +1170,7 @@ const Main: React.FC = () => {
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                       className="rounded"
-                                      disabled={!sourcePerms.Frozen}
+                                      disabled={!sourcePerms.Freeze}
                                       onSelect={() => {
                                         fetchFreeze(player);
                                       }}
@@ -1757,11 +1739,11 @@ const Main: React.FC = () => {
                                         </AlertDialogDescription>
                                       </AlertDialogHeader>
                                       <AlertDialogFooter>
-                                        <AlertDialogCancel className="rounded">
+                                        {/* <AlertDialogCancel className="rounded">
                                           Cancel
-                                        </AlertDialogCancel>
+                                        </AlertDialogCancel> */}
                                         <AlertDialogAction className="rounded">
-                                          Continue
+                                          Close
                                         </AlertDialogAction>
                                       </AlertDialogFooter>
                                     </AlertDialogContent>
