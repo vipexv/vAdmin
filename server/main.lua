@@ -1,6 +1,6 @@
 local ESX = exports['es_extended']:getSharedObject()
 
--- [NEEDS TESTING] Instead of having another table named FrozenPlayers we can just add another value to the PlayerList table with a boolean that states if the player is frozen or not.
+-- [TESTED/WORKS] Instead of having another table named FrozenPlayers we can just add another value to the PlayerList table with a boolean that states if the player is frozen or not.
 PlayerList = {}
 PlayerCache = {}
 AdminData = {}
@@ -558,20 +558,19 @@ RegisterNetEvent("vadmin:server:frz", function(data)
     }
   })
 
-  -- [Needs testing.]
-  if PlayerList[data.ID] then
-    local isFrozen = PlayerList[data.ID].frozen
+  if PlayerList[tonumber(data.ID)] then
+    local isFrozen = PlayerList[tonumber(data.ID)].frozen
 
     if isFrozen then
-      isFrozen = false
       FreezeEntityPosition(GetPlayerPed(data.ID), false)
+      PlayerList[tonumber(data.ID)].frozen = false
       Debug(("[netEvent:vadmin:server:frz] isFrozen var: %s \n player data: %s"):format(isFrozen,
         json.encode(PlayerList[data.ID])))
       return
     end
 
     FreezeEntityPosition(GetPlayerPed(data.ID), true)
-    isFrozen = true
+    PlayerList[tonumber(data.ID)].frozen = true
   else
     return Debug("(Error) [netEvent:vadmin:server:frz] Unable to locate player inside the PlayerList table.")
   end
