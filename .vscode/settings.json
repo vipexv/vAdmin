@@ -1,0 +1,10 @@
+{
+  "cSpell.words": ["boxshadow"],
+  "Lua.diagnostics.globals": ["lib", "Locale"],
+  "Lua.diagnostics.disable": [
+    "param-type-mismatch",
+    "lowercase-global",
+    "missing-parameter",
+    "inject-field"
+  ]
+}
