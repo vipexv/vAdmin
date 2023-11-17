@@ -1510,11 +1510,11 @@ const Main: React.FC = () => {
                                         </AlertDialogDescription>
                                       </AlertDialogHeader>
                                       <AlertDialogFooter>
-                                        <AlertDialogCancel className="rounded">
+                                        {/* <AlertDialogCancel className="rounded">
                                           Cancel
-                                        </AlertDialogCancel>
+                                        </AlertDialogCancel> */}
                                         <AlertDialogAction className="rounded">
-                                          Continue
+                                          Close
                                         </AlertDialogAction>
                                       </AlertDialogFooter>
                                     </AlertDialogContent>
