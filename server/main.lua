@@ -1,10 +1,8 @@
 local ESX = exports['es_extended']:getSharedObject()
 
--- [TESTED/WORKS] Instead of having another table named FrozenPlayers we can just add another value to the PlayerList table with a boolean that states if the player is frozen or not.
 PlayerList = {}
 PlayerCache = {}
 AdminData = {}
--- FrozenPlayers = {}
 
 local LoadBanList = function()
   local banList = {}
@@ -170,8 +168,7 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = 'Player Kicked',
-    webhook =
-    'https://discord.com/api/webhooks/1155241970931867780/OkBvuLXn_ym55OLpsWmfkZekS3sV5Km6Cj-2POMz-GG3AsgSUSLU_88HoUdKG017-SUJ',
+    webhook = Webhooks.Kick,
     fields = {
       {
         name = 'Admin',
@@ -235,8 +232,7 @@ RegisterNetEvent("vadmin:server:options", function(data)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = ("> Option Triggered: %s"):format((data.carWipe and "Car Wipe" or data.clearChat and "Clear Chat")),
-    webhook =
-    'https://discord.com/api/webhooks/1155244972535197767/MWIdufrzcD4386sMPraEI98Sg2d6RtH3Ii2h_qKirrLQIEVj-EXcSJeoCpEBM5O0-lsm',
+    webhook = Webhooks.Misc,
     fields = {
       {
         name = 'Admin',
@@ -403,8 +399,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = 'Player Banned',
-    webhook =
-    'https://discord.com/api/webhooks/1155239531440779295/e7tlmXeaDxL7pkcWmQbPDe1tdU9fr9VVZZGZUJbXOFnfz3puXAV5KCHmqmOvqElyVUd7',
+    webhook = Webhooks.Ban,
     fields = {
       {
         name = 'Admin',
@@ -481,8 +476,7 @@ RegisterNetEvent("vadmin:server:tp", function(info)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = ("> Option Triggered: %s"):format(info.Option),
-    webhook =
-    'https://discord.com/api/webhooks/1155244972535197767/MWIdufrzcD4386sMPraEI98Sg2d6RtH3Ii2h_qKirrLQIEVj-EXcSJeoCpEBM5O0-lsm',
+    webhook = Webhooks.Teleport,
     fields = {
       {
         name = 'Admin',
@@ -537,8 +531,7 @@ RegisterNetEvent("vadmin:server:frz", function(data)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = '> Option Triggered: Freeze Player',
-    webhook =
-    'https://discord.com/api/webhooks/1155244972535197767/MWIdufrzcD4386sMPraEI98Sg2d6RtH3Ii2h_qKirrLQIEVj-EXcSJeoCpEBM5O0-lsm',
+    webhook = Webhooks.Freeze,
     fields = {
       {
         name = 'Admin',
@@ -662,8 +655,7 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = 'Offline Ban',
-    webhook =
-    'https://discord.com/api/webhooks/1155245059160145971/sSc6mVGBJJjKeNHHumM5bzX8nQxePzRFWRzUTOlnxCVHZyybdXyU4PodslC_6oTiN-OI',
+    webhook = Webhooks.OfflineBan,
     fields = {
       {
         name = 'Admin',
@@ -727,8 +719,7 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
   discordLog({
     title = '[V] Admin Menu Logs',
     description = ("> Option Triggered: Spectate"),
-    webhook =
-    'https://discord.com/api/webhooks/1155244972535197767/MWIdufrzcD4386sMPraEI98Sg2d6RtH3Ii2h_qKirrLQIEVj-EXcSJeoCpEBM5O0-lsm',
+    webhook = Webhooks.Spectate,
     fields = {
       {
         name = 'Admin',
@@ -806,8 +797,7 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
     discordLog({
       title = '[V] Admin Menu Logs',
       description = ("Player Unbanned"),
-      webhook =
-      'https://discord.com/api/webhooks/1155247365394026576/SzhYp22D3FYVKT3bzXwDDIHRcnJGPbYmMmvAFdLwImQ4AM4cw7k15O0yDgqmECU8RBZL',
+      webhook = Webhooks.Unban,
       fields = {
         {
           name = 'Admin',
