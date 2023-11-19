@@ -1,5 +1,3 @@
-local ESX = exports['es_extended']:getSharedObject()
-
 PlayerList = {}
 PlayerCache = {}
 AdminData = {}
@@ -13,6 +11,23 @@ local LoadBanList = function()
   end
 
   return banList
+end
+
+
+---@param playerId string | number
+---@param message string
+local showNotification = function(playerId, message)
+  if not playerId or not message then
+    return Debug("(Error) showNotificiation function was called, but a param is missing.")
+  end
+
+  if tostring(playerId) == "-1" then
+    return Debug(
+      "Prevented the function `showFunction` from continuing, the function was called but the playerId param was -1, intending to display this notification to everyone, if source is existent it was called by source: ",
+      source)
+  end
+
+  TriggerClientEvent("UIMessage", playerId, "nui:notify", message)
 end
 
 GetPlayerIdentifiersWithoutIP = function(player)
@@ -146,13 +161,12 @@ lib.callback.register("vadmin:getPermissions", function(source)
 end)
 
 RegisterNetEvent("VAdmin:Server:K", function(data)
-  local xPlayer = ESX.GetPlayerFromId(source)
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Kick"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
   local targetName = GetPlayerName(data.target_id) or "Error Getting Player Name"
@@ -172,12 +186,12 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
       {
@@ -223,8 +237,6 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
 end)
 
 RegisterNetEvent("vadmin:server:options", function(data)
-  local xPlayer = ESX.GetPlayerFromId(source)
-
   if not data then
     return Debug("(Error) [NetEvent:vadmin:server:options] data param is null, returning.")
   end
@@ -236,12 +248,12 @@ RegisterNetEvent("vadmin:server:options", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
     }
@@ -253,7 +265,7 @@ RegisterNetEvent("vadmin:server:options", function(data)
     if not sourcePerms then return end
 
     if not sourcePerms["Clear Chat"] then
-      return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+      return DropPlayer(source, Lang:t("cheating_kick_message"))
     end
     TriggerClientEvent("chat:clear", -1)
     return
@@ -265,7 +277,7 @@ RegisterNetEvent("vadmin:server:options", function(data)
     if not sourcePerms then return end
 
     if not sourcePerms["Car Wipe"] then
-      return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+      return DropPlayer(source, Lang:t("cheating_kick_message"))
     end
     TriggerClientEvent('chat:addMessage', -1, {
       template = [[
@@ -323,14 +335,12 @@ RegisterNetEvent("vadmin:server:options", function(data)
 end)
 
 RegisterNetEvent("VAdmin:Server:B", function(data)
-  local xPlayer = ESX.GetPlayerFromId(source)
-
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Ban"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
   local target = ESX.GetPlayerFromId(data.target_id)
@@ -382,10 +392,6 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
 
   table.insert(banList, BanData)
 
-
-  -- local KickReason = ("❌ What the fluff dude! \n You have been banned :O \n \n Staff Member: %s (ID - %s) \n Ban Reason: %s \n Ban Length: %s \n Rejoin for more info. \n \n If you feel like this was a mistake, feel free to open a ticket at discord.gg/narco to appeal it.")
-  --     :format(GetPlayerName(source), source, data.reason, data.length)
-
   DropPlayer(data.target_id,
     Lang:t("drop_player_ban_message", {
       staff_member_name = GetPlayerName(source),
@@ -403,12 +409,12 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
       {
@@ -424,7 +430,8 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
     }
   })
 
-  xPlayer.showNotification("Successfully banned the player!")
+  showNotification(source, "Successfully banned the player!")
+
 
   TriggerClientEvent('chat:addMessage', -1, {
     template = [[
@@ -438,7 +445,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
                                 border-radius: 4px;
                         ">
                             <i class="fa-sharp fa-solid fa-ban"></i>
-                            BANNED -
+                            PLAYER BANNED -
                             {0}
                             <br>
                             {1}
@@ -451,7 +458,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
                         </div>
                     ]],
     args = {
-      ("Player banned: %s (ID - %s)"):format(targetName, targetId),
+      ("Player: %s (ID - %s)"):format(targetName, targetId),
       ("Banned by: %s"):format(GetPlayerName(source) or "Error getting player name"),
       ("Length: %s"):format(data.length),
       ("Reason: %s"):format(data.reason),
@@ -461,17 +468,19 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
 end)
 
 RegisterNetEvent("vadmin:server:tp", function(info)
-  local xPlayer = ESX.GetPlayerFromId(source)
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Teleport"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
-  local xPlayer = ESX.GetPlayerFromId(source)
-  local xTarget = ESX.GetPlayerFromId(tonumber(info.ID))
+  local sourcePed = GetPlayerPed(source)
+  local targetPed = GetPlayerPed(info.ID)
+  local sourcePedCoords = GetEntityCoords(sourcePed)
+  local targetPedCoords = GetEntityCoords(targetPed)
+
 
   discordLog({
     title = '[V] Admin Menu Logs',
@@ -480,12 +489,12 @@ RegisterNetEvent("vadmin:server:tp", function(info)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
       {
@@ -498,11 +507,11 @@ RegisterNetEvent("vadmin:server:tp", function(info)
 
 
   if info.Option == "Goto" then
-    xPlayer.setCoords(xTarget.getCoords())
+    SetEntityCoords(sourcePed, targetPedCoords)
     return
   end
   if info.Option == "Bring" then
-    xTarget.setCoords(xPlayer.getCoords())
+    SetEntityCoords(targetPed, sourcePedCoords)
     return
   end
 end)
@@ -519,13 +528,12 @@ RegisterNetEvent("vadmin:server:rev", function(data)
 end)
 
 RegisterNetEvent("vadmin:server:frz", function(data)
-  local xPlayer = ESX.GetPlayerFromId(source)
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Freeze"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
   discordLog({
@@ -535,12 +543,12 @@ RegisterNetEvent("vadmin:server:frz", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
       {
@@ -580,14 +588,12 @@ end)
 
 
 RegisterNetEvent("vadmin:server:offlineban", function(data)
-  local xPlayer = ESX.GetPlayerFromId(source)
-
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Freeze"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
   local BanOsTime = os.time()
   local UnbanOsTime = (BanOsTime + (BanLengths[data.length]))
@@ -659,12 +665,12 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
       {
@@ -692,13 +698,12 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
 end)
 
 RegisterNetEvent("vadmin:server:spectate", function(data)
-  local xPlayer = ESX.GetPlayerFromId(source)
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Spectate"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
   local targetPed = GetPlayerPed(data.ID)
@@ -723,12 +728,12 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
         name = 'Admin Identifiers',
-        value = organizeIdentifiers(xPlayer.source),
+        value = organizeIdentifiers(source),
         inline = false
       },
       {
@@ -740,15 +745,16 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
   TriggerClientEvent("vadmin:spectate:start", source, data.ID, GetEntityCoords(targetPed))
 end)
 
+
 RegisterNetEvent("vadmin:server:spectate:end", function()
-  local xPlayer = ESX.GetPlayerFromId(source)
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Spectate"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
+
   local sourcePlayerStateBag = Player(source).state
 
   local prevRoutBucket = sourcePlayerStateBag.spectateReturnBucket
@@ -759,22 +765,19 @@ RegisterNetEvent("vadmin:server:spectate:end", function()
 end)
 
 RegisterNetEvent("vadmin:server:unban", function(banID)
-  local xPlayer = ESX.GetPlayerFromId(source)
-
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms then return end
 
   if not sourcePerms["Unban"] then
-    return DropPlayer(xPlayer.source, Lang:t("cheating_kick_message"))
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
   if not banID then
-    return xPlayer.showNotification("Ban ID cannot be null!")
+    return showNotification(source, "Ban ID cannot be null!")
   end
 
   local banList = LoadBanList()
-  local xPlayer = ESX.GetPlayerFromId(source)
   local found = false
   local targetName
   local targetHwids
@@ -801,12 +804,12 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
       fields = {
         {
           name = 'Admin',
-          value = ('%s (ID - [%s])'):format(GetPlayerName(xPlayer.source), xPlayer.source),
+          value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
           inline = true
         },
         {
           name = 'Admin Identifiers',
-          value = organizeIdentifiers(xPlayer.source),
+          value = organizeIdentifiers(source),
           inline = false
         },
         {
@@ -826,14 +829,14 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
       }
     })
 
-    xPlayer.showNotification("Player was found and unbanned!")
+    showNotification(source, "Player was found and unbanned!")
   else
-    xPlayer.showNotification("Error Ban ID not found!")
+    showNotification(source, "Error Ban ID not found!")
   end
 end)
 
 local loopThroughIdentifiers = function(banIdentifiers, sourceIdentifiers)
-  if not banIdentifiers or not sourceIdentifiers then
+  if not next(banIdentifiers) or not next(sourceIdentifiers) then
     return false
   end
 
@@ -850,7 +853,18 @@ local loopThroughIdentifiers = function(banIdentifiers, sourceIdentifiers)
 
   return false
 end
+---@return string
+local thankYou = function()
+  return
+  "Thank you god for everything you have blessed me and my family with, and i hope you continue to do so, i wish nothing but the best upon you and hope you achieve everything you need and want to, thank you for everything you do for us, Amen."
+end
 
+local message = thankYou()
+print(message)
+
+---@param banTokens {}
+---@param sourceTokens {}
+---@return boolean
 local loopThroughTokens = function(banTokens, sourceTokens)
   if not next(banTokens) or not next(sourceTokens) then
     return false

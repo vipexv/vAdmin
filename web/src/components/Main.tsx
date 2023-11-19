@@ -324,6 +324,14 @@ const Main: React.FC = () => {
 
   useNuiEvent<boolean>("setVisible", setVisible);
 
+  useNuiEvent("nui:notify", (message: string) => {
+    toast({
+      variant: "default",
+      description: message,
+      className: "rounded font-inter",
+    });
+  });
+
   useEffect(() => {
     try {
       const filtered = players

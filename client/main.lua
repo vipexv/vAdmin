@@ -1,5 +1,3 @@
-local ESX = exports['es_extended']:getSharedObject()
-
 Permissions = {
   -- ["Set Job"] = true,
   -- ["Car Wipe"] = true,
@@ -68,14 +66,14 @@ RegisterCommand('adminmenu', function()
 
 
     if not Permissions.Menu then
-      return ESX.ShowNotification("What the fluff dude, you don't have perms :o", "ban")
+      return Notify("What the fluff dude, you don't have perms :o")
     end
 
     UIMessage("nui:adminperms", Permissions)
   end
 
   if not Permissions.Menu then
-    return ESX.ShowNotification("What the fluff dude, you don't have perms :o", "ban")
+    return Notify("What the fluff dude, you don't have perms :o", "ban")
   end
 
   local PlayerList = lib.callback.await('vadmin:plist', false)
@@ -249,11 +247,11 @@ local createSpectatorThreads = function()
         local newPed = GetPlayerPed(storedTargetPlayerId)
         if newPed > 0 then
           if newPed ~= storedTargetPed then
-            print(("Spectated target ped (%s) updated to %s"):format(storedTargetPlayerId, newPed))
+            Debug(("Spectated target ped (%s) updated to %s"):format(storedTargetPlayerId, newPed))
           end
           storedTargetPed = newPed
         else
-          print(("Spectated player (%s) no longer exists, ending spectate..."):format(
+          Debug(("Spectated player (%s) no longer exists, ending spectate..."):format(
             storedTargetPlayerId))
           stopSpectating()
         end
@@ -268,6 +266,7 @@ local createSpectatorThreads = function()
 end
 
 local setGamerTagFunc = function(targetTag, pid)
+  Debug("Settings gamer tag settings for pid:", pid)
   SetMpGamerTagVisibility(targetTag, 0, true)
 
   SetMpGamerTagHealthBarColour(targetTag, 129)
@@ -305,7 +304,10 @@ local showGamerTags = function()
         gamerTag = CreateFakeMpGamerTag(targetPed, playerStr, false, false, 0),
         ped = targetPed
       }
+
+      Debug("Added player to the `playerGamerTags` table for PID: ", pid, "Data: ", json.encode(playerGamerTags[pid]))
     end
+
     local targetTag = playerGamerTags[pid].gamerTag
     local targetPedCoords = GetEntityCoords(targetPed)
     if #(targetPedCoords - curCoords) <= 300 then
@@ -317,7 +319,7 @@ local showGamerTags = function()
 end
 
 cleanAllGamerTags = function()
-  print("Clearing up gamer tags table.")
+  Debug("Clearing up gamer tags table.")
   for _, v in pairs(playerGamerTags) do
     RemoveMpGamerTag(v.gamerTag)
   end
@@ -328,7 +330,7 @@ local createGamerTagThread = function()
   CreateThread(function()
     while State.playerNames do
       showGamerTags()
-      Wait(250)
+      Wait(150)
     end
 
     cleanAllGamerTags()
@@ -373,7 +375,7 @@ local createInstitutionalThreads = function()
       Wait(5)
     end
 
-    print('Finished buttons checker thread')
+    Debug('Finished buttons checker thread')
   end)
 end
 
@@ -382,7 +384,7 @@ end
 
 RegisterNetEvent("vadmin:spectate:start", function(targetServerId, targetCoords)
   if targetServerId == GetPlayerServerId(PlayerId()) then
-    return ESX.ShowNotification("Cannot spectate yourself dummy!", "ban")
+    return Notify("Cannot spectate yourself dummy!")
   end
 
   storedTargetPed = nil
@@ -409,21 +411,20 @@ RegisterNetEvent("vadmin:spectate:start", function(targetServerId, targetCoords)
     targetResolveAttempts = targetResolveAttempts + 1
     resolvedPlayerId = GetPlayerFromServerId(serverId)
     resolvedPed = GetPlayerPed(resolvedPlayerId)
-    print(("Attempting to resolve ped. %s, %s"):format(resolvedPlayerId, resolvedPed))
+    Debug(("Attempting to resolve ped. %s, %s"):format(resolvedPlayerId, resolvedPed))
     Wait(50)
   end
 
   if (resolvedPlayerId <= 0 or resolvedPed <= 0) then
-    print('Failed to resolve target PlayerId or Ped')
+    Debug('Failed to resolve target PlayerId or Ped')
     collisionTpCoordTransition(spectatorReturnCoords)
     prepareSpectatorPed(false)
     DoScreenFadeIn(500)
     while IsScreenFadedOut() do Wait(5) end
 
     spectatorReturnCoords = nil
-    return ESX.ShowNotification(
-      "Spectate failed, press F8 and check for any debug/print statements in F8 console before reporting it to a developer.",
-      "ban")
+    return Notify(
+      "Spectate failed, press F8 and check for any debug/print statements in F8 console before reporting it to a developer.")
   end
 
 
@@ -435,7 +436,7 @@ RegisterNetEvent("vadmin:spectate:start", function(targetServerId, targetCoords)
   NetworkSetInSpectatorMode(true, resolvedPed)
   SetMinimapInSpectatorMode(true, resolvedPed)
 
-  print(('Set spectate to true for resolvedPed (%s)'):format(resolvedPed))
+  Debug(('Set spectate to true for resolvedPed (%s)'):format(resolvedPed))
   isSpectateEnabled = true
   -- toggleShowPlayerIDs(true, false)
   createSpectatorThreads()
@@ -537,7 +538,7 @@ RegisterNuiCallback("vadmin:nui_cb:ban", function(data, cb)
   end
 
   if tonumber(data.target_id) == GetPlayerServerId(PlayerId()) then
-    return ESX.ShowNotification("What the fluff dude, you can't ban yourself :o", "ban")
+    return Notify("What the fluff dude, you can't ban yourself :o")
   end
 
   TriggerServerEvent("VAdmin:Server:B", data)
@@ -551,7 +552,7 @@ RegisterNuiCallback("vadmin:nui_cb:kick", function(data, cb)
   end
 
   if tonumber(data.target_id) == GetPlayerServerId(PlayerId()) then
-    return ESX.ShowNotification("What the fluff dude, you can't kick yourself :o")
+    return Notify("What the fluff dude, you can't kick yourself :o")
   end
 
   TriggerServerEvent("VAdmin:Server:K", data)
@@ -569,19 +570,18 @@ RegisterCommand("ban", function(source, args, rawCommand)
   local reason = table.concat(args, " ")
 
   if not Permissions.Ban then
-    return ESX.ShowNotification(
-      "Insufficient permissions, if you are staff, please go ahead and open and close the menu to see if that fixes it.",
-      "ban")
+    return Notify(
+      "Insufficient permissions, if you are staff, please go ahead and open and close the menu to see if that fixes it.")
   end
 
-  if not targetID then return ESX.ShowNotification("Target ID is null.", "ban") end
+  if not targetID then return Notify("Target ID is null.") end
 
   if tonumber(targetID) == tonumber(GetPlayerServerId(PlayerId())) then
-    return ESX.ShowNotification("What the fluff dude, you can't ban yourself!")
+    return Notify("What the fluff dude, you can't ban yourself!")
   end
 
   if not reason or #reason <= 1 then
-    return ESX.ShowNotification("Error: Reason is too short!", "ban")
+    return Notify("Error: Reason is too short!")
   end
 
   local data = {

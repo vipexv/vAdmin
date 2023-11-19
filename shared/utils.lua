@@ -14,6 +14,7 @@ config = {
   }
 }
 
+
 EasySeconds = {
   ['Minute'] = 60,
   ['Hour'] = 60 * 60,
@@ -140,3 +141,14 @@ function Debug(...)
 end
 
 --- Healthy, Happy, Successful.
+
+
+
+-- Feel free to re-write this function to use your notification system if you don't like the currnet one built with the admin menu.
+---@param message string
+Notify = function(message)
+  if not message then
+    return Debug("(Error) Notify function was called, but the first param was null.")
+  end
+  UIMessage("nui:notify", message)
+end
