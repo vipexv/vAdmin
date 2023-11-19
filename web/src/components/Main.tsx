@@ -252,7 +252,7 @@ const Main: React.FC = () => {
   const [cacheSearchQuery, setCacheSearchQuery] = useState<string>("");
 
   // useEffect(() => {
-  //   if (!debugMode) return;
+  //   // if (!debugMode) return;
   //   const min = 10000;
   //   const max = 50000;
   //   // const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -832,7 +832,7 @@ const Main: React.FC = () => {
                                 </DropdownMenuItem>
                                 <AlertDialog>
                                   <AlertDialogTrigger
-                                    className="rounded flex items-center w-full p-1 border-none hover:bg-accent transition"
+                                    className="rounded flex items-center w-full px-[8px] py-[6px] border-none hover:bg-accent transition text-sm"
                                     disabled={!sourcePerms.Menu}
                                   >
                                     {" "}

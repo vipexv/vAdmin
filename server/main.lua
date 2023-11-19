@@ -206,6 +206,8 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
       },
     }
   })
+  if not Config.ChatMessages then return end
+
   TriggerClientEvent('chat:addMessage', -1, {
     template = [[
                         <div style="
@@ -279,8 +281,9 @@ RegisterNetEvent("vadmin:server:options", function(data)
     if not sourcePerms["Car Wipe"] then
       return DropPlayer(source, Lang:t("cheating_kick_message"))
     end
-    TriggerClientEvent('chat:addMessage', -1, {
-      template = [[
+    if Config.ChatMessages then
+      TriggerClientEvent('chat:addMessage', -1, {
+        template = [[
                             <div style="
                                     padding: 0.45vw;
                                     margin: 0.55vw;
@@ -293,10 +296,12 @@ RegisterNetEvent("vadmin:server:options", function(data)
                               <i class="fas fa-robot"></i> Car wipe in 20 seconds.
                             </div>
                         ]],
-    })
+      })
+    end
     Wait(10000)
-    TriggerClientEvent('chat:addMessage', -1, {
-      template = [[
+    if Config.ChatMessages then
+      TriggerClientEvent('chat:addMessage', -1, {
+        template = [[
                             <div style="
                                     padding: 0.45vw;
                                     margin: 0.55vw;
@@ -309,13 +314,15 @@ RegisterNetEvent("vadmin:server:options", function(data)
                                 <i class="fas fa-robot"></i> Car wipe in 10 seconds.
                             </div>
                         ]],
-    })
+      })
+    end
     Wait(10000)
     for _, v in pairs(GetAllVehicles()) do
       if (GetPedInVehicleSeat(v, -1) == 0) then
         DeleteEntity(v)
       end
     end
+    if not Config.ChatMessages then return end
     TriggerClientEvent('chat:addMessage', -1, {
       template = [[
                             <div style="
@@ -431,6 +438,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
 
   showNotification(source, "Successfully banned the player!")
 
+  if not Config.ChatMessages then return end
 
   TriggerClientEvent('chat:addMessage', -1, {
     template = [[
@@ -560,7 +568,6 @@ RegisterNetEvent("vadmin:server:frz", function(data)
 
   if PlayerList[tonumber(data.ID)] then
     local isFrozen = PlayerList[tonumber(data.ID)].frozen
-
     if isFrozen then
       FreezeEntityPosition(GetPlayerPed(data.ID), false)
       PlayerList[tonumber(data.ID)].frozen = false
@@ -624,8 +631,9 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
 
   SaveBanList(banList)
 
-  TriggerClientEvent('chat:addMessage', -1, {
-    template = [[
+  if Config.ChatMessages then
+    TriggerClientEvent('chat:addMessage', -1, {
+      template = [[
                         <div style="
                                 padding: 0.45vw;
                                 margin: 0.55vw;
@@ -648,14 +656,15 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
                             {4}
                         </div>
                     ]],
-    args = {
-      ("Player: %s"):format(data.playerName or "unknown"),
-      ("Banned by: %s"):format(GetPlayerName(source) or "unknown"),
-      ("Length: %s"):format(data.length),
-      ("Reason: %s"):format(data.reason),
-      ("Ban date: %s"):format(banDate)
-    }
-  })
+      args = {
+        ("Player: %s"):format(data.playerName or "unknown"),
+        ("Banned by: %s"):format(GetPlayerName(source) or "unknown"),
+        ("Length: %s"):format(data.length),
+        ("Reason: %s"):format(data.reason),
+        ("Ban date: %s"):format(banDate)
+      }
+    })
+  end
 
   discordLog({
     title = '[V] Admin Menu Logs',

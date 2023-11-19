@@ -73,7 +73,7 @@ RegisterCommand('adminmenu', function()
   end
 
   if not Permissions.Menu then
-    return Notify("What the fluff dude, you don't have perms :o", "ban")
+    return Notify("What the fluff dude, you don't have perms :o")
   end
 
   local PlayerList = lib.callback.await('vadmin:plist', false)
@@ -123,6 +123,12 @@ end)
 RegisterNuiCallback("vadmin:client:spectate", function(playerData, cb)
   if not next(playerData) then
     return Debug("(Error)  [nuiCallback:vadmin:client:spectate] first param is nil/null, returning.")
+  end
+
+  local sourceId = GetPlayerServerId(PlayerId())
+
+  if tostring(sourceId) == tostring(playerData.ID) then
+    return Notify("What the fluff dude, you cannot spectate yourself.")
   end
 
   TriggerServerEvent("vadmin:server:spectate", playerData)
