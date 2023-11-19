@@ -343,9 +343,8 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
     return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
-  local target = ESX.GetPlayerFromId(data.target_id)
 
-  if not target then
+  if not data.target_id then
     return Debug("(Error) [netEvent:vadmin:server:b] target is null")
   end
 
