@@ -1,7 +1,7 @@
 Config = {
   Debug = true,
   KeyMapping = "F9",   -- The key to open the Admin Menu.
-  ChatMessages = true, --Messages that get sent to the chat once a player is banned, kicked, offline banned and car wipes.
+  ChatMessages = true, -- Messages that get sent to the chat once a player is banned, kicked, offline banned and car wipes.
   DefaultPermissions = {
     AllowedPermissions = {
       Menu = false,
