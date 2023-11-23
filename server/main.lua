@@ -1,3 +1,30 @@
+-- In the future, i want to use classes allot more, currently just setting them up.
+
+-- [Classes]
+
+-- Player Class for the PlayerList
+CPlayer = {}
+
+function CPlayer:new(id, name, identifiers, tokens)
+  local obj = {
+    name = name,
+    id = id,
+    identifiers = identifiers,
+    tokens = tokens,
+  }
+  setmetatable(obj, self)
+  self.__index = self
+  return obj
+end
+
+function CPlayer:displayInfo()
+  for i = 1, #self do
+    Debug(("Index: %s, value: %s"):format(i, self[i]))
+  end
+end
+
+-- [Main]
+
 PlayerList = {}
 PlayerCache = {}
 AdminData = {}
@@ -47,7 +74,7 @@ local SaveBanList = function(banData)
 end
 
 function AddPlayerToList(playerData)
-  PlayerList[playerData.ID] = playerData
+  PlayerList[playerData.id] = playerData
 end
 
 function RemovePlayerFromList(playerID)
@@ -58,7 +85,7 @@ end
 --   return PlayerList[playerID]
 -- end
 
-AddEventHandler("playerJoining", function(srcString, _oldID)
+AddEventHandler("playerJoining", function(_srcString, _oldID)
   if source <= 0 then
     Debug("(Error) [eventHandler:playerJoining] source is nil, returning.")
     return
@@ -81,12 +108,16 @@ AddEventHandler("playerJoining", function(srcString, _oldID)
     end
   end
 
-  local playerData = {
-    Name = string.sub(playerDetectedName or "unknown", 1, 75),
-    ID = source,
-    Identifiers = GetPlayerIdentifiersWithoutIP(source),
-    HWIDS = GetPlayerTokens(source),
-  }
+  local playerName = string.sub(playerDetectedName or "unknown", 1, 75)
+
+  local playerData = CPlayer:new(source, playerName, GetPlayerIdentifiersWithoutIP(source), GetPlayerTokens(source))
+
+  -- local playerData = {
+  --   name = string.sub(playerDetectedName or "unknown", 1, 75),
+  --   id = source,
+  --   identifiers = GetPlayerIdentifiersWithoutIP(source),
+  --   tokens = GetPlayerTokens(source),
+  -- }
 
   if PlayerList[source] then
     Debug("(Error) [eventHandler:playerJoining] Player is already in the [PlayerList] table.")
@@ -110,13 +141,11 @@ AddEventHandler("playerDropped", function(reason)
   end
 end)
 
--- Grab the active players once the script loads.
 SetTimeout(5000, function()
   CreateThread(function()
     local Players = GetPlayers()
     for i = 1, #Players do
       local player = Players[i]
-      Debug("player server sided variable type: ", type(player))
       if PlayerList[player] then
         Debug("(Error) [Thread:InitPlayerList] Player is already in the PlayerList table.")
         return
@@ -131,14 +160,17 @@ SetTimeout(5000, function()
         end
       end
 
-      local playerData = {
-        Name = GetPlayerName(player),
-        ID = player,
-        Identifiers = GetPlayerIdentifiersWithoutIP(player),
-        HWIDS = GetPlayerTokens(player),
-      }
+      local playerName = string.sub(GetPlayerName(source) or "unknown", 1, 75)
 
-      -- Store player data using their ID as the key
+      local playerData = CPlayer:new(source, playerName, GetPlayerIdentifiersWithoutIP(source), GetPlayerTokens(source))
+
+      -- local playerData = {
+      --   name = GetPlayerName(player),
+      --   id = player,
+      --   identifiers = GetPlayerIdentifiersWithoutIP(player),
+      --   tokens = GetPlayerTokens(player),
+      -- }
+
       PlayerList[tonumber(player)] = playerData
     end
   end)
@@ -169,7 +201,7 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
     return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
-  local targetName = GetPlayerName(data.target_id) or "Error Getting Player Name"
+  local targetName = GetPlayerName(data.target_id) or "Error Getting Player name"
   local targetId = data.target_id
 
   DropPlayer(data.target_id,
@@ -186,17 +218,17 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
       {
         name = 'Target',
-        value = ("%s - (ID - %s)"):format(targetName, targetId),
+        value = ("%s - (id - %s)"):format(targetName, targetId),
         inline = false
       },
       {
@@ -231,8 +263,8 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
                     ]],
 
     args = {
-      ("Player: %s (ID - %s)"):format(targetName, targetId),
-      ("Kicked by: %s (ID - %s)"):format(GetPlayerName(source), source),
+      ("Player: %s (id - %s)"):format(targetName, targetId),
+      ("Kicked by: %s (id - %s)"):format(GetPlayerName(source), source),
       ("Reason: %s"):format(data.reason)
     }
   })
@@ -250,11 +282,11 @@ RegisterNetEvent("vadmin:server:options", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
@@ -384,10 +416,10 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
   local banID = tostring(rchar .. #banList + 1)
 
   local BanData = {
-    StaffMember = GetPlayerName(source) or "Error Getting the Admin's name",
-    playerName = GetPlayerName(data.target_id) or "Error Grabbing player name",
-    Identifiers = GetPlayerIdentifiersWithoutIP(data.target_id),
-    HWIDS = GetPlayerTokens(data.target_id),
+    StaffMember = GetPlayerName(source) or "Unknown",
+    playerName = GetPlayerName(data.target_id) or "Unknown",
+    identifiers = GetPlayerIdentifiersWithoutIP(data.target_id),
+    tokens = GetPlayerTokens(data.target_id),
     Length = os.time() + BanLengths[data.length],
     LengthString = data.length,
     UnbanDate = unbanDate,
@@ -415,22 +447,22 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
       {
         name = 'Target',
-        value = ("%s - (ID - %s)"):format(targetName, targetId),
+        value = ("%s - (id - %s)"):format(targetName, targetId),
         inline = false
       },
       {
         name = 'Ban Info',
-        value = ("Reason: %s \n Expires In: %s (%s) \n Ban ID: %s"):format(data.reason, unbanDate, data.length, banID),
+        value = ("Reason: %s \n Expires In: %s (%s) \n Ban id: %s"):format(data.reason, unbanDate, data.length, banID),
         inline = false
       },
     }
@@ -465,7 +497,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
                         </div>
                     ]],
     args = {
-      ("Player: %s (ID - %s)"):format(targetName, targetId),
+      ("Player: %s (id - %s)"):format(targetName, targetId),
       ("Banned by: %s"):format(GetPlayerName(source) or "Error getting player name"),
       ("Length: %s"):format(data.length),
       ("Reason: %s"):format(data.reason),
@@ -484,7 +516,7 @@ RegisterNetEvent("vadmin:server:tp", function(info)
   end
 
   local sourcePed = GetPlayerPed(source)
-  local targetPed = GetPlayerPed(info.ID)
+  local targetPed = GetPlayerPed(info.id)
   local sourcePedCoords = GetEntityCoords(sourcePed)
   local targetPedCoords = GetEntityCoords(targetPed)
 
@@ -496,17 +528,17 @@ RegisterNetEvent("vadmin:server:tp", function(info)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
       {
         name = 'Target',
-        value = ("%s - (ID - %s)"):format(GetPlayerName(info.ID) or "Error Getting Target Name", info.ID),
+        value = ("%s - (id - %s)"):format(GetPlayerName(info.id) or "Error Getting Target name", info.id),
         inline = false
       },
     }
@@ -531,7 +563,7 @@ RegisterNetEvent("vadmin:server:rev", function(data)
   if not sourcePerms["Revive"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
-  exports["Legacy"]:RevivePlayer(data.ID)
+  exports["Legacy"]:RevivePlayer(data.id)
 end)
 
 RegisterNetEvent("vadmin:server:frz", function(data)
@@ -550,46 +582,46 @@ RegisterNetEvent("vadmin:server:frz", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
       {
         name = 'Target',
-        value = ("%s"):format(GetPlayerName(data.ID) or "Error Getting Target Name"),
+        value = ("%s"):format(GetPlayerName(data.id) or "Error Getting Target name"),
         inline = false
       },
     }
   })
 
-  if PlayerList[tonumber(data.ID)] then
-    local isFrozen = PlayerList[tonumber(data.ID)].frozen
+  if PlayerList[tonumber(data.id)] then
+    local isFrozen = PlayerList[tonumber(data.id)].frozen
     if isFrozen then
-      FreezeEntityPosition(GetPlayerPed(data.ID), false)
-      PlayerList[tonumber(data.ID)].frozen = false
+      FreezeEntityPosition(GetPlayerPed(data.id), false)
+      PlayerList[tonumber(data.id)].frozen = false
       Debug(("[netEvent:vadmin:server:frz] isFrozen var: %s \n player data: %s"):format(isFrozen,
-        json.encode(PlayerList[data.ID])))
+        json.encode(PlayerList[data.id])))
       return
     end
 
-    FreezeEntityPosition(GetPlayerPed(data.ID), true)
-    PlayerList[tonumber(data.ID)].frozen = true
+    FreezeEntityPosition(GetPlayerPed(data.id), true)
+    PlayerList[tonumber(data.id)].frozen = true
   else
     return Debug("(Error) [netEvent:vadmin:server:frz] Unable to locate player inside the PlayerList table.")
   end
 
-  -- if FrozenPlayers[data.ID] then
-  --   FreezeEntityPosition(GetPlayerPed(data.ID), false)
-  --   FrozenPlayers[data.ID] = nil
+  -- if FrozenPlayers[data.id] then
+  --   FreezeEntityPosition(GetPlayerPed(data.id), false)
+  --   FrozenPlayers[data.id] = nil
   --   return
   -- end
 
-  -- FreezeEntityPosition(GetPlayerPed(data.ID), true)
-  -- FrozenPlayers[data.ID] = {}
+  -- FreezeEntityPosition(GetPlayerPed(data.id), true)
+  -- FrozenPlayers[data.id] = {}
 end)
 
 
@@ -612,13 +644,13 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
 
   local banID = tostring(rchar .. #banList + 1)
 
-  -- print(("(DEBUG) Ban ID: %s"):format(banID))
+  -- print(("(DEBUG) Ban id: %s"):format(banID))
 
   local banData = {
     StaffMember = GetPlayerName(source) or "Error grabbing the player name",
-    Identifiers = data.Identifiers,
+    identifiers = data.identifiers,
     playerName = data.playerName,
-    HWIDS = data.HWIDS,
+    tokens = data.tokens,
     Length = os.time() + BanLengths[data.length],
     LengthString = data.length,
     UnbanDate = unbanDate,
@@ -673,11 +705,11 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
@@ -687,18 +719,18 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
         inline = false
       },
       {
-        name = 'Target Identifiers',
-        value = ("```%s```"):format(table.concat(data.Identifiers, "\n")),
+        name = 'Target identifiers',
+        value = ("```%s```"):format(table.concat(data.identifiers, "\n")),
         inline = false
       },
       {
         name = 'Target HWIDs',
-        value = ("```%s```"):format(table.concat(data.HWIDS, "\n")),
+        value = ("```%s```"):format(table.concat(data.tokens, "\n")),
         inline = false
       },
       {
         name = 'Offline Ban Info',
-        value = ("Reason: %s \n Expires in: %s (%s) \n Ban ID: %s"):format(data.reason, unbanDate, data.length, banID),
+        value = ("Reason: %s \n Expires in: %s (%s) \n Ban id: %s"):format(data.reason, unbanDate, data.length, banID),
         inline = false
       },
     }
@@ -714,15 +746,15 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
     return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
-  local targetPed = GetPlayerPed(data.ID)
+  local targetPed = GetPlayerPed(data.id)
   if not targetPed then return print("Target Ped is null in vadmin:server:spectate") end
   -- One Sync Infinity is cool!
-  local targetBucket = GetPlayerRoutingBucket(data.ID)
+  local targetBucket = GetPlayerRoutingBucket(data.id)
   local srcBucket = GetPlayerRoutingBucket(source)
   local sourcePlayerStateBag = Player(source).state
 
   if srcBucket ~= targetBucket then
-    print(('Target and source buckets differ | src: %s, bkt: %i | tgt: %s, bkt: %i'):format(source, srcBucket, data.ID,
+    print(('Target and source buckets differ | src: %s, bkt: %i | tgt: %s, bkt: %i'):format(source, srcBucket, data.id,
       targetBucket))
     if sourcePlayerStateBag.spectateReturnBucket == nil then
       sourcePlayerStateBag.spectateReturnBucket = srcBucket
@@ -736,21 +768,21 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
-        name = 'Admin Identifiers',
+        name = 'Admin identifiers',
         value = organizeIdentifiers(source),
         inline = false
       },
       {
         name = "Target Info",
-        value = ("Target Name: %s (ID - %s)"):format(GetPlayerName(data.ID) or "Error Grabbing Target Name", data.ID)
+        value = ("Target name: %s (id - %s)"):format(GetPlayerName(data.id) or "Error Grabbing Target name", data.id)
       }
     }
   })
-  TriggerClientEvent("vadmin:spectate:start", source, data.ID, GetEntityCoords(targetPed))
+  TriggerClientEvent("vadmin:spectate:start", source, data.id, GetEntityCoords(targetPed))
 end)
 
 
@@ -782,7 +814,7 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
   end
 
   if not banID then
-    return showNotification(source, "Ban ID cannot be null!")
+    return showNotification(source, "Ban id cannot be null!")
   end
 
   local banList = LoadBanList()
@@ -795,8 +827,8 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
     if tostring(banData.uuid) == tostring(banID) then
       found = true
       targetName = banData.playerName
-      targetHwids = banData.HWIDS
-      targetIdentifiers = banData.Identifiers
+      targetHwids = banData.tokens
+      targetIdentifiers = banData.identifiers
       table.remove(banList, k)
     end
   end
@@ -812,22 +844,22 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
       fields = {
         {
           name = 'Admin',
-          value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
+          value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
           inline = true
         },
         {
-          name = 'Admin Identifiers',
+          name = 'Admin identifiers',
           value = organizeIdentifiers(source),
           inline = false
         },
         {
           name = "Target Info",
-          value = ("Target Name: %s"):format(
-            targetName or "Error Grabbing Target Name"
+          value = ("Target name: %s"):format(
+            targetName or "Error Grabbing Target name"
           )
         },
         {
-          name = "Target Identifiers",
+          name = "Target identifiers",
           value = ("```%s```"):format(table.concat(targetIdentifiers, "\n"))
         },
         {
@@ -839,7 +871,7 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
 
     showNotification(source, "Player was found and unbanned!")
   else
-    showNotification(source, "Error Ban ID not found!")
+    showNotification(source, "Error Ban id not found!")
   end
 end)
 
@@ -904,8 +936,8 @@ AddEventHandler("playerConnecting", function(_name, _setKickReason, deferrals)
   deferrals.update("Checking if the user is banned...")
 
   for banIndex, banEntry in pairs(banlist) do
-    local identifierCheck = loopThroughIdentifiers(banEntry.Identifiers, identifiers)
-    local tokenCheck = loopThroughTokens(banEntry.HWIDS, tokens)
+    local identifierCheck = loopThroughIdentifiers(banEntry.identifiers, identifiers)
+    local tokenCheck = loopThroughTokens(banEntry.tokens, tokens)
 
     if identifierCheck or tokenCheck then
       local remainingTime = banEntry.Length - os.time()
@@ -943,7 +975,7 @@ RegisterCommand("unban", function(source, args, _rawCommand)
   local banID = args[1]
 
   if not banID then
-    return print("Ban ID cannot be null!")
+    return print("Ban id cannot be null!")
   end
 
   local banList = LoadBanList()
@@ -956,8 +988,8 @@ RegisterCommand("unban", function(source, args, _rawCommand)
     if tostring(banData.uuid) == tostring(banID) then
       found = true
       targetName = banData.playerName
-      targetHwids = banData.HWIDS
-      targetIdentifiers = banData.Identifiers
+      targetHwids = banData.tokens
+      targetIdentifiers = banData.identifiers
       table.remove(banList, k)
     end
   end
@@ -968,6 +1000,6 @@ RegisterCommand("unban", function(source, args, _rawCommand)
   if found then
     print("Player was found and unbanned!")
   else
-    print("(Error) Player with that Ban ID not found!")
+    print("(Error) Player with that Ban id not found!")
   end
 end)

@@ -127,7 +127,7 @@ RegisterNuiCallback("vadmin:client:spectate", function(playerData, cb)
 
   local sourceId = GetPlayerServerId(PlayerId())
 
-  if tostring(sourceId) == tostring(playerData.ID) then
+  if tostring(sourceId) == tostring(playerData.id) then
     return Notify("What the fluff dude, you cannot spectate yourself.")
   end
 
@@ -473,11 +473,11 @@ end)
 
 --   -- for pids, pData in pairs(CPlayerList) do
 --   --   uploadData[#uploadData + 1] = {
---   --     Name = pData.Name or "[Error] Unknown",
---   --     ID = pData.ID,
+--   --     name = pData.name or "[Error] Unknown",
+--   --     id = pData.id,
 --   --     Health = pData.Health,
---   --     Identifiers = pData.Identifiers,
---   --     HWIDS = pData.HWIDS
+--   --     identifiers = pData.identifiers,
+--   --     tokens = pData.tokens
 --   --   }
 --   -- end
 --   UIMessage("nui:plist", CPlayerList)
@@ -580,7 +580,7 @@ RegisterCommand("ban", function(source, args, rawCommand)
       "Insufficient permissions, if you are staff, please go ahead and open and close the menu to see if that fixes it.")
   end
 
-  if not targetID then return Notify("Target ID is null.") end
+  if not targetID then return Notify("Target id is null.") end
 
   if tonumber(targetID) == tonumber(GetPlayerServerId(PlayerId())) then
     return Notify("What the fluff dude, you can't ban yourself!")

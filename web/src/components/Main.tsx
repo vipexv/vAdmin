@@ -88,10 +88,10 @@ type Tabs = {
 };
 
 type PlayerData = {
-  Name: string | null;
-  ID: number | null;
-  Identifiers: any;
-  HWIDS: any;
+  name: string | null;
+  id: number | null;
+  identifiers: any;
+  tokens: any;
 };
 
 type BanData = {
@@ -102,9 +102,9 @@ type BanData = {
 type OfflineBanData = {
   reason: string;
   length: string;
-  Identifiers: any | null;
+  identifiers: any | null;
   playerName: string | null;
-  HWIDS: any | null;
+  tokens: any | null;
 };
 
 type KickData = {
@@ -222,8 +222,8 @@ const Main: React.FC = () => {
     length: "",
     reason: "",
     playerName: "",
-    Identifiers: null,
-    HWIDS: null,
+    identifiers: null,
+    tokens: null,
   });
 
   const [selectedOptions, setSelectedOptions] = useState<selectedOptions>({
@@ -259,9 +259,9 @@ const Main: React.FC = () => {
   //   const examplePlayerData: PlayerData[] = Array.from(
   //     { length: 100 },
   //     (_, index) => ({
-  //       Name: `Test Dummy ${index + 1}`,
-  //       ID: index + 1, // Increment the player_id naturally (So cool i know!)
-  //       Identifiers: [
+  //       name: `Test Dummy ${index + 1}`,
+  //       id: index + 1, // Increment the player_id naturally (So cool i know!)
+  //       identifiers: [
   //         "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
   //         "xbl:2535413463113628",
   //         "live:844425900550524",
@@ -269,7 +269,7 @@ const Main: React.FC = () => {
   //         "fivem:1124792",
   //         "license2:6c5a04a27880f9ef14f177cd52b495d6d9517187",
   //       ],
-  //       HWIDS: [
+  //       tokens: [
   //         "3:6ee006eb015de6d96eeb4ffb186c6f914eb26710705cc84e390e0a710c2fc7da",
   //         "2:9beaca997de990b97451bf48e45648e70dece18eaf70d4089806689838d97cc4",
   //         "5:4c21ed333227a0780dbf446cf6ce463c52f1e128f6ee12cc94e1ce0cbb9c7501",
@@ -336,11 +336,11 @@ const Main: React.FC = () => {
     try {
       const filtered = players
         ? Object.values(players).filter((player) => {
-            if (!player || !player.ID || !player.Name) return;
-            const playerId = player.ID?.toString().toLowerCase();
+            if (!player || !player.id || !player.name) return;
+            const playerId = player.id?.toString().toLowerCase();
             const query = searchQuery.toLowerCase();
             return (
-              player.Name.toLowerCase().includes(query) ||
+              player.name.toLowerCase().includes(query) ||
               playerId.includes(query)
             );
           })
@@ -355,11 +355,11 @@ const Main: React.FC = () => {
     try {
       const filtered = cachedPlayers
         ? Object.values(cachedPlayers).filter((player) => {
-            if (!player || !player.ID || !player.Name) return;
-            const playerId = player.ID?.toString().toLowerCase();
+            if (!player || !player.id || !player.name) return;
+            const playerId = player.id?.toString().toLowerCase();
             const query = cacheSearchQuery.toLowerCase();
             return (
-              player.Name.toLowerCase().includes(query) ||
+              player.name.toLowerCase().includes(query) ||
               playerId.includes(query)
             );
           })
@@ -383,7 +383,7 @@ const Main: React.FC = () => {
     if (!banID) {
       toast({
         variant: "destructive",
-        description: "Ban ID is not specified.",
+        description: "Ban id is not specified.",
         className: "rounded font-inter",
       });
     }
@@ -403,9 +403,9 @@ const Main: React.FC = () => {
     }
     offlineBanData.length = offlineBanLength;
     offlineBanData.reason = offlineBanReason;
-    offlineBanData.Identifiers = player.Identifiers;
-    offlineBanData.playerName = player.Name;
-    offlineBanData.HWIDS = player.HWIDS;
+    offlineBanData.identifiers = player.identifiers;
+    offlineBanData.playerName = player.name;
+    offlineBanData.tokens = player.tokens;
 
     fetchNui("vadmin:client:offlineban", offlineBanData);
 
@@ -413,8 +413,8 @@ const Main: React.FC = () => {
       length: "",
       reason: "",
       playerName: "",
-      Identifiers: null,
-      HWIDS: null,
+      identifiers: null,
+      tokens: null,
     });
     setOfflineBanLength("");
     setOffineBanReason("");
@@ -433,7 +433,7 @@ const Main: React.FC = () => {
 
     banData.length = banLength;
     banData.reason = banReason;
-    banData.target_id = player.ID;
+    banData.target_id = player.id;
 
     fetchNui("vadmin:nui_cb:ban", banData);
 
@@ -475,7 +475,7 @@ const Main: React.FC = () => {
     }
 
     kickData.reason = kickReason;
-    kickData.target_id = player.ID;
+    kickData.target_id = player.id;
 
     fetchNui("vadmin:nui_cb:kick", kickData);
 
@@ -535,9 +535,9 @@ const Main: React.FC = () => {
     setOfflineBanData({
       length: "",
       reason: "",
-      Identifiers: null,
+      identifiers: null,
       playerName: "",
-      HWIDS: null,
+      tokens: null,
     });
     setOfflineBanLength("");
     setKickReason("");
@@ -635,13 +635,13 @@ const Main: React.FC = () => {
                         <DialogHeader>
                           <DialogTitle>Unban Player</DialogTitle>
                           <DialogDescription>
-                            Input the players Ban ID.
+                            Input the players Ban id.
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="flex items-center gap-1">
                             <Label htmlFor="name" className="text-right">
-                              Ban ID:
+                              Ban id:
                             </Label>
 
                             <Input
@@ -770,28 +770,28 @@ const Main: React.FC = () => {
                       !searchQuery &&
                       Object.values(players).map(
                         (player: PlayerData, index: number) => {
-                          if (!player || !player.ID || !player.Name) {
+                          if (!player || !player.id || !player.name) {
                             return;
                           }
                           try {
                             const { displayName, pureName } = cleanPlayerName(
-                              player.Name
+                              player.name
                             );
-                            player.Name = displayName;
+                            player.name = displayName;
                           } catch (error) {
                             console.log(error);
                           }
                           return (
-                            <DropdownMenu key={player.ID}>
+                            <DropdownMenu key={player.id}>
                               <DropdownMenuTrigger
                                 className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces break-words"
                                 style={{
                                   maxWidth: "250px",
                                 }}
                               >
-                                {player.Name}{" "}
+                                {player.name}{" "}
                                 <span className="float-right text-xs bg-green-600 rounded p-1 bg-opacity-50 text-white font-bold font-inter">
-                                  ID: {player.ID}
+                                  id: {player.id}
                                 </span>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
@@ -801,7 +801,7 @@ const Main: React.FC = () => {
                                     maxWidth: "250px",
                                   }}
                                 >
-                                  [{player.ID}] | {player.Name}
+                                  [{player.id}] | {player.name}
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -840,19 +840,19 @@ const Main: React.FC = () => {
                                       size="16px"
                                       className="mr-1 ml-1"
                                     />{" "}
-                                    Identifiers
+                                    identifiers
                                   </AlertDialogTrigger>
                                   <AlertDialogContent className="border-none rounded text-white w-full p-3">
                                     <AlertDialogHeader>
                                       <AlertDialogTitle>
-                                        [{player.ID}] | {player.Name}
+                                        [{player.id}] | {player.name}
                                       </AlertDialogTitle>
                                       <AlertDialogDescription>
                                         <div>
                                           <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
                                             Identifier
                                           </p>
-                                          {player.Identifiers.map(
+                                          {player.identifiers.map(
                                             (
                                               identifier: any,
                                               index: number
@@ -867,9 +867,9 @@ const Main: React.FC = () => {
                                         </div>
                                         <div className="mt-10">
                                           <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
-                                            Hardware ID
+                                            Hardware id
                                           </p>
-                                          {player.HWIDS.map(
+                                          {player.tokens.map(
                                             (hwid: any, index: number) => (
                                               <>
                                                 <div className="flex flex-col gap-2 rounded text-xs">
@@ -947,7 +947,7 @@ const Main: React.FC = () => {
                                     <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          [{player.ID}] | {player.Name}?
+                                          [{player.id}] | {player.name}?
                                         </DialogTitle>
                                         <DialogDescription>
                                           Input a reason for the kick.
@@ -1003,7 +1003,7 @@ const Main: React.FC = () => {
                                     <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          [{player.ID}] | {player.Name}?
+                                          [{player.id}] | {player.name}?
                                         </DialogTitle>
                                         <DialogDescription>
                                           Input a reason for the ban.
@@ -1117,27 +1117,27 @@ const Main: React.FC = () => {
                       <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow">
                         {Object.values(filteredPlayerList).map(
                           (player: PlayerData, index: number) => {
-                            if (!player || !player.ID || !player.Name) return;
+                            if (!player || !player.id || !player.name) return;
                             try {
                               const { displayName, pureName } = cleanPlayerName(
-                                player.Name
+                                player.name
                               );
-                              player.Name = displayName;
+                              player.name = displayName;
                             } catch (error) {
                               console.log(error);
                             }
                             return (
                               <>
-                                <DropdownMenu key={player.ID}>
+                                <DropdownMenu key={player.id}>
                                   <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
-                                    {player.Name}{" "}
+                                    {player.name}{" "}
                                     <span
                                       className="float-right text-xs bg-green-600 rounded p-1 bg-opacity-50 text-white font-bold font-inter"
                                       style={{
                                         maxWidth: "250px",
                                       }}
                                     >
-                                      ID: {player.ID}
+                                      id: {player.id}
                                     </span>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
@@ -1147,7 +1147,7 @@ const Main: React.FC = () => {
                                         maxWidth: "250px",
                                       }}
                                     >
-                                      [{player.ID}] | {player.Name}
+                                      [{player.id}] | {player.name}
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
@@ -1232,7 +1232,7 @@ const Main: React.FC = () => {
                                         <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
                                           <DialogHeader>
                                             <DialogTitle>
-                                              [{player.ID}] | {player.Name}?
+                                              [{player.id}] | {player.name}?
                                             </DialogTitle>
                                             <DialogDescription>
                                               Input a reason for the kick.
@@ -1291,7 +1291,7 @@ const Main: React.FC = () => {
                                         <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
                                           <DialogHeader>
                                             <DialogTitle>
-                                              [{player.ID}] | {player.Name}?
+                                              [{player.id}] | {player.name}?
                                             </DialogTitle>
                                             <DialogDescription>
                                               Input a reason for the ban.
@@ -1427,14 +1427,14 @@ const Main: React.FC = () => {
                     {!cacheSearchQuery &&
                       Object.values(cachedPlayers).map(
                         (player: PlayerData, index: number) => {
-                          if (!player || !player.ID || !player.Name) {
+                          if (!player || !player.id || !player.name) {
                             return;
                           }
                           try {
                             const { displayName, pureName } = cleanPlayerName(
-                              player.Name
+                              player.name
                             );
-                            player.Name = displayName;
+                            player.name = displayName;
                           } catch (error) {
                             console.log(error);
                           }
@@ -1442,14 +1442,14 @@ const Main: React.FC = () => {
                             <>
                               <DropdownMenu key={index}>
                                 <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none text-white">
-                                  {player.Name}
+                                  {player.name}
                                   <span
                                     className="float-right text-xs bg-red-500 rounded p-1 bg-opacity-50 text-white font-bold font-inter whitespace-break-spaces"
                                     style={{
                                       maxWidth: "250px",
                                     }}
                                   >
-                                    Old ID: {player.ID}
+                                    Old id: {player.id}
                                   </span>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
@@ -1459,12 +1459,12 @@ const Main: React.FC = () => {
                                       maxWidth: "250px",
                                     }}
                                   >
-                                    [{player.ID}] | {player.Name}
+                                    [{player.id}] | {player.name}
                                   </DropdownMenuLabel>
                                   <DropdownMenuSeparator />
                                   {/* <DropdownMenuItem className="rounded mb-1">
                                 <Fingerprint size="16px" className="mr-1" />{" "}
-                                Identifiers
+                                identifiers
                               </DropdownMenuItem> */}
                                   <AlertDialog>
                                     <AlertDialogTrigger
@@ -1476,19 +1476,19 @@ const Main: React.FC = () => {
                                         size="16px"
                                         className="mr-1"
                                       />{" "}
-                                      Identifiers
+                                      identifiers
                                     </AlertDialogTrigger>
                                     <AlertDialogContent className="border-none rounded text-white w-full p-3">
                                       <AlertDialogHeader>
                                         <AlertDialogTitle>
-                                          [{player.ID}] | {player.Name}
+                                          [{player.id}] | {player.name}
                                         </AlertDialogTitle>
                                         <AlertDialogDescription>
                                           <div>
                                             <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
                                               Identifier
                                             </p>
-                                            {player.Identifiers.map(
+                                            {player.identifiers.map(
                                               (
                                                 identifier: any,
                                                 index: number
@@ -1503,9 +1503,9 @@ const Main: React.FC = () => {
                                           </div>
                                           <div className="mt-10">
                                             <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
-                                              Hardware ID
+                                              Hardware id
                                             </p>
-                                            {player.HWIDS.map(
+                                            {player.tokens.map(
                                               (hwid: any, index: number) => (
                                                 <>
                                                   <div className="flex flex-col gap-2 rounded text-xs">
@@ -1546,7 +1546,7 @@ const Main: React.FC = () => {
                                     <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          [{player.ID}] | {player.Name}?
+                                          [{player.id}] | {player.name}?
                                         </DialogTitle>
                                         <DialogDescription>
                                           Input a reason for the ban.
@@ -1658,12 +1658,12 @@ const Main: React.FC = () => {
                     {cacheSearchQuery &&
                       Object.values(filteredCacheList).map(
                         (player: PlayerData, index: number) => {
-                          if (!player || !player.ID || !player.Name) return;
+                          if (!player || !player.id || !player.name) return;
                           try {
                             const { displayName, pureName } = cleanPlayerName(
-                              player.Name
+                              player.name
                             );
-                            player.Name = displayName;
+                            player.name = displayName;
                           } catch (error) {
                             console.log(error);
                           }
@@ -1676,9 +1676,9 @@ const Main: React.FC = () => {
                                     maxWidth: "250px",
                                   }}
                                 >
-                                  {player.Name}
+                                  {player.name}
                                   <span className="float-right text-xs bg-red-500 rounded p-1 bg-opacity-50 text-white font-bold font-inter">
-                                    Old ID: {player.ID}
+                                    Old id: {player.id}
                                   </span>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
@@ -1688,12 +1688,12 @@ const Main: React.FC = () => {
                                       maxWidth: "250px",
                                     }}
                                   >
-                                    [{player.ID}] | {player.Name}
+                                    [{player.id}] | {player.name}
                                   </DropdownMenuLabel>
                                   <DropdownMenuSeparator />
                                   {/* <DropdownMenuItem className="rounded mb-1">
                                 <Fingerprint size="16px" className="mr-1" />{" "}
-                                Identifiers
+                                identifiers
                               </DropdownMenuItem> */}
                                   <AlertDialog>
                                     <AlertDialogTrigger
@@ -1705,19 +1705,19 @@ const Main: React.FC = () => {
                                         size="16px"
                                         className="mr-1"
                                       />{" "}
-                                      Identifiers
+                                      identifiers
                                     </AlertDialogTrigger>
                                     <AlertDialogContent className="border-none rounded text-white w-full p-3">
                                       <AlertDialogHeader>
                                         <AlertDialogTitle>
-                                          [{player.ID}] | {player.Name}
+                                          [{player.id}] | {player.name}
                                         </AlertDialogTitle>
                                         <AlertDialogDescription>
                                           <div>
                                             <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
                                               Identifier
                                             </p>
-                                            {player.Identifiers.map(
+                                            {player.identifiers.map(
                                               (
                                                 identifier: any,
                                                 index: number
@@ -1732,9 +1732,9 @@ const Main: React.FC = () => {
                                           </div>
                                           <div className="mt-10">
                                             <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
-                                              Hardware ID
+                                              Hardware id
                                             </p>
-                                            {player.HWIDS.map(
+                                            {player.tokens.map(
                                               (hwid: any, index: number) => (
                                                 <>
                                                   <div className="flex flex-col gap-2 rounded text-xs">
@@ -1775,7 +1775,7 @@ const Main: React.FC = () => {
                                     <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
                                       <DialogHeader>
                                         <DialogTitle>
-                                          [{player.ID}] | {player.Name}?
+                                          [{player.id}] | {player.name}?
                                         </DialogTitle>
                                         <DialogDescription>
                                           Input a reason for the ban.

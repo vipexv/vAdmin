@@ -90,16 +90,14 @@ discordLog = function(args)
     title = args?.title or '',
     description = args?.description or '',
     timestamp = os.date('!%Y-%m-%dT%H:%M:%S'),
-    footer = config?.embed?.footer or {}
+    footer = config?.embed?.footer or {},
+    image = { url = "https://i.imgur.com/XuuQq8V.png" } -- [V] Admin Menu Banner
   }
 
   if type(args?.fields) == 'table' and #args?.fields >= 1 then
     embed.fields = args?.fields
   end
 
-
-  -- [V] Admin Menu Banner
-  embed.image = { url = "https://i.imgur.com/XuuQq8V.png" }
 
   PerformHttpRequest(args?.webhook, function(err, text, headers) end, 'POST', json.encode({
     username = config?.embed?.user?.name,
