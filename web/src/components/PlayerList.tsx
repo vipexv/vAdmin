@@ -103,12 +103,8 @@ type selectedOptions = {
 const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [kickModalOpen, setKickModalOpen] = useState(false);
   const [banModalOpen, setBanModalOpen] = useState(false);
-
   const { toast } = useToast();
-
   const [banID, setBanID] = useState("");
-
-  const [filteredCacheList, setFilteredCacheList] = useState<PlayerData[]>([]);
   const [banData, setBanData] = useState<BanData>({
     target_id: 0,
     length: "",
@@ -121,30 +117,15 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     identifiers: null,
     tokens: null,
   });
-
   const [kickData, setKickData] = useState<KickData>({
     target_id: 0,
     reason: "",
   });
-
   const [banLength, setBanLength] = useState("");
   const [banReason, setBanReason] = useState("");
   const [offlineBanLength, setOfflineBanLength] = useState("");
   const [offlineBanReason, setOffineBanReason] = useState("");
   const [kickReason, setKickReason] = useState("");
-
-  const fetchUnban = () => {
-    if (!banID) {
-      toast({
-        variant: "destructive",
-        description: "Ban id is not specified.",
-        className: "rounded font-inter",
-      });
-    }
-    fetchNui("vadmin:client:unban", banID);
-    setBanID("");
-    hideNui();
-  };
 
   const hideNui = () => {
     setBanData({

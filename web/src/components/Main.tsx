@@ -6,49 +6,21 @@ import { debugData } from "../utils/debugData";
 import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { isEnvBrowser } from "../utils/misc";
-import cleanPlayerName from "@/utils/cleanPlayerName";
 import PlayerList from "./PlayerList";
 import {
-  ArrowLeftRight,
-  ArrowRightLeft,
   CarFront,
   Cross,
-  Fingerprint,
-  Gavel,
-  Glasses,
-  Heart,
   MoreHorizontal,
   ShieldCheck,
   ShieldHalf,
   ShieldX,
-  Snowflake,
   UserSquare,
   UserX2,
   Users,
   X,
-  Zap,
 } from "lucide-react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { motion } from "framer-motion";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -81,46 +53,28 @@ debugData([
 ]);
 
 const testPerms = {
-  ["Set Job"]: true,
-  ["Car Wipe"]: true,
-  ["Player Names"]: true,
-  ["Community Service"]: true,
-  Ban: true,
-  Kick: true,
-  Report: true,
-  ["Delete Car"]: true,
-  Teleport: true,
-  Spectate: true,
-  ["Give Car"]: true,
-  ["Clear Chat"]: true,
-  ["Give Account Money"]: true,
-  Revive: true,
-  Announce: true,
-  Unban: true,
-  Freeze: true,
-  ["Offline Ban"]: true,
-  ["Give Item"]: true,
-  Skin: true,
+  "Car Wipe": true,
   Armor: true,
-  ["Set Gang"]: true,
-  ["Clear Loadout"]: true,
-  ["Copy Coords"]: true,
+  "Player Names": true,
+  Spectate: true,
+  Heal: true,
+  "Clear Chat": true,
+  Kick: true,
+  Freeze: true,
+  Unban: true,
+  Revive: true,
   Menu: true,
-  ["Set Account Money"]: true,
-  ["Go Back"]: true,
-  ["Flip Car"]: true,
-  Health: true,
-  ["Clear Inventory"]: true,
+  "Offline Ban": true,
+  Ban: true,
+  Teleport: true,
   NoClip: true,
-  ["Give Weapon"]: true,
-  ["Spawn Car"]: true,
 };
 
 const examplePlayerData: PlayerData[] = Array.from(
   { length: 100 },
   (_, index) => ({
     name: `Test Dummy ${index + 1}`,
-    id: index + 1, // Increment the player_id naturally (So cool i know!)
+    id: index + 1,
     identifiers: [
       "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
       "xbl:2535413463113628",
@@ -139,6 +93,13 @@ const examplePlayerData: PlayerData[] = Array.from(
     ],
   })
 );
+
+debugData([
+  {
+    action: "nui:adminperms",
+    data: testPerms,
+  },
+]);
 
 debugData([
   {
@@ -320,43 +281,10 @@ const Main: React.FC = () => {
   const [offlineBanReason, setOffineBanReason] = useState("");
   const [kickReason, setKickReason] = useState("");
 
-  const [kickModalOpen, setKickModalOpen] = useState(false);
   const [banModalOpen, setBanModalOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [cacheSearchQuery, setCacheSearchQuery] = useState<string>("");
-
-  // useEffect(() => {
-  //   // if (!debugMode) return;
-  //   const min = 10000;
-  //   const max = 50000;
-  //   // const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  //   const examplePlayerData: PlayerData[] = Array.from(
-  //     { length: 100 },
-  //     (_, index) => ({
-  //       name: `Test Dummy ${index + 1}`,
-  //       id: index + 1, // Increment the player_id naturally (So cool i know!)
-  //       identifiers: [
-  //         "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
-  //         "xbl:2535413463113628",
-  //         "live:844425900550524",
-  //         "discord:470311257589809152",
-  //         "fivem:1124792",
-  //         "license2:6c5a04a27880f9ef14f177cd52b495d6d9517187",
-  //       ],
-  //       tokens: [
-  //         "3:6ee006eb015de6d96eeb4ffb186c6f914eb26710705cc84e390e0a710c2fc7da",
-  //         "2:9beaca997de990b97451bf48e45648e70dece18eaf70d4089806689838d97cc4",
-  //         "5:4c21ed333227a0780dbf446cf6ce463c52f1e128f6ee12cc94e1ce0cbb9c7501",
-  //         "4:89e1d1a48495d9eacee361c4c81aec7c0a4fca1ad6da7ef480edf9726d6a2f94",
-  //         "4:353da103a6cacd356b2d33d41fa554038a2606946661515ba94a98d599aaeca5",
-  //         "4:b14d1e1a4ed3aa2387d8f0f601eb94e9bd27c9ab42170e59b5bf9c0dfe244077",
-  //       ],
-  //     })
-  //   );
-  //   setPlayers(examplePlayerData);
-  //   setCachedPlayers(examplePlayerData);
-  // }, []);
 
   useNuiEvent<PlayerData[]>("nui:plist", (data) => {
     setPlayers(data);
@@ -364,30 +292,7 @@ const Main: React.FC = () => {
 
   useNuiEvent<PlayerMenuPermissionV2>("nui:adminperms", async (perms) => {
     try {
-      // sourcePerms.Armor = perms.Armor;
-      // sourcePerms.Ban = perms.Ban;
-      // sourcePerms["Car Wipe"] = perms["Car Wipe"];
-      // sourcePerms["Clear Chat"] = perms["Clear Chat"];
-      // sourcePerms.Freeze = perms.Freeze;
-      // sourcePerms.Heal = perms.Heal;
-      // sourcePerms.Kick = perms.Kick;
-      // sourcePerms.Menu = perms.Menu;
-      // sourcePerms.NoClip = perms.NoClip;
-      // sourcePerms["Offline Ban"] = perms["Offline Ban"];
-      // sourcePerms["Player Names"] = perms["Player Names"];
-      // sourcePerms.Revive = perms.Revive;
-      // sourcePerms.Spectate = perms.Spectate;
-      // sourcePerms.Teleport = perms.Teleport;
-      // sourcePerms.Unban = perms.Unban;
-
-      // Unsure how just using this doesn't actually update it, spaghetti code all the way, i need to re-write most of this.
       setSourcePerms(perms);
-
-      console.log(
-        `Source Perms State: ${JSON.stringify(
-          sourcePerms
-        )}, Perms Param: ${JSON.stringify(perms)}`
-      );
     } catch (error) {
       console.error("Error updating state:", error);
     }
@@ -882,7 +787,7 @@ const Main: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded text-white">
+                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow text-white">
                     {!cacheSearchQuery && (
                       <PlayerList
                         playerList={cachedPlayers}
