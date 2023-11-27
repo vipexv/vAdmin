@@ -1,42 +1,10 @@
-Permissions = {
-  -- ["Set Job"] = true,
-  -- ["Car Wipe"] = true,
-  -- ["Player Names"] = true,
-  -- ["Community Service"] = true,
-  -- Ban = true,
-  -- Kick = true,
-  -- Report = true,
-  -- ["Delete Car"] = true,
-  -- Teleport = true,
-  -- Spectate = true,
-  -- ["Give Car"] = true,
-  -- ["Clear Chat"] = true,
-  -- ["Give Account Money"] = true,
-  -- Revive = true,
-  -- Announce = true,
-  -- Unban = true,
-  -- Frozen = true,
-  -- ["Offline Ban"] = true,
-  -- ["Give Item"] = true,
-  -- Skin = true,
-  -- Armor = true,
-  -- ["Set Gang"] = true,
-  -- ["Clear Loadout"] = true,
-  -- ["Copy Coords"] = true,
-  -- Menu = true,
-  -- ["Set Account Money"] = true,
-  -- ["Go Back"] = true,
-  -- ["Flip Car"] = true,
-  -- Health = true,
-  -- ["Clear Inventory"] = true,
-  -- NoClip = true,
-  -- ["Give Weapon"] = true,
-  -- ["Spawn Car"] = true,
-}
+Permissions = {}
 
 State = {
   playerNames = false,
 }
+
+-- Player names and spectate logic is a direct copy and paste from txAdmin [https://github.com/tabarra/txAdmin/tree/master] because i think txAdmin is cool :0
 
 local spectatorReturnCoords
 local isSpectateEnabled = false

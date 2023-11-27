@@ -7,6 +7,7 @@ import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { isEnvBrowser } from "../utils/misc";
 import cleanPlayerName from "@/utils/cleanPlayerName";
+import PlayerList from "./PlayerList";
 import {
   ArrowLeftRight,
   ArrowRightLeft,
@@ -76,6 +77,80 @@ debugData([
   {
     action: "setVisible",
     data: true,
+  },
+]);
+
+const testPerms = {
+  ["Set Job"]: true,
+  ["Car Wipe"]: true,
+  ["Player Names"]: true,
+  ["Community Service"]: true,
+  Ban: true,
+  Kick: true,
+  Report: true,
+  ["Delete Car"]: true,
+  Teleport: true,
+  Spectate: true,
+  ["Give Car"]: true,
+  ["Clear Chat"]: true,
+  ["Give Account Money"]: true,
+  Revive: true,
+  Announce: true,
+  Unban: true,
+  Freeze: true,
+  ["Offline Ban"]: true,
+  ["Give Item"]: true,
+  Skin: true,
+  Armor: true,
+  ["Set Gang"]: true,
+  ["Clear Loadout"]: true,
+  ["Copy Coords"]: true,
+  Menu: true,
+  ["Set Account Money"]: true,
+  ["Go Back"]: true,
+  ["Flip Car"]: true,
+  Health: true,
+  ["Clear Inventory"]: true,
+  NoClip: true,
+  ["Give Weapon"]: true,
+  ["Spawn Car"]: true,
+};
+
+const examplePlayerData: PlayerData[] = Array.from(
+  { length: 100 },
+  (_, index) => ({
+    name: `Test Dummy ${index + 1}`,
+    id: index + 1, // Increment the player_id naturally (So cool i know!)
+    identifiers: [
+      "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
+      "xbl:2535413463113628",
+      "live:844425900550524",
+      "discord:470311257589809152",
+      "fivem:1124792",
+      "license2:6c5a04a27880f9ef14f177cd52b495d6d9517187",
+    ],
+    tokens: [
+      "3:6ee006eb015de6d96eeb4ffb186c6f914eb26710705cc84e390e0a710c2fc7da",
+      "2:9beaca997de990b97451bf48e45648e70dece18eaf70d4089806689838d97cc4",
+      "5:4c21ed333227a0780dbf446cf6ce463c52f1e128f6ee12cc94e1ce0cbb9c7501",
+      "4:89e1d1a48495d9eacee361c4c81aec7c0a4fca1ad6da7ef480edf9726d6a2f94",
+      "4:353da103a6cacd356b2d33d41fa554038a2606946661515ba94a98d599aaeca5",
+      "4:b14d1e1a4ed3aa2387d8f0f601eb94e9bd27c9ab42170e59b5bf9c0dfe244077",
+    ],
+  })
+);
+
+debugData([
+  {
+    action: "nui:clist",
+    data: examplePlayerData,
+  },
+]);
+
+debugData([
+  {
+    action: "nui:plist",
+    data: examplePlayerData,
   },
 ]);
 
@@ -766,640 +841,24 @@ const Main: React.FC = () => {
                     />
                   </div>
                   <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow">
-                    {!!players &&
-                      !searchQuery &&
-                      Object.values(players).map(
-                        (player: PlayerData, index: number) => {
-                          if (!player || !player.id || !player.name) {
-                            return;
-                          }
-                          try {
-                            const { displayName, pureName } = cleanPlayerName(
-                              player.name
-                            );
-                            player.name = displayName;
-                          } catch (error) {
-                            console.log(error);
-                          }
-                          return (
-                            <DropdownMenu key={player.id}>
-                              <DropdownMenuTrigger
-                                className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces break-words"
-                                style={{
-                                  maxWidth: "250px",
-                                }}
-                              >
-                                {player.name}{" "}
-                                <span className="float-right text-xs bg-green-600 rounded p-1 bg-opacity-50 text-white font-bold font-inter">
-                                  id: {player.id}
-                                </span>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
-                                <DropdownMenuLabel
-                                  className="font-bold whitespace-break-spaces"
-                                  style={{
-                                    maxWidth: "250px",
-                                  }}
-                                >
-                                  [{player.id}] | {player.name}
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  className="rounded"
-                                  disabled={!sourcePerms.Teleport}
-                                  onSelect={() => {
-                                    fetchTeleport(player, "Goto");
-                                  }}
-                                >
-                                  <ArrowLeftRight
-                                    size="16px"
-                                    className="mr-1"
-                                  />{" "}
-                                  Goto
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  disabled={!sourcePerms.Teleport}
-                                  className="rounded"
-                                  onSelect={() => {
-                                    fetchTeleport(player, "Bring");
-                                  }}
-                                >
-                                  <ArrowRightLeft
-                                    size="16px"
-                                    className="mr-1"
-                                  />{" "}
-                                  Bring
-                                </DropdownMenuItem>
-                                <AlertDialog>
-                                  <AlertDialogTrigger
-                                    className="rounded flex items-center w-full px-[8px] py-[6px] border-none hover:bg-accent transition text-sm"
-                                    disabled={!sourcePerms.Menu}
-                                  >
-                                    {" "}
-                                    <Fingerprint
-                                      size="16px"
-                                      className="mr-1 ml-1"
-                                    />{" "}
-                                    identifiers
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent className="border-none rounded text-white w-full p-3">
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>
-                                        [{player.id}] | {player.name}
-                                      </AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        <div>
-                                          <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
-                                            Identifier
-                                          </p>
-                                          {player.identifiers.map(
-                                            (
-                                              identifier: any,
-                                              index: number
-                                            ) => (
-                                              <>
-                                                <div className="flex flex-col gap-2 rounded text-xs">
-                                                  <p>{identifier}</p>
-                                                </div>
-                                              </>
-                                            )
-                                          )}
-                                        </div>
-                                        <div className="mt-10">
-                                          <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
-                                            Hardware id
-                                          </p>
-                                          {player.tokens.map(
-                                            (hwid: any, index: number) => (
-                                              <>
-                                                <div className="flex flex-col gap-2 rounded text-xs">
-                                                  <p>{hwid}</p>
-                                                </div>
-                                              </>
-                                            )
-                                          )}
-                                        </div>
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      {/* <AlertDialogCancel className="rounded">
-                                        Cancel
-                                      </AlertDialogCancel> */}
-                                      <AlertDialogAction className="rounded">
-                                        Close
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
-                                <DropdownMenuItem
-                                  className="rounded"
-                                  disabled={!sourcePerms.Freeze}
-                                  onSelect={() => {
-                                    fetchFreeze(player);
-                                  }}
-                                >
-                                  {" "}
-                                  <Snowflake size="16px" className="mr-1" />
-                                  Freeze
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="rounded"
-                                  disabled={!sourcePerms.Spectate}
-                                  onSelect={() => {
-                                    fetchSpectate(player);
-                                    hideNui();
-                                  }}
-                                >
-                                  <Glasses size="16px" className="mr-1" />
-                                  Spectate
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  disabled={!sourcePerms.Revive}
-                                  className="rounded mb-1"
-                                  onSelect={() => {
-                                    fetchRevive(player);
-                                  }}
-                                >
-                                  {" "}
-                                  <Heart size="16px" className="mr-1" />
-                                  Revive
-                                </DropdownMenuItem>
-                                <div className="flex flex-row gap-2">
-                                  <Dialog
-                                    open={kickModalOpen}
-                                    onOpenChange={setKickModalOpen}
-                                  >
-                                    <DialogTrigger
-                                      asChild
-                                      disabled={!sourcePerms.Kick}
-                                    >
-                                      <Button
-                                        color="danger"
-                                        className=""
-                                        style={{
-                                          borderColor: "gray",
-                                        }}
-                                      >
-                                        <Zap size="16px" className="mr-1" />{" "}
-                                        Kick
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          [{player.id}] | {player.name}?
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          Input a reason for the kick.
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <div className="grid gap-4 py-4">
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                          <Label
-                                            htmlFor="name"
-                                            className="text-right"
-                                          >
-                                            Reason
-                                          </Label>
-                                          <Input
-                                            id="name"
-                                            onChange={(e) => {
-                                              setKickReason(e.target.value);
-                                            }}
-                                            className="col-span-3"
-                                          />
-                                        </div>
-                                      </div>
-                                      <DialogFooter>
-                                        <Button
-                                          type="submit"
-                                          color="danger"
-                                          onClick={(e) => {
-                                            setKickModalOpen(false);
-                                            fetchKickUser(player);
-                                            console.log(player);
-                                          }}
-                                          className="rounded outline-none"
-                                        >
-                                          Confirm Kick
-                                        </Button>
-                                      </DialogFooter>
-                                    </DialogContent>
-                                  </Dialog>
-
-                                  <Dialog
-                                    open={banModalOpen}
-                                    onOpenChange={setBanModalOpen}
-                                  >
-                                    <DialogTrigger
-                                      asChild
-                                      disabled={!sourcePerms.Ban}
-                                    >
-                                      <Button color="danger">
-                                        <Gavel size="16px" className="mr-1" />
-                                        Ban
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          [{player.id}] | {player.name}?
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          Input a reason for the ban.
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <div className="grid gap-4 py-4">
-                                        <div className="flex items-center gap-1">
-                                          <Label
-                                            htmlFor="name"
-                                            className="text-right"
-                                          >
-                                            Reason
-                                          </Label>
-
-                                          <Input
-                                            id="name"
-                                            onChange={(e) => {
-                                              setBanReason(e.target.value);
-                                            }}
-                                            className="rounded"
-                                          />
-                                          <Select
-                                            onValueChange={(e: string) => {
-                                              setBanLength(e);
-                                            }}
-                                            required
-                                          >
-                                            <SelectTrigger className="w-[180px] outline-none rounded">
-                                              <SelectValue placeholder="Length" />
-                                            </SelectTrigger>
-                                            <SelectContent
-                                              className="border outline-none rounded font-roboto"
-                                              style={{
-                                                borderColor: "gray",
-                                              }}
-                                            >
-                                              <SelectItem value="1 Hour">
-                                                1 Hour
-                                              </SelectItem>
-                                              <SelectItem value="3 Hours">
-                                                3 Hours
-                                              </SelectItem>
-                                              <SelectItem value="6 Hours">
-                                                6 Hours
-                                              </SelectItem>
-                                              <SelectItem value="12 Hours">
-                                                12 Hours
-                                              </SelectItem>
-                                              <SelectItem value="1 Day">
-                                                1 Day
-                                              </SelectItem>
-                                              <SelectItem value="3 Days">
-                                                3 Day
-                                              </SelectItem>
-                                              <SelectItem value="1 Week">
-                                                1 Week
-                                              </SelectItem>
-                                              <SelectItem value="1 Month">
-                                                1 Month
-                                              </SelectItem>
-                                              <SelectItem value="3 Months">
-                                                3 Months
-                                              </SelectItem>
-                                              <SelectItem value="6 Months">
-                                                6 Months
-                                              </SelectItem>
-                                              <SelectItem value="1 Year">
-                                                1 Year
-                                              </SelectItem>
-                                              <SelectItem value="Permanent">
-                                                Permanent
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
-                                        </div>
-                                      </div>
-                                      <DialogFooter>
-                                        <Button
-                                          color="danger"
-                                          type="submit"
-                                          onClick={(e) => {
-                                            setBanModalOpen(false);
-                                            fetchBanUser(player);
-                                            console.log(player);
-                                          }}
-                                          className="rounded outline-none"
-                                        >
-                                          Confirm Ban
-                                        </Button>
-                                      </DialogFooter>
-                                    </DialogContent>
-                                  </Dialog>
-                                </div>
-                                {/* <DropdownMenuItem
-                                onSelect={() => {
-                                  setKickModalOpen(true);
-                                }}
-                                className="bg-red-600 rounded"
-                              >
-                                <Gavel size="16px" className="mr-1" />
-                                Ban
-                              </DropdownMenuItem> */}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          );
-                        }
-                      )}
+                    {!!players && !searchQuery && (
+                      <PlayerList
+                        playerList={players}
+                        cached={false}
+                        sourcePerms={sourcePerms}
+                      />
+                    )}
                   </div>
                   {searchQuery && (
                     <>
                       <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow">
-                        {Object.values(filteredPlayerList).map(
-                          (player: PlayerData, index: number) => {
-                            if (!player || !player.id || !player.name) return;
-                            try {
-                              const { displayName, pureName } = cleanPlayerName(
-                                player.name
-                              );
-                              player.name = displayName;
-                            } catch (error) {
-                              console.log(error);
-                            }
-                            return (
-                              <>
-                                <DropdownMenu key={player.id}>
-                                  <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
-                                    {player.name}{" "}
-                                    <span
-                                      className="float-right text-xs bg-green-600 rounded p-1 bg-opacity-50 text-white font-bold font-inter"
-                                      style={{
-                                        maxWidth: "250px",
-                                      }}
-                                    >
-                                      id: {player.id}
-                                    </span>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
-                                    <DropdownMenuLabel
-                                      className="font-bold whitespace-break-spaces"
-                                      style={{
-                                        maxWidth: "250px",
-                                      }}
-                                    >
-                                      [{player.id}] | {player.name}
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                      className="rounded"
-                                      disabled={!sourcePerms.Teleport}
-                                      onSelect={() => {
-                                        fetchTeleport(player, "Goto");
-                                      }}
-                                    >
-                                      <ArrowLeftRight
-                                        size="16px"
-                                        className="mr-1"
-                                      />{" "}
-                                      Goto
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      disabled={!sourcePerms.Teleport}
-                                      className="rounded"
-                                      onSelect={() => {
-                                        fetchTeleport(player, "Bring");
-                                      }}
-                                    >
-                                      <ArrowRightLeft
-                                        size="16px"
-                                        className="mr-1"
-                                      />{" "}
-                                      Bring
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      className="rounded"
-                                      disabled={!sourcePerms.Freeze}
-                                      onSelect={() => {
-                                        fetchFreeze(player);
-                                      }}
-                                    >
-                                      {" "}
-                                      <Snowflake size="16px" className="mr-1" />
-                                      Freeze
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      className="rounded"
-                                      disabled={!sourcePerms.Spectate}
-                                      onSelect={() => {
-                                        fetchSpectate(player);
-                                        hideNui();
-                                      }}
-                                    >
-                                      <Glasses size="16px" className="mr-1" />
-                                      Spectate
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      disabled={!sourcePerms.Revive}
-                                      className="rounded mb-1"
-                                      onSelect={() => {
-                                        fetchRevive(player);
-                                      }}
-                                    >
-                                      {" "}
-                                      <Heart size="16px" className="mr-1" />
-                                      Revive
-                                    </DropdownMenuItem>
-                                    <div className="flex flex-row gap-2">
-                                      <Dialog
-                                        open={kickModalOpen}
-                                        onOpenChange={setKickModalOpen}
-                                      >
-                                        <DialogTrigger
-                                          asChild
-                                          disabled={!sourcePerms.Kick}
-                                        >
-                                          <Button
-                                            color="danger"
-                                            className=""
-                                            style={{
-                                              borderColor: "gray",
-                                            }}
-                                          >
-                                            <Zap size="16px" className="mr-1" />{" "}
-                                            Kick
-                                          </Button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
-                                          <DialogHeader>
-                                            <DialogTitle>
-                                              [{player.id}] | {player.name}?
-                                            </DialogTitle>
-                                            <DialogDescription>
-                                              Input a reason for the kick.
-                                            </DialogDescription>
-                                          </DialogHeader>
-                                          <div className="grid gap-4 py-4">
-                                            <div className="grid grid-cols-4 items-center gap-4">
-                                              <Label
-                                                htmlFor="name"
-                                                className="text-right"
-                                              >
-                                                Reason
-                                              </Label>
-                                              <Input
-                                                id="name"
-                                                onChange={(e) => {
-                                                  setKickReason(e.target.value);
-                                                }}
-                                                className="col-span-3"
-                                              />
-                                            </div>
-                                          </div>
-                                          <DialogFooter>
-                                            <Button
-                                              type="submit"
-                                              color="danger"
-                                              onClick={(e) => {
-                                                setKickModalOpen(false);
-                                                fetchKickUser(player);
-                                                console.log(player);
-                                              }}
-                                              className="rounded outline-none"
-                                            >
-                                              Confirm Kick
-                                            </Button>
-                                          </DialogFooter>
-                                        </DialogContent>
-                                      </Dialog>
-
-                                      <Dialog
-                                        open={banModalOpen}
-                                        onOpenChange={setBanModalOpen}
-                                      >
-                                        <DialogTrigger
-                                          asChild
-                                          disabled={!sourcePerms.Ban}
-                                        >
-                                          <Button color="danger">
-                                            <Gavel
-                                              size="16px"
-                                              className="mr-1"
-                                            />
-                                            Ban
-                                          </Button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
-                                          <DialogHeader>
-                                            <DialogTitle>
-                                              [{player.id}] | {player.name}?
-                                            </DialogTitle>
-                                            <DialogDescription>
-                                              Input a reason for the ban.
-                                            </DialogDescription>
-                                          </DialogHeader>
-                                          <div className="grid gap-4 py-4">
-                                            <div className="flex items-center gap-1">
-                                              <Label
-                                                htmlFor="name"
-                                                className="text-right"
-                                              >
-                                                Reason
-                                              </Label>
-
-                                              <Input
-                                                id="name"
-                                                onChange={(e) => {
-                                                  setBanReason(e.target.value);
-                                                }}
-                                                className="rounded"
-                                              />
-                                              <Select
-                                                onValueChange={(e: string) => {
-                                                  setBanLength(e);
-                                                }}
-                                                required
-                                              >
-                                                <SelectTrigger className="w-[180px] outline-none rounded">
-                                                  <SelectValue placeholder="Length" />
-                                                </SelectTrigger>
-                                                <SelectContent
-                                                  className="border outline-none rounded font-roboto"
-                                                  style={{
-                                                    borderColor: "gray",
-                                                  }}
-                                                >
-                                                  <SelectItem value="1 Hour">
-                                                    1 Hour
-                                                  </SelectItem>
-                                                  <SelectItem value="3 Hours">
-                                                    3 Hours
-                                                  </SelectItem>
-                                                  <SelectItem value="6 Hours">
-                                                    6 Hours
-                                                  </SelectItem>
-                                                  <SelectItem value="12 Hours">
-                                                    12 Hours
-                                                  </SelectItem>
-                                                  <SelectItem value="1 Day">
-                                                    1 Day
-                                                  </SelectItem>
-                                                  <SelectItem value="3 Days">
-                                                    3 Day
-                                                  </SelectItem>
-                                                  <SelectItem value="1 Week">
-                                                    1 Week
-                                                  </SelectItem>
-                                                  <SelectItem value="1 Month">
-                                                    1 Month
-                                                  </SelectItem>
-                                                  <SelectItem value="3 Months">
-                                                    3 Months
-                                                  </SelectItem>
-                                                  <SelectItem value="6 Months">
-                                                    6 Months
-                                                  </SelectItem>
-                                                  <SelectItem value="1 Year">
-                                                    1 Year
-                                                  </SelectItem>
-                                                  <SelectItem value="Permanent">
-                                                    Permanent
-                                                  </SelectItem>
-                                                </SelectContent>
-                                              </Select>
-                                            </div>
-                                          </div>
-                                          <DialogFooter>
-                                            <Button
-                                              color="danger"
-                                              type="submit"
-                                              onClick={(e) => {
-                                                setBanModalOpen(false);
-                                                fetchBanUser(player);
-                                                console.log(player);
-                                              }}
-                                              className="rounded outline-none"
-                                            >
-                                              Confirm Ban
-                                            </Button>
-                                          </DialogFooter>
-                                        </DialogContent>
-                                      </Dialog>
-                                    </div>
-                                    {/* <DropdownMenuItem
-                                onSelect={() => {
-                                  setKickModalOpen(true);
-                                }}
-                                className="bg-red-600 rounded"
-                              >
-                                <Gavel size="16px" className="mr-1" />
-                                Ban
-                              </DropdownMenuItem> */}
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </>
-                            );
-                          }
-                        )}
+                        {
+                          <PlayerList
+                            playerList={filteredPlayerList}
+                            cached={false}
+                            sourcePerms={sourcePerms}
+                          />
+                        }
                       </div>
                     </>
                   )}
@@ -1423,449 +882,21 @@ const Main: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow">
-                    {!cacheSearchQuery &&
-                      Object.values(cachedPlayers).map(
-                        (player: PlayerData, index: number) => {
-                          if (!player || !player.id || !player.name) {
-                            return;
-                          }
-                          try {
-                            const { displayName, pureName } = cleanPlayerName(
-                              player.name
-                            );
-                            player.name = displayName;
-                          } catch (error) {
-                            console.log(error);
-                          }
-                          return (
-                            <>
-                              <DropdownMenu key={index}>
-                                <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none text-white">
-                                  {player.name}
-                                  <span
-                                    className="float-right text-xs bg-red-500 rounded p-1 bg-opacity-50 text-white font-bold font-inter whitespace-break-spaces"
-                                    style={{
-                                      maxWidth: "250px",
-                                    }}
-                                  >
-                                    Old id: {player.id}
-                                  </span>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
-                                  <DropdownMenuLabel
-                                    className="font-bold whitespace-break-spaces"
-                                    style={{
-                                      maxWidth: "250px",
-                                    }}
-                                  >
-                                    [{player.id}] | {player.name}
-                                  </DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
-                                  {/* <DropdownMenuItem className="rounded mb-1">
-                                <Fingerprint size="16px" className="mr-1" />{" "}
-                                identifiers
-                              </DropdownMenuItem> */}
-                                  <AlertDialog>
-                                    <AlertDialogTrigger
-                                      className="rounded mb-1 flex justify-center items-center font-inter w-full p-1 font-semibold text-sm"
-                                      disabled={!sourcePerms.Menu}
-                                    >
-                                      {" "}
-                                      <Fingerprint
-                                        size="16px"
-                                        className="mr-1"
-                                      />{" "}
-                                      identifiers
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent className="border-none rounded text-white w-full p-3">
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                          [{player.id}] | {player.name}
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          <div>
-                                            <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
-                                              Identifier
-                                            </p>
-                                            {player.identifiers.map(
-                                              (
-                                                identifier: any,
-                                                index: number
-                                              ) => (
-                                                <>
-                                                  <div className="flex flex-col gap-2 rounded text-xs">
-                                                    <p>{identifier}</p>
-                                                  </div>
-                                                </>
-                                              )
-                                            )}
-                                          </div>
-                                          <div className="mt-10">
-                                            <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
-                                              Hardware id
-                                            </p>
-                                            {player.tokens.map(
-                                              (hwid: any, index: number) => (
-                                                <>
-                                                  <div className="flex flex-col gap-2 rounded text-xs">
-                                                    <p>{hwid}</p>
-                                                  </div>
-                                                </>
-                                              )
-                                            )}
-                                          </div>
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        {/* <AlertDialogCancel className="rounded">
-                                          Cancel
-                                        </AlertDialogCancel> */}
-                                        <AlertDialogAction className="rounded">
-                                          Close
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
-                                  <Dialog
-                                    open={banModalOpen}
-                                    onOpenChange={setBanModalOpen}
-                                  >
-                                    <DialogTrigger
-                                      asChild
-                                      disabled={!sourcePerms["Offline Ban"]}
-                                    >
-                                      <Button
-                                        color="danger"
-                                        className="mt-1 w-full "
-                                      >
-                                        <Gavel size="16px" className="mr-1" />
-                                        Offline Ban
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          [{player.id}] | {player.name}?
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          Input a reason for the ban.
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <div className="grid gap-4 py-4">
-                                        <div className="flex items-center gap-1">
-                                          <Label
-                                            htmlFor="name"
-                                            className="text-right"
-                                          >
-                                            Reason
-                                          </Label>
-
-                                          <Input
-                                            id="name"
-                                            onChange={(e) => {
-                                              setOffineBanReason(
-                                                e.target.value
-                                              );
-                                            }}
-                                            className="rounded"
-                                          />
-                                          <Select
-                                            onValueChange={(e: string) => {
-                                              setOfflineBanLength(e);
-                                            }}
-                                            required
-                                          >
-                                            <SelectTrigger className="w-[180px] outline-none rounded">
-                                              <SelectValue placeholder="Length" />
-                                            </SelectTrigger>
-                                            <SelectContent
-                                              className="border outline-none rounded font-roboto"
-                                              style={{
-                                                borderColor: "gray",
-                                              }}
-                                            >
-                                              <SelectItem value="1 Hour">
-                                                1 Hour
-                                              </SelectItem>
-                                              <SelectItem value="3 Hours">
-                                                3 Hours
-                                              </SelectItem>
-                                              <SelectItem value="6 Hours">
-                                                6 Hours
-                                              </SelectItem>
-                                              <SelectItem value="12 Hours">
-                                                12 Hours
-                                              </SelectItem>
-                                              <SelectItem value="1 Day">
-                                                1 Day
-                                              </SelectItem>
-                                              <SelectItem value="3 Days">
-                                                3 Day
-                                              </SelectItem>
-                                              <SelectItem value="1 Week">
-                                                1 Week
-                                              </SelectItem>
-                                              <SelectItem value="1 Month">
-                                                1 Month
-                                              </SelectItem>
-                                              <SelectItem value="3 Months">
-                                                3 Months
-                                              </SelectItem>
-                                              <SelectItem value="6 Months">
-                                                6 Months
-                                              </SelectItem>
-                                              <SelectItem value="1 Year">
-                                                1 Year
-                                              </SelectItem>
-                                              <SelectItem value="Permanent">
-                                                Permanent
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
-                                        </div>
-                                      </div>
-                                      <DialogFooter>
-                                        <Button
-                                          color="danger"
-                                          type="submit"
-                                          onClick={(e) => {
-                                            setBanModalOpen(false);
-                                            fetchOfflineBanUser(player);
-                                          }}
-                                          className="rounded outline-none"
-                                        >
-                                          Confirm Ban
-                                        </Button>
-                                      </DialogFooter>
-                                    </DialogContent>
-                                  </Dialog>
-                                  {/* <DropdownMenuItem
-                                onSelect={() => {
-                                  setKickModalOpen(true);
-                                }}
-                                className="bg-red-600 rounded"
-                              >
-                                <Gavel size="16px" className="mr-1" />
-                                Ban
-                              </DropdownMenuItem> */}
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </>
-                          );
-                        }
-                      )}
-                    {cacheSearchQuery &&
-                      Object.values(filteredCacheList).map(
-                        (player: PlayerData, index: number) => {
-                          if (!player || !player.id || !player.name) return;
-                          try {
-                            const { displayName, pureName } = cleanPlayerName(
-                              player.name
-                            );
-                            player.name = displayName;
-                          } catch (error) {
-                            console.log(error);
-                          }
-                          return (
-                            <>
-                              <DropdownMenu key={index}>
-                                <DropdownMenuTrigger
-                                  className="rounded text-left p-2 font-semibold bg-black outline-none text-white break-words whitespace-break-spaces"
-                                  style={{
-                                    maxWidth: "250px",
-                                  }}
-                                >
-                                  {player.name}
-                                  <span className="float-right text-xs bg-red-500 rounded p-1 bg-opacity-50 text-white font-bold font-inter">
-                                    Old id: {player.id}
-                                  </span>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
-                                  <DropdownMenuLabel
-                                    className="font-bold whitespace-break-spaces"
-                                    style={{
-                                      maxWidth: "250px",
-                                    }}
-                                  >
-                                    [{player.id}] | {player.name}
-                                  </DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
-                                  {/* <DropdownMenuItem className="rounded mb-1">
-                                <Fingerprint size="16px" className="mr-1" />{" "}
-                                identifiers
-                              </DropdownMenuItem> */}
-                                  <AlertDialog>
-                                    <AlertDialogTrigger
-                                      className="rounded mb-1 flex justify-center items-center font-inter w-full p-1 font-semibold text-sm"
-                                      disabled={!sourcePerms.Menu}
-                                    >
-                                      {" "}
-                                      <Fingerprint
-                                        size="16px"
-                                        className="mr-1"
-                                      />{" "}
-                                      identifiers
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent className="border-none rounded text-white w-full p-3">
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                          [{player.id}] | {player.name}
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                          <div>
-                                            <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
-                                              Identifier
-                                            </p>
-                                            {player.identifiers.map(
-                                              (
-                                                identifier: any,
-                                                index: number
-                                              ) => (
-                                                <>
-                                                  <div className="flex flex-col gap-2 rounded text-xs">
-                                                    <p>{identifier}</p>
-                                                  </div>
-                                                </>
-                                              )
-                                            )}
-                                          </div>
-                                          <div className="mt-10">
-                                            <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
-                                              Hardware id
-                                            </p>
-                                            {player.tokens.map(
-                                              (hwid: any, index: number) => (
-                                                <>
-                                                  <div className="flex flex-col gap-2 rounded text-xs">
-                                                    <p>{hwid}</p>
-                                                  </div>
-                                                </>
-                                              )
-                                            )}
-                                          </div>
-                                        </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                        {/* <AlertDialogCancel className="rounded">
-                                          Cancel
-                                        </AlertDialogCancel> */}
-                                        <AlertDialogAction className="rounded">
-                                          Close
-                                        </AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
-                                  <Dialog
-                                    open={banModalOpen}
-                                    onOpenChange={setBanModalOpen}
-                                  >
-                                    <DialogTrigger
-                                      asChild
-                                      disabled={!sourcePerms["Offline Ban"]}
-                                    >
-                                      <Button
-                                        color="danger"
-                                        className="mt-1 w-full "
-                                      >
-                                        <Gavel size="16px" className="mr-1" />
-                                        Offline Ban
-                                      </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
-                                      <DialogHeader>
-                                        <DialogTitle>
-                                          [{player.id}] | {player.name}?
-                                        </DialogTitle>
-                                        <DialogDescription>
-                                          Input a reason for the ban.
-                                        </DialogDescription>
-                                      </DialogHeader>
-                                      <div className="grid gap-4 py-4">
-                                        <div className="flex items-center gap-1">
-                                          <Label
-                                            htmlFor="name"
-                                            className="text-right"
-                                          >
-                                            Reason
-                                          </Label>
-
-                                          <Input
-                                            id="name"
-                                            onChange={(e) => {
-                                              setOffineBanReason(
-                                                e.target.value
-                                              );
-                                            }}
-                                            className="rounded"
-                                          />
-                                          <Select
-                                            onValueChange={(e: string) => {
-                                              setOfflineBanLength(e);
-                                            }}
-                                            required
-                                          >
-                                            <SelectTrigger className="w-[180px] outline-none rounded">
-                                              <SelectValue placeholder="Length" />
-                                            </SelectTrigger>
-                                            <SelectContent
-                                              className="border outline-none rounded font-roboto"
-                                              style={{
-                                                borderColor: "gray",
-                                              }}
-                                            >
-                                              <SelectItem value="6 Hours">
-                                                6 Hours
-                                              </SelectItem>
-                                              <SelectItem value="12 Hours">
-                                                12 Hours
-                                              </SelectItem>
-                                              <SelectItem value="3 Days">
-                                                3 Day
-                                              </SelectItem>
-                                              <SelectItem value="1 Week">
-                                                1 Week
-                                              </SelectItem>
-                                              <SelectItem value="1 Month">
-                                                1 Month
-                                              </SelectItem>
-                                              <SelectItem value="3 Months">
-                                                3 Months
-                                              </SelectItem>
-                                              <SelectItem value="6 Months">
-                                                6 Months
-                                              </SelectItem>
-                                              <SelectItem value="1 Year">
-                                                1 Year
-                                              </SelectItem>
-                                              <SelectItem value="Permanent">
-                                                Permanent
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
-                                        </div>
-                                      </div>
-                                      <DialogFooter>
-                                        <Button
-                                          color="danger"
-                                          type="submit"
-                                          onClick={(e) => {
-                                            setBanModalOpen(false);
-                                            fetchOfflineBanUser(player);
-                                          }}
-                                          className="rounded outline-none"
-                                        >
-                                          Confirm Ban
-                                        </Button>
-                                      </DialogFooter>
-                                    </DialogContent>
-                                  </Dialog>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </>
-                          );
-                        }
-                      )}
+                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded text-white">
+                    {!cacheSearchQuery && (
+                      <PlayerList
+                        playerList={cachedPlayers}
+                        cached={true}
+                        sourcePerms={sourcePerms}
+                      />
+                    )}
+                    {cacheSearchQuery && (
+                      <PlayerList
+                        playerList={filteredCacheList}
+                        cached={true}
+                        sourcePerms={sourcePerms}
+                      />
+                    )}
                   </div>
                 </>
               ) : (

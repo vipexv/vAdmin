@@ -218,7 +218,7 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -228,7 +228,7 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
       },
       {
         name = 'Target',
-        value = ("%s - (id - %s)"):format(targetName, targetId),
+        value = ("%s - (ID - %s)"):format(targetName, targetId),
         inline = false
       },
       {
@@ -263,8 +263,8 @@ RegisterNetEvent("VAdmin:Server:K", function(data)
                     ]],
 
     args = {
-      ("Player: %s (id - %s)"):format(targetName, targetId),
-      ("Kicked by: %s (id - %s)"):format(GetPlayerName(source), source),
+      ("Player: %s (ID - %s)"):format(targetName, targetId),
+      ("Kicked by: %s (ID - %s)"):format(GetPlayerName(source), source),
       ("Reason: %s"):format(data.reason)
     }
   })
@@ -282,7 +282,7 @@ RegisterNetEvent("vadmin:server:options", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -447,7 +447,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -457,7 +457,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
       },
       {
         name = 'Target',
-        value = ("%s - (id - %s)"):format(targetName, targetId),
+        value = ("%s - (ID - %s)"):format(targetName, targetId),
         inline = false
       },
       {
@@ -497,7 +497,7 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
                         </div>
                     ]],
     args = {
-      ("Player: %s (id - %s)"):format(targetName, targetId),
+      ("Player: %s (ID - %s)"):format(targetName, targetId),
       ("Banned by: %s"):format(GetPlayerName(source) or "Error getting player name"),
       ("Length: %s"):format(data.length),
       ("Reason: %s"):format(data.reason),
@@ -528,7 +528,7 @@ RegisterNetEvent("vadmin:server:tp", function(info)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -538,7 +538,7 @@ RegisterNetEvent("vadmin:server:tp", function(info)
       },
       {
         name = 'Target',
-        value = ("%s - (id - %s)"):format(GetPlayerName(info.id) or "Error Getting Target name", info.id),
+        value = ("%s - (ID - %s)"):format(GetPlayerName(info.id) or "Error Getting Target name", info.id),
         inline = false
       },
     }
@@ -582,7 +582,7 @@ RegisterNetEvent("vadmin:server:frz", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -705,7 +705,7 @@ RegisterNetEvent("vadmin:server:offlineban", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -768,7 +768,7 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
     fields = {
       {
         name = 'Admin',
-        value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+        value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
         inline = true
       },
       {
@@ -778,7 +778,7 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
       },
       {
         name = "Target Info",
-        value = ("Target name: %s (id - %s)"):format(GetPlayerName(data.id) or "Error Grabbing Target name", data.id)
+        value = ("Target name: %s (ID - %s)"):format(GetPlayerName(data.id) or "Error Grabbing Target name", data.id)
       }
     }
   })
@@ -844,7 +844,7 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
       fields = {
         {
           name = 'Admin',
-          value = ('%s (id - [%s])'):format(GetPlayerName(source), source),
+          value = ('%s (ID - [%s])'):format(GetPlayerName(source), source),
           inline = true
         },
         {
@@ -899,8 +899,7 @@ local thankYou = function()
   "Thank you god for everything you have blessed me and my family with, and i hope you continue to do so, i wish nothing but the best upon you and hope you achieve everything you need and want to, thank you for everything you do for us, Amen."
 end
 
-local message = thankYou()
-print(message)
+print(thankYou())
 
 ---@param banTokens {}
 ---@param sourceTokens {}
