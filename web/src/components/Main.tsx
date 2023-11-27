@@ -148,42 +148,6 @@ type KickData = {
   reason: string;
 };
 
-interface PlayerMenuPermission {
-  "Set Job": boolean;
-  "Car Wipe": boolean;
-  "Player Names": boolean;
-  "Community Service": boolean;
-  Ban: boolean;
-  Kick: boolean;
-  Report: boolean;
-  "Delete Car": boolean;
-  Teleport: boolean;
-  Spectate: boolean;
-  "Give Car": boolean;
-  "Clear Chat": boolean;
-  "Give Account Money": boolean;
-  Revive: boolean;
-  Announce: boolean;
-  Unban: boolean;
-  Frozen: boolean;
-  "Offline Ban": boolean;
-  "Give Item": boolean;
-  Skin: boolean;
-  Armor: boolean;
-  "Set Gang": boolean;
-  "Clear Loadout": boolean;
-  "Copy Coords": boolean;
-  Menu: boolean;
-  "Set Account Money": boolean;
-  "Go Back": boolean;
-  "Flip Car": boolean;
-  Health: boolean;
-  "Clear Inventory": boolean;
-  NoClip: boolean;
-  "Give Weapon": boolean;
-  "Spawn Car": boolean;
-}
-
 interface PlayerMenuPermissionV2 {
   "Car Wipe": boolean;
   Armor: boolean;
@@ -209,8 +173,6 @@ type selectedOptions = {
   carWipe: boolean;
   clearChat: boolean;
 };
-
-const debugMode = false;
 
 const Main: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -371,103 +333,6 @@ const Main: React.FC = () => {
     setBanID("");
     hideNui();
   };
-
-  const fetchOfflineBanUser = (player: PlayerData) => {
-    if (!offlineBanReason || !offlineBanLength) {
-      toast({
-        variant: "destructive",
-        description: "Ban Reason or Length is not specified.",
-        className: "rounded font-roboto",
-      });
-      return;
-    }
-    offlineBanData.length = offlineBanLength;
-    offlineBanData.reason = offlineBanReason;
-    offlineBanData.identifiers = player.identifiers;
-    offlineBanData.playerName = player.name;
-    offlineBanData.tokens = player.tokens;
-
-    fetchNui("vadmin:client:offlineban", offlineBanData);
-
-    setOfflineBanData({
-      length: "",
-      reason: "",
-      playerName: "",
-      identifiers: null,
-      tokens: null,
-    });
-    setOfflineBanLength("");
-    setOffineBanReason("");
-  };
-
-  const fetchBanUser = (player: any) => {
-    // Move this logic inside the component
-    if (!banReason || !banLength) {
-      toast({
-        variant: "destructive",
-        description: "Ban Reason or Length is not specified.",
-        className: "rounded font-roboto",
-      });
-      return;
-    }
-
-    banData.length = banLength;
-    banData.reason = banReason;
-    banData.target_id = player.id;
-
-    fetchNui("vadmin:nui_cb:ban", banData);
-
-    setBanData({
-      target_id: 0,
-      length: "",
-      reason: "",
-    });
-    setBanLength("");
-    setBanReason("");
-    hideNui();
-  };
-
-  const fetchTeleport = (player: any, option: string) => {
-    player.Option = option;
-    fetchNui("vadmin:client:tp", player);
-  };
-
-  const fetchRevive = (player: any) => {
-    fetchNui("vadmin:client:rev", player);
-  };
-
-  const fetchFreeze = (player: any) => {
-    fetchNui("vadmin:client:frz", player);
-  };
-
-  const fetchSpectate = (player: any) => {
-    fetchNui("vadmin:client:spectate", player);
-  };
-
-  const fetchKickUser = (player: any) => {
-    if (!kickReason) {
-      toast({
-        variant: "destructive",
-        description: "Kick Reason is not specified.",
-        className: "rounded font-roboto",
-      });
-      return;
-    }
-
-    kickData.reason = kickReason;
-    kickData.target_id = player.id;
-
-    fetchNui("vadmin:nui_cb:kick", kickData);
-
-    setKickReason("");
-    setKickData({
-      target_id: 0,
-      reason: "",
-    });
-    hideNui();
-  };
-
-  // Then, use fetchBanUser inside your component as needed.
 
   useEffect(() => {
     if (!visible) return;

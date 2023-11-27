@@ -74,32 +74,6 @@ type KickData = {
   reason: string;
 };
 
-interface PlayerMenuPermissionV2 {
-  "Car Wipe": boolean;
-  Armor: boolean;
-  "Player Names": boolean;
-  Spectate: boolean;
-  Heal: boolean;
-  "Clear Chat": boolean;
-  Kick: boolean;
-  Freeze: boolean;
-  Unban: boolean;
-  Revive: boolean;
-  Menu: boolean;
-  "Offline Ban": boolean;
-  Ban: boolean;
-  Teleport: boolean;
-  NoClip: boolean;
-}
-
-type selectedOptions = {
-  health: boolean;
-  armor: boolean;
-  playerNames: boolean;
-  carWipe: boolean;
-  clearChat: boolean;
-};
-
 const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [kickModalOpen, setKickModalOpen] = useState(false);
   const [banModalOpen, setBanModalOpen] = useState(false);
