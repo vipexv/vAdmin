@@ -14,11 +14,11 @@ local storedTargetServerId
 local isPlayerIdsEnabled = false
 local playerGamerTags = {}
 
-local function toggleNuiFrame(shouldShow)
+---@param shouldShow boolean
+local toggleNuiFrame = function(shouldShow)
   SetNuiFocus(shouldShow, shouldShow)
   UIMessage('setVisible', shouldShow)
 end
-
 
 RegisterCommand('adminmenu', function()
   UIMessage("nui:adminperms", Permissions)

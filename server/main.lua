@@ -81,10 +81,6 @@ function RemovePlayerFromList(playerID)
   PlayerList[playerID] = nil
 end
 
--- function GetPlayerData(playerID)
---   return PlayerList[playerID]
--- end
-
 AddEventHandler("playerJoining", function(_srcString, _oldID)
   if source <= 0 then
     Debug("(Error) [eventHandler:playerJoining] source is nil, returning.")
@@ -112,6 +108,9 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
 
   local playerData = CPlayer:new(source, playerName, GetPlayerIdentifiersWithoutIP(source), GetPlayerTokens(source))
 
+  Debug("[eventHandler:playerJoining] playerData variable: ", json.encode(playerData))
+
+  -- Unused, usign a general class now.
   -- local playerData = {
   --   name = string.sub(playerDetectedName or "unknown", 1, 75),
   --   id = source,
@@ -160,9 +159,11 @@ SetTimeout(5000, function()
         end
       end
 
-      local playerName = string.sub(GetPlayerName(source) or "unknown", 1, 75)
+      local playerName = string.sub(GetPlayerName(player) or "unknown", 1, 75)
 
-      local playerData = CPlayer:new(source, playerName, GetPlayerIdentifiersWithoutIP(source), GetPlayerTokens(source))
+      local playerData = CPlayer:new(player, playerName, GetPlayerIdentifiersWithoutIP(player), GetPlayerTokens(player))
+
+      Debug("[Thread] playerData variable: ", json.encode(playerData))
 
       -- local playerData = {
       --   name = GetPlayerName(player),
@@ -748,7 +749,6 @@ RegisterNetEvent("vadmin:server:spectate", function(data)
 
   local targetPed = GetPlayerPed(data.id)
   if not targetPed then return print("Target Ped is null in vadmin:server:spectate") end
-  -- One Sync Infinity is cool!
   local targetBucket = GetPlayerRoutingBucket(data.id)
   local srcBucket = GetPlayerRoutingBucket(source)
   local sourcePlayerStateBag = Player(source).state

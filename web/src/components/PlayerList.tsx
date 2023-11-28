@@ -219,228 +219,236 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     hideNui();
   };
 
-  return Object.values(playerList).map((player: any) => {
-    if (!player || !player.id || !player.name) return;
-    try {
-      const { displayName, pureName } = cleanPlayerName(player.name);
-      player.name = displayName;
-    } catch (error) {
-      console.log(error);
-    }
-    console.log(player);
-    return (
-      <DropdownMenu key={player.id}>
-        <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
-          {player.name}{" "}
-          <span
-            className={`float-right text-xs ${
-              cached ? "bg-red-500" : "bg-green-600"
-            } rounded p-1 bg-opacity-50 text-white font-bold font-inter`}
-            style={{
-              maxWidth: "250px",
-            }}
-          >
-            ID: {player.id}
-          </span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
-          <DropdownMenuLabel
-            className="font-bold whitespace-break-spaces"
-            style={{
-              maxWidth: "250px",
-            }}
-          >
-            [{player.id}] | {player.name}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="rounded"
-            disabled={!sourcePerms.Teleport}
-            onSelect={() => {
-              fetchTeleport(player, "Goto");
-            }}
-          >
-            <ArrowLeftRight size="16px" className="mr-1" /> Goto
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={!sourcePerms.Teleport}
-            className="rounded"
-            onSelect={() => {
-              fetchTeleport(player, "Bring");
-            }}
-          >
-            <ArrowRightLeft size="16px" className="mr-1" /> Bring
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="rounded"
-            disabled={!sourcePerms.Freeze}
-            onSelect={() => {
-              fetchFreeze(player);
-            }}
-          >
-            {" "}
-            <Snowflake size="16px" className="mr-1" />
-            Freeze
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="rounded"
-            disabled={!sourcePerms.Spectate}
-            onSelect={() => {
-              fetchSpectate(player);
-              hideNui();
-            }}
-          >
-            <Glasses size="16px" className="mr-1" />
-            Spectate
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={!sourcePerms.Revive}
-            className="rounded mb-1"
-            onSelect={() => {
-              fetchRevive(player);
-            }}
-          >
-            {" "}
-            <Heart size="16px" className="mr-1" />
-            Revive
-          </DropdownMenuItem>
-          <div className="flex flex-row gap-2">
-            <Dialog open={kickModalOpen} onOpenChange={setKickModalOpen}>
-              <DialogTrigger asChild disabled={!sourcePerms.Kick}>
-                <Button
-                  color="danger"
-                  className=""
+  return (
+    <>
+      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow text-white">
+        {Object.values(playerList).map((player: any) => {
+          if (!player || !player.id || !player.name) return;
+          try {
+            const { displayName, pureName } = cleanPlayerName(player.name);
+            player.name = displayName;
+          } catch (error) {
+            console.log(error);
+          }
+          console.log(player);
+          return (
+            <DropdownMenu key={player.id}>
+              <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
+                {player.name}{" "}
+                <span
+                  className={`float-right text-xs ${
+                    cached ? "bg-red-500" : "bg-green-600"
+                  } rounded p-1 bg-opacity-50 text-white font-bold font-inter`}
                   style={{
-                    borderColor: "gray",
+                    maxWidth: "250px",
                   }}
                 >
-                  <Zap size="16px" className="mr-1" /> Kick
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
-                <DialogHeader>
-                  <DialogTitle>
-                    [{player.id}] | {player.name}?
-                  </DialogTitle>
-                  <DialogDescription>
-                    Input a reason for the kick.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Reason
-                    </Label>
-                    <Input
-                      id="name"
-                      onChange={(e) => {
-                        setKickReason(e.target.value);
-                      }}
-                      className="col-span-3"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="submit"
-                    color="danger"
-                    onClick={(e) => {
-                      setKickModalOpen(false);
-                      fetchKickUser(player);
-                      console.log(player);
-                    }}
-                    className="rounded outline-none"
-                  >
-                    Confirm Kick
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-
-            <Dialog open={banModalOpen} onOpenChange={setBanModalOpen}>
-              <DialogTrigger asChild disabled={!sourcePerms.Ban}>
-                <Button color="danger">
-                  <Gavel size="16px" className="mr-1" />
-                  Ban
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
-                <DialogHeader>
-                  <DialogTitle>
-                    [{player.id}] | {player.name}?
-                  </DialogTitle>
-                  <DialogDescription>
-                    Input a reason for the ban.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="name" className="text-right">
-                      Reason
-                    </Label>
-
-                    <Input
-                      id="name"
-                      onChange={(e) => {
-                        setBanReason(e.target.value);
-                      }}
-                      className="rounded"
-                    />
-                    <Select
-                      onValueChange={(e: string) => {
-                        setBanLength(e);
-                      }}
-                      required
-                    >
-                      <SelectTrigger className="w-[180px] outline-none rounded">
-                        <SelectValue placeholder="Length" />
-                      </SelectTrigger>
-                      <SelectContent
-                        className="border outline-none rounded font-roboto"
+                  ID: {player.id}
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="border-none font-semibold rounded coolstuff font-inter">
+                <DropdownMenuLabel
+                  className="font-bold whitespace-break-spaces"
+                  style={{
+                    maxWidth: "250px",
+                  }}
+                >
+                  [{player.id}] | {player.name}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="rounded"
+                  disabled={!sourcePerms.Teleport}
+                  onSelect={() => {
+                    fetchTeleport(player, "Goto");
+                  }}
+                >
+                  <ArrowLeftRight size="16px" className="mr-1" /> Goto
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={!sourcePerms.Teleport}
+                  className="rounded"
+                  onSelect={() => {
+                    fetchTeleport(player, "Bring");
+                  }}
+                >
+                  <ArrowRightLeft size="16px" className="mr-1" /> Bring
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="rounded"
+                  disabled={!sourcePerms.Freeze}
+                  onSelect={() => {
+                    fetchFreeze(player);
+                  }}
+                >
+                  {" "}
+                  <Snowflake size="16px" className="mr-1" />
+                  Freeze
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="rounded"
+                  disabled={!sourcePerms.Spectate}
+                  onSelect={() => {
+                    fetchSpectate(player);
+                    hideNui();
+                  }}
+                >
+                  <Glasses size="16px" className="mr-1" />
+                  Spectate
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  disabled={!sourcePerms.Revive}
+                  className="rounded mb-1"
+                  onSelect={() => {
+                    fetchRevive(player);
+                  }}
+                >
+                  {" "}
+                  <Heart size="16px" className="mr-1" />
+                  Revive
+                </DropdownMenuItem>
+                <div className="flex flex-row gap-2">
+                  <Dialog open={kickModalOpen} onOpenChange={setKickModalOpen}>
+                    <DialogTrigger asChild disabled={!sourcePerms.Kick}>
+                      <Button
+                        color="danger"
+                        className=""
                         style={{
                           borderColor: "gray",
                         }}
                       >
-                        <SelectItem value="1 Hour">1 Hour</SelectItem>
-                        <SelectItem value="3 Hours">3 Hours</SelectItem>
-                        <SelectItem value="6 Hours">6 Hours</SelectItem>
-                        <SelectItem value="12 Hours">12 Hours</SelectItem>
-                        <SelectItem value="1 Day">1 Day</SelectItem>
-                        <SelectItem value="3 Days">3 Day</SelectItem>
-                        <SelectItem value="1 Week">1 Week</SelectItem>
-                        <SelectItem value="1 Month">1 Month</SelectItem>
-                        <SelectItem value="3 Months">3 Months</SelectItem>
-                        <SelectItem value="6 Months">6 Months</SelectItem>
-                        <SelectItem value="1 Year">1 Year</SelectItem>
-                        <SelectItem value="Permanent">Permanent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                        <Zap size="16px" className="mr-1" /> Kick
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
+                      <DialogHeader>
+                        <DialogTitle>
+                          [{player.id}] | {player.name}?
+                        </DialogTitle>
+                        <DialogDescription>
+                          Input a reason for the kick.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="name" className="text-right">
+                            Reason
+                          </Label>
+                          <Input
+                            id="name"
+                            onChange={(e) => {
+                              setKickReason(e.target.value);
+                            }}
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          type="submit"
+                          color="danger"
+                          onClick={(e) => {
+                            setKickModalOpen(false);
+                            fetchKickUser(player);
+                            console.log(player);
+                          }}
+                          className="rounded outline-none"
+                        >
+                          Confirm Kick
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Dialog open={banModalOpen} onOpenChange={setBanModalOpen}>
+                    <DialogTrigger asChild disabled={!sourcePerms.Ban}>
+                      <Button color="danger">
+                        <Gavel size="16px" className="mr-1" />
+                        Ban
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
+                      <DialogHeader>
+                        <DialogTitle>
+                          [{player.id}] | {player.name}?
+                        </DialogTitle>
+                        <DialogDescription>
+                          Input a reason for the ban.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="flex items-center gap-1">
+                          <Label htmlFor="name" className="text-right">
+                            Reason
+                          </Label>
+
+                          <Input
+                            id="name"
+                            onChange={(e) => {
+                              setBanReason(e.target.value);
+                            }}
+                            className="rounded"
+                          />
+                          <Select
+                            onValueChange={(e: string) => {
+                              setBanLength(e);
+                            }}
+                            required
+                          >
+                            <SelectTrigger className="w-[180px] outline-none rounded">
+                              <SelectValue placeholder="Length" />
+                            </SelectTrigger>
+                            <SelectContent
+                              className="border outline-none rounded font-roboto"
+                              style={{
+                                borderColor: "gray",
+                              }}
+                            >
+                              <SelectItem value="1 Hour">1 Hour</SelectItem>
+                              <SelectItem value="3 Hours">3 Hours</SelectItem>
+                              <SelectItem value="6 Hours">6 Hours</SelectItem>
+                              <SelectItem value="12 Hours">12 Hours</SelectItem>
+                              <SelectItem value="1 Day">1 Day</SelectItem>
+                              <SelectItem value="3 Days">3 Day</SelectItem>
+                              <SelectItem value="1 Week">1 Week</SelectItem>
+                              <SelectItem value="1 Month">1 Month</SelectItem>
+                              <SelectItem value="3 Months">3 Months</SelectItem>
+                              <SelectItem value="6 Months">6 Months</SelectItem>
+                              <SelectItem value="1 Year">1 Year</SelectItem>
+                              <SelectItem value="Permanent">
+                                Permanent
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          color="danger"
+                          type="submit"
+                          onClick={(e) => {
+                            setBanModalOpen(false);
+                            if (cached) {
+                              fetchOfflineBanUser(player);
+                              return;
+                            }
+                            fetchBanUser(player);
+                          }}
+                          className="rounded outline-none"
+                        >
+                          Confirm Ban
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
-                <DialogFooter>
-                  <Button
-                    color="danger"
-                    type="submit"
-                    onClick={(e) => {
-                      setBanModalOpen(false);
-                      if (cached) {
-                        fetchOfflineBanUser(player);
-                        return;
-                      }
-                      fetchBanUser(player);
-                    }}
-                    className="rounded outline-none"
-                  >
-                    Confirm Ban
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  });
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        })}
+      </div>
+    </>
+  );
 };
 
 export default PlayerList;
