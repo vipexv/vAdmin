@@ -478,13 +478,13 @@ const Main: React.FC = () => {
                         <DialogHeader>
                           <DialogTitle>Unban Player</DialogTitle>
                           <DialogDescription>
-                            Input the players Ban id.
+                            Input the players Ban ID.
                           </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="flex items-center gap-1">
                             <Label htmlFor="name" className="text-right">
-                              Ban id:
+                              Ban ID:
                             </Label>
 
                             <Input

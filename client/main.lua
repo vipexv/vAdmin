@@ -20,18 +20,30 @@ local toggleNuiFrame = function(shouldShow)
   UIMessage('setVisible', shouldShow)
 end
 
+RegisterNetEvent("vadmin:cb:updatePermissions", function(perms)
+  if not next(perms) then
+    return Debug("(Error) [netEvent:vadmin:cb:updatePermissions] Expected a table at first param, got: ",
+      type(perms))
+  end
+
+  Permissions = perms
+end)
+
 RegisterCommand('adminmenu', function()
   UIMessage("nui:adminperms", Permissions)
   if not next(Permissions) then
-    local srcPermissions = lib.callback.await('vadmin:getPermissions', false)
+    -- Using ox_lib
+    -- local srcPermissions = lib.callback.await('vadmin:getPermissions', false)
 
-    if not next(srcPermissions) then
+
+    Notify("[First Load] Checking player permissions...")
+    TriggerServerEvent("vadmin:getPermissions")
+
+    Wait(500)
+
+    if not next(Permissions) then
       return Debug("(Error) (command:adminmenu) srcPermissions is null, returning.")
     end
-
-
-    Permissions = srcPermissions
-
 
     if not Permissions.Menu then
       return Notify("What the fluff dude, you don't have perms :o")
@@ -44,17 +56,21 @@ RegisterCommand('adminmenu', function()
     return Notify("What the fluff dude, you don't have perms :o")
   end
 
-  local PlayerList = lib.callback.await('vadmin:plist', false)
-  local PlayerCache = lib.callback.await("vadmin:clist", false)
+  -- ox_lib Soltion
+  -- local PlayerList = lib.callback.await('vadmin:plist', false)
+  -- local PlayerCache = lib.callback.await("vadmin:clist", false)
 
+  -- if #PlayerList then
+  --   UIMessage("nui:plist", PlayerList)
+  -- end
 
-  if #PlayerList then
-    UIMessage("nui:plist", PlayerList)
-  end
+  -- if #PlayerCache then
+  --   UIMessage("nui:clist", PlayerCache)
+  -- end
 
-  if #PlayerCache then
-    UIMessage("nui:clist", PlayerCache)
-  end
+  -- Standalone Solution for updating the player list and cache list.
+  TriggerServerEvent("vadmin:plist")
+  TriggerServerEvent("vadmin:clist")
 
   if Permissions.Menu then
     toggleNuiFrame(true)

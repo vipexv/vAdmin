@@ -1,26 +1,26 @@
--- In the future, i want to use classes allot more, currently just setting them up.
-
--- [Classes]
-
--- Player Class for the PlayerList
 CPlayer = {}
 
-function CPlayer:new(id, name, identifiers, tokens)
+---@param player string | number
+---@return any
+function CPlayer:new(player)
+  if not player then
+    return Debug("(Error) `CPlayer:new` function was called but the first param is null.")
+  end
+
   local obj = {
-    name = name,
-    id = id,
-    identifiers = identifiers,
-    tokens = tokens,
+    name = GetPlayerName(player),
+    id = player,
+    identifiers = GetPlayerIdentifiersWithoutIP(player),
+    tokens = GetPlayerTokens(player),
   }
+
   setmetatable(obj, self)
   self.__index = self
   return obj
 end
 
 function CPlayer:displayInfo()
-  for i = 1, #self do
-    Debug(("Index: %s, value: %s"):format(i, self[i]))
-  end
+  Debug(("Data: %s"):format(json.encode(self)))
 end
 
 -- [Main]
@@ -87,7 +87,6 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
     return
   end
 
-  Debug("[netEvent:playerJoining] source type: ", type(source))
   local playerDetectedName = GetPlayerName(source)
 
   if type(playerDetectedName) ~= "string" then
@@ -99,6 +98,7 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
     local permission = Config.PermissionSystem[permissionIndex]
     if IsPlayerAceAllowed(source, permission.AcePerm) then
       AdminData[tonumber(source)] = permission.AllowedPermissions
+      AdminData[tonumber(source)].id = source
       Debug("Added joining player to the AdminData table: ", GetPlayerName(source), " AdminData Table: ",
         json.encode(AdminData))
     end
@@ -106,17 +106,9 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
 
   local playerName = string.sub(playerDetectedName or "unknown", 1, 75)
 
-  local playerData = CPlayer:new(source, playerName, GetPlayerIdentifiersWithoutIP(source), GetPlayerTokens(source))
+  local playerData = CPlayer:new(source)
 
   Debug("[eventHandler:playerJoining] playerData variable: ", json.encode(playerData))
-
-  -- Unused, usign a general class now.
-  -- local playerData = {
-  --   name = string.sub(playerDetectedName or "unknown", 1, 75),
-  --   id = source,
-  --   identifiers = GetPlayerIdentifiersWithoutIP(source),
-  --   tokens = GetPlayerTokens(source),
-  -- }
 
   if PlayerList[source] then
     Debug("(Error) [eventHandler:playerJoining] Player is already in the [PlayerList] table.")
@@ -154,44 +146,92 @@ SetTimeout(5000, function()
         local permission = Config.PermissionSystem[permissionsIndex]
         if IsPlayerAceAllowed(player, permission.AcePerm) then
           AdminData[tonumber(player)] = permission.AllowedPermissions
+          AdminData[tonumber(player)].id = player
           Debug("Added player to the AdminData table: ", GetPlayerName(player), " AdminData Table: ",
             json.encode(AdminData))
         end
       end
 
-      local playerName = string.sub(GetPlayerName(player) or "unknown", 1, 75)
-
-      local playerData = CPlayer:new(player, playerName, GetPlayerIdentifiersWithoutIP(player), GetPlayerTokens(player))
+      local playerData = CPlayer:new(player)
 
       Debug("[Thread] playerData variable: ", json.encode(playerData))
-
-      -- local playerData = {
-      --   name = GetPlayerName(player),
-      --   id = player,
-      --   identifiers = GetPlayerIdentifiersWithoutIP(player),
-      --   tokens = GetPlayerTokens(player),
-      -- }
 
       PlayerList[tonumber(player)] = playerData
     end
   end)
 end)
 
-lib.callback.register('vadmin:plist', function(source)
-  return PlayerList
-end)
-
-lib.callback.register("vadmin:clist", function(source)
-  return PlayerCache
-end)
-
-lib.callback.register("vadmin:getPermissions", function(source)
-  if not AdminData[tonumber(source)] then
-    return Config.DefaultPermissions
+RegisterNetEvent("vadmin:plist", function()
+  if not source then
+    return Debug("(Error) [netEvent:vadmin:plist] source is nil/null")
   end
 
-  return AdminData[tonumber(source)]
+
+  -- Update it only for the player that called it.
+
+  TriggerClientEvent("UIMessage", source, "nui:plist", PlayerList)
+
+  -- Update it for everyone.
+
+  -- TriggerClientEvent("UIMessage", -1, "nui:plist", PlayerList)
+
+  -- Loop Through Admin's and update it for each one.
+
+  -- for i = 1, #AdminData do
+  --   local admin = AdminData[i]
+  --   TriggerClientEvent("UIMessage", admin.id, "nui:plist", PlayerList)
+  -- end
 end)
+
+RegisterNetEvent("vadmin:clist", function()
+  if not source then
+    return Debug("(Error) [netEvent:vadmin:clist] source is nil/null")
+  end
+
+
+  -- Update it only for the player that called it.
+  TriggerClientEvent("UIMessage", source, "nui:clist", PlayerCache)
+
+  -- Update it for everyone.
+  -- TriggerClientEvent("UIMessage", -1, "nui:clist", PlayerCache)
+
+  -- Loop Through Admin's and update it for each one.
+  -- for i = 1, #AdminData do
+  --   local admin = AdminData[i]
+  --   TriggerClientEvent("UIMessage", admin.id, "nui:clist", PlayerCache)
+  -- end
+end)
+
+RegisterNetEvent("vadmin:getPermissions", function()
+  if not source then
+    return Debug("(Error) [netEvent:vadmin:getPermissions] source is nil/null")
+  end
+
+  if not AdminData[tonumber(source)] then
+    TriggerClientEvent("vadmin:cb:updatePermissions", source, Config.DefaultPermissions.AllowedPermissions)
+    return
+  end
+
+  TriggerClientEvent("vadmin:cb:updatePermissions", source, AdminData[tonumber(source)])
+end)
+
+
+-- Only run this if you plan on using ox_lib with it.
+-- lib.callback.register('vadmin:plist', function(source)
+--   return PlayerList
+-- end)
+
+-- lib.callback.register("vadmin:clist", function(source)
+--   return PlayerCache
+-- end)
+
+-- lib.callback.register("vadmin:getPermissions", function(source)
+--   if not AdminData[tonumber(source)] then
+--     return Config.DefaultPermissions
+--   end
+
+--   return AdminData[tonumber(source)]
+-- end)
 
 RegisterNetEvent("VAdmin:Server:K", function(data)
   local sourcePerms = AdminData[tonumber(source)]
@@ -550,6 +590,7 @@ RegisterNetEvent("vadmin:server:tp", function(info)
     SetEntityCoords(sourcePed, targetPedCoords)
     return
   end
+
   if info.Option == "Bring" then
     SetEntityCoords(targetPed, sourcePedCoords)
     return
@@ -814,7 +855,7 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
   end
 
   if not banID then
-    return showNotification(source, "Ban id cannot be null!")
+    return showNotification(source, "Ban ID cannot be null!")
   end
 
   local banList = LoadBanList()
@@ -871,7 +912,7 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
 
     showNotification(source, "Player was found and unbanned!")
   else
-    showNotification(source, "Error Ban id not found!")
+    showNotification(source, "Error Player with the specified Ban ID was not found!")
   end
 end)
 
@@ -893,13 +934,6 @@ local loopThroughIdentifiers = function(banIdentifiers, sourceIdentifiers)
 
   return false
 end
----@return string
-local thankYou = function()
-  return
-  "Thank you god for everything you have blessed me and my family with, and i hope you continue to do so, i wish nothing but the best upon you and hope you achieve everything you need and want to, thank you for everything you do for us, Amen."
-end
-
-print(thankYou())
 
 ---@param banTokens {}
 ---@param sourceTokens {}
@@ -966,7 +1000,7 @@ end)
 
 
 RegisterCommand("unban", function(source, args, _rawCommand)
-  -- Only the console can execute this command for now.
+  -- Only the console can execute this command for now, admins use the unban logic in the NUI.
   if tonumber(source) ~= 0 then
     return print("This command can only be executed by the console!")
   end
@@ -974,7 +1008,7 @@ RegisterCommand("unban", function(source, args, _rawCommand)
   local banID = args[1]
 
   if not banID then
-    return print("Ban id cannot be null!")
+    return print("Ban ID cannot be null!")
   end
 
   local banList = LoadBanList()
@@ -999,6 +1033,6 @@ RegisterCommand("unban", function(source, args, _rawCommand)
   if found then
     print("Player was found and unbanned!")
   else
-    print("(Error) Player with that Ban id not found!")
+    print("(Error) Player with that Ban ID not found!")
   end
 end)

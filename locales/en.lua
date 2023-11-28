@@ -1,6 +1,6 @@
 local Translations = {
   ban_info =
-  "❌ What the fluff dude, you're banned :O.\n\nBanned by: %{staffMember}\nBan Reason: %{banReason}\n Ban Date: %{banDate} \n Expiration Date: %{expirationDate} (%{expirationTime}) \n Ban id: %{banId} \n\nIf you feel like this was a mistake, please go ahead and contact our support team.",
+  "❌ What the fluff dude, you're banned :O.\n\nBanned by: %{staffMember}\nBan Reason: %{banReason}\n Ban Date: %{banDate} \n Expiration Date: %{expirationDate} (%{expirationTime}) \n Ban ID: %{banId} \n\nIf you feel like this was a mistake, please go ahead and contact our support team.",
   kick_message =
   "❌ You have been kicked from the server. \n \n Kicked by Staff Member: %{staff_member_name} (id - %{staff_member_id}) \n Reason: %{kick_reason} \n \n Feel free to make a ticket at discord.gg/narco if you feel like this was a mistake.",
   drop_player_ban_message =

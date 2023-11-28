@@ -5,6 +5,7 @@ import cleanPlayerName from "@/utils/cleanPlayerName";
 import {
   ArrowLeftRight,
   ArrowRightLeft,
+  Fingerprint,
   Gavel,
   Glasses,
   Heart,
@@ -43,6 +44,17 @@ import {
 
 import Input from "@mui/joy/Input";
 import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 type PlayerData = {
   name: string | null;
@@ -126,7 +138,7 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   };
 
   const fetchOfflineBanUser = (player: PlayerData) => {
-    if (!offlineBanReason || !offlineBanLength) {
+    if (!banReason || !banLength) {
       toast({
         variant: "destructive",
         description: "Ban Reason or Length is not specified.",
@@ -134,23 +146,19 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
       });
       return;
     }
-    offlineBanData.length = offlineBanLength;
-    offlineBanData.reason = offlineBanReason;
-    offlineBanData.identifiers = player.identifiers;
-    offlineBanData.playerName = player.name;
-    offlineBanData.tokens = player.tokens;
+
+    const offlineBanData = {
+      length: banLength,
+      reason: banReason,
+      identifiers: player.identifiers,
+      playerName: player.name,
+      tokens: player.tokens,
+    };
 
     fetchNui("vadmin:client:offlineban", offlineBanData);
-
-    setOfflineBanData({
-      length: "",
-      reason: "",
-      playerName: "",
-      identifiers: null,
-      tokens: null,
-    });
-    setOfflineBanLength("");
-    setOffineBanReason("");
+    setBanLength("");
+    setBanReason("");
+    hideNui();
   };
 
   const fetchBanUser = (player: any) => {
@@ -184,9 +192,9 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     fetchNui("vadmin:client:tp", player);
   };
 
-  const fetchRevive = (player: any) => {
-    fetchNui("vadmin:client:rev", player);
-  };
+  // const fetchRevive = (player: any) => {
+  //   fetchNui("vadmin:client:rev", player);
+  // };
 
   const fetchFreeze = (player: any) => {
     fetchNui("vadmin:client:frz", player);
@@ -230,14 +238,13 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
           } catch (error) {
             console.log(error);
           }
-          console.log(player);
           return (
             <DropdownMenu key={player.id}>
               <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
                 {player.name}{" "}
                 <span
                   className={`float-right text-xs ${
-                    cached ? "bg-red-500" : "bg-green-600"
+                    cached ? "bg-red-600" : "bg-green-600"
                   } rounded p-1 bg-opacity-50 text-white font-bold font-inter`}
                   style={{
                     maxWidth: "250px",
@@ -256,115 +263,174 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
                   [{player.id}] | {player.name}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="rounded"
-                  disabled={!sourcePerms.Teleport}
-                  onSelect={() => {
-                    fetchTeleport(player, "Goto");
-                  }}
-                >
-                  <ArrowLeftRight size="16px" className="mr-1" /> Goto
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={!sourcePerms.Teleport}
-                  className="rounded"
-                  onSelect={() => {
-                    fetchTeleport(player, "Bring");
-                  }}
-                >
-                  <ArrowRightLeft size="16px" className="mr-1" /> Bring
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="rounded"
-                  disabled={!sourcePerms.Freeze}
-                  onSelect={() => {
-                    fetchFreeze(player);
-                  }}
-                >
-                  {" "}
-                  <Snowflake size="16px" className="mr-1" />
-                  Freeze
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="rounded"
-                  disabled={!sourcePerms.Spectate}
-                  onSelect={() => {
-                    fetchSpectate(player);
-                    hideNui();
-                  }}
-                >
-                  <Glasses size="16px" className="mr-1" />
-                  Spectate
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  disabled={!sourcePerms.Revive}
-                  className="rounded mb-1"
-                  onSelect={() => {
-                    fetchRevive(player);
-                  }}
-                >
-                  {" "}
-                  <Heart size="16px" className="mr-1" />
-                  Revive
-                </DropdownMenuItem>
-                <div className="flex flex-row gap-2">
-                  <Dialog open={kickModalOpen} onOpenChange={setKickModalOpen}>
-                    <DialogTrigger asChild disabled={!sourcePerms.Kick}>
-                      <Button
-                        color="danger"
-                        className=""
-                        style={{
-                          borderColor: "gray",
-                        }}
-                      >
-                        <Zap size="16px" className="mr-1" /> Kick
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
-                      <DialogHeader>
-                        <DialogTitle>
-                          [{player.id}] | {player.name}?
-                        </DialogTitle>
-                        <DialogDescription>
-                          Input a reason for the kick.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="name" className="text-right">
-                            Reason
-                          </Label>
-                          <Input
-                            id="name"
-                            onChange={(e) => {
-                              setKickReason(e.target.value);
-                            }}
-                            className="col-span-3"
-                          />
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    className="w-full mb-1 flex cursor-default select-none justify-start items-center rounded px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 border-none hover:bg-accent"
+                    disabled={!sourcePerms.Menu}
+                  >
+                    {" "}
+                    <Fingerprint size="16px" className="mr-1" /> Info
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="border-none rounded text-white w-full p-3">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        [{player.id}] | {player.name}
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        <div>
+                          <p className="font-inter text-lg text-white mt-3 uppercase font-bold">
+                            Identifiers
+                          </p>
+                          {player.identifiers.map(
+                            (identifier: any, index: number) => (
+                              <>
+                                <div
+                                  className="flex flex-col gap-2 rounded text-xs"
+                                  key={index}
+                                >
+                                  <p>{identifier}</p>
+                                </div>
+                              </>
+                            )
+                          )}
                         </div>
-                      </div>
-                      <DialogFooter>
-                        <Button
-                          type="submit"
-                          color="danger"
-                          onClick={(e) => {
-                            setKickModalOpen(false);
-                            fetchKickUser(player);
-                            console.log(player);
-                          }}
-                          className="rounded outline-none"
-                        >
-                          Confirm Kick
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                        <div className="mt-10">
+                          <p className="font-inter text-lg text-white mb-2 uppercase font-bold">
+                            Hardware ID's
+                          </p>
+                          {player.tokens.map((token: any, index: number) => (
+                            <>
+                              <div
+                                className="flex flex-col gap-2 rounded text-xs"
+                                key={index}
+                              >
+                                <p>{token}</p>
+                              </div>
+                            </>
+                          ))}
+                        </div>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogAction className="rounded">
+                        Close
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                {!cached && (
+                  <>
+                    <DropdownMenuItem
+                      className="rounded mb-1"
+                      disabled={!sourcePerms.Teleport}
+                      onSelect={() => {
+                        fetchTeleport(player, "Goto");
+                      }}
+                    >
+                      <ArrowLeftRight size="16px" className="mr-1" /> Goto
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      disabled={!sourcePerms.Teleport}
+                      className="rounded"
+                      onSelect={() => {
+                        fetchTeleport(player, "Bring");
+                      }}
+                    >
+                      <ArrowRightLeft size="16px" className="mr-1" /> Bring
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="rounded"
+                      disabled={!sourcePerms.Freeze}
+                      onSelect={() => {
+                        fetchFreeze(player);
+                      }}
+                    >
+                      {" "}
+                      <Snowflake size="16px" className="mr-1" />
+                      Freeze
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="rounded mb-1"
+                      disabled={!sourcePerms.Spectate}
+                      onSelect={() => {
+                        fetchSpectate(player);
+                        hideNui();
+                      }}
+                    >
+                      <Glasses size="16px" className="mr-1" />
+                      Spectate
+                    </DropdownMenuItem>
+                  </>
+                )}
+                <div className="flex flex-row gap-2">
+                  {!cached && (
+                    <>
+                      <Dialog
+                        open={kickModalOpen}
+                        onOpenChange={setKickModalOpen}
+                      >
+                        <DialogTrigger asChild disabled={!sourcePerms.Kick}>
+                          <Button
+                            color="danger"
+                            className=""
+                            style={{
+                              borderColor: "gray",
+                            }}
+                          >
+                            <Zap size="16px" className="mr-1" /> Kick
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] text-white rounded border-none">
+                          <DialogHeader>
+                            <DialogTitle>
+                              [{player.id}] | {player.name}?
+                            </DialogTitle>
+                            <DialogDescription>
+                              Input a reason for the kick.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="name" className="text-right">
+                                Reason
+                              </Label>
+                              <Input
+                                id="name"
+                                onChange={(e) => {
+                                  setKickReason(e.target.value);
+                                }}
+                                className="col-span-3"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button
+                              type="submit"
+                              color="danger"
+                              onClick={(e) => {
+                                setKickModalOpen(false);
+                                fetchKickUser(player);
+                              }}
+                              className="rounded outline-none"
+                            >
+                              Confirm Kick
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </>
+                  )}
 
                   <Dialog open={banModalOpen} onOpenChange={setBanModalOpen}>
-                    <DialogTrigger asChild disabled={!sourcePerms.Ban}>
+                    <DialogTrigger
+                      asChild
+                      disabled={!sourcePerms.Ban}
+                      className={`${cached ? "w-full" : ""}`}
+                    >
                       <Button color="danger">
                         <Gavel size="16px" className="mr-1" />
-                        Ban
+                        {!cached ? "Ban" : "Offline Ban"}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[525px] text-white rounded border-none">
