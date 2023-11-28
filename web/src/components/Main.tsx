@@ -446,7 +446,6 @@ const Main: React.FC = () => {
                       onSelect={(e) => {
                         selectedOptions.carWipe = true;
                         fetchClient();
-                        console.log("Done");
                       }}
                     >
                       <CarFront size={"16px"} className="mr-1" />
@@ -459,7 +458,6 @@ const Main: React.FC = () => {
                       onSelect={(e) => {
                         selectedOptions.clearChat = true;
                         fetchClient();
-                        console.log("Done");
                       }}
                     >
                       <X size={"16px"} className="mr-1" />
@@ -533,7 +531,6 @@ const Main: React.FC = () => {
                       onSelect={(e) => {
                         selectedOptions.health = true;
                         fetchClient();
-                        console.log("Done");
                       }}
                     >
                       <Cross size={"16px"} className="mr-1" />
@@ -545,7 +542,6 @@ const Main: React.FC = () => {
                       onSelect={(e) => {
                         selectedOptions.armor = true;
                         fetchClient();
-                        console.log("Done");
                       }}
                     >
                       <ShieldHalf size={"16px"} className="mr-1" />
@@ -557,7 +553,6 @@ const Main: React.FC = () => {
                       onSelect={(e) => {
                         selectedOptions.playerNames = true;
                         fetchClient();
-                        console.log("Done");
                       }}
                     >
                       <UserSquare size={"16px"} className="mr-1" /> Player Names

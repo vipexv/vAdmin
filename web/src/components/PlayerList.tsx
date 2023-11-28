@@ -223,7 +223,7 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     <>
       <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow text-white">
         {Object.values(playerList).map((player: any) => {
-          if (!player || !player.id || !player.name) return;
+          if (!player) return;
           try {
             const { displayName, pureName } = cleanPlayerName(player.name);
             player.name = displayName;
