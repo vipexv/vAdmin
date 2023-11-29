@@ -22,8 +22,9 @@ Config = {
     }
   },
   PermissionSystem = {
+    -- Revive isn't really a thing since this script is standalone,the back end logic for it is there but i removed the front-end option for it, could be re-added in the future if i decide to add optional support for frameworks.
     {
-      AcePerm = "vadmin.all",
+      AcePerm = "vadmin.owner",
       AllowedPermissions = {
         Menu = true,
         Kick = true,
@@ -31,6 +32,26 @@ Config = {
         ["Clear Chat"] = true,
         ["Offline Ban"] = true,
         Unban = true,
+        Freeze = true,
+        Teleport = true,
+        Spectate = true,
+        Revive = true,
+        NoClip = true,
+        Heal = true,
+        Armor = true,
+        ["Player Names"] = true,
+        ["Car Wipe"] = true
+      }
+    },
+    {
+      AcePerm = "vadmin.moderator",
+      AllowedPermissions = {
+        Menu = true,
+        Kick = true,
+        Ban = false,
+        ["Clear Chat"] = true,
+        ["Offline Ban"] = false,
+        Unban = false,
         Freeze = true,
         Teleport = true,
         Spectate = true,
