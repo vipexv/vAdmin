@@ -104,8 +104,6 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
     end
   end
 
-  local playerName = string.sub(playerDetectedName or "unknown", 1, 75)
-
   local playerData = CPlayer:new(source)
 
   Debug("[eventHandler:playerJoining] playerData variable: ", json.encode(playerData))
