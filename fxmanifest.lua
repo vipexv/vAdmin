@@ -27,4 +27,4 @@ files {
 	'web/build/**/*',
 }
 
-dependency "ox_lib"
+-- dependency "ox_lib" -- Enable only if using ox_lib
