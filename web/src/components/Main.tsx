@@ -115,38 +115,38 @@ debugData([
   },
 ]);
 
-type Tabs = {
+interface Tabs {
   Players: boolean;
   SelfOptions: boolean;
   Utilities: boolean;
   Cache: boolean;
   BanList: boolean;
-};
+}
 
-type PlayerData = {
+interface PlayerData {
   name: string | null;
   id: number | null;
   identifiers: any;
   tokens: any;
-};
+}
 
-type BanData = {
+interface BanData {
   target_id: number;
   reason: string;
   length: string;
-};
-type OfflineBanData = {
+}
+interface OfflineBanData {
   reason: string;
   length: string;
   identifiers: any | null;
   playerName: string | null;
   tokens: any | null;
-};
+}
 
-type KickData = {
+interface KickData {
   target_id: number;
   reason: string;
-};
+}
 
 interface PlayerMenuPermissionV2 {
   "Car Wipe": boolean;
@@ -166,13 +166,13 @@ interface PlayerMenuPermissionV2 {
   NoClip: boolean;
 }
 
-type selectedOptions = {
+interface selectedOptions {
   health: boolean;
   armor: boolean;
   playerNames: boolean;
   carWipe: boolean;
   clearChat: boolean;
-};
+}
 
 const Main: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -211,19 +211,6 @@ const Main: React.FC = () => {
     []
   );
   const [filteredCacheList, setFilteredCacheList] = useState<PlayerData[]>([]);
-  const [banData, setBanData] = useState<BanData>({
-    target_id: 0,
-    length: "",
-    reason: "",
-  });
-  const [offlineBanData, setOfflineBanData] = useState<OfflineBanData>({
-    length: "",
-    reason: "",
-    playerName: "",
-    identifiers: null,
-    tokens: null,
-  });
-
   const [selectedOptions, setSelectedOptions] = useState<selectedOptions>({
     health: false,
     armor: false,
@@ -232,19 +219,7 @@ const Main: React.FC = () => {
     clearChat: false,
   });
 
-  const [kickData, setKickData] = useState<KickData>({
-    target_id: 0,
-    reason: "",
-  });
-
-  const [banLength, setBanLength] = useState("");
-  const [banReason, setBanReason] = useState("");
-  const [offlineBanLength, setOfflineBanLength] = useState("");
-  const [offlineBanReason, setOffineBanReason] = useState("");
-  const [kickReason, setKickReason] = useState("");
-
   const [banModalOpen, setBanModalOpen] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [cacheSearchQuery, setCacheSearchQuery] = useState<string>("");
 
@@ -347,11 +322,6 @@ const Main: React.FC = () => {
             Cache: false,
             BanList: false,
           });
-          setBanData({
-            target_id: 0,
-            length: "",
-            reason: "",
-          });
           fetchNui("hideFrame");
         } else setVisible(!visible);
       }
@@ -369,26 +339,6 @@ const Main: React.FC = () => {
       Utilities: false,
       Cache: false,
       BanList: false,
-    });
-    setBanData({
-      target_id: 0,
-      length: "",
-      reason: "",
-    });
-    setBanLength("");
-    setBanReason("");
-    setOfflineBanData({
-      length: "",
-      reason: "",
-      identifiers: null,
-      playerName: "",
-      tokens: null,
-    });
-    setOfflineBanLength("");
-    setKickReason("");
-    setKickData({
-      target_id: 0,
-      reason: "",
     });
     fetchNui("hideFrame");
   };
