@@ -19,7 +19,7 @@ client_script "client/**/*"
 
 server_scripts {
 	"server/webhooks.lua",
-	'server/utils.lua',
+	'server/sv_utils.lua',
 	'server/Classes/**/*',
 	"server/main.lua"
 }
