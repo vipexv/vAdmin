@@ -15,7 +15,10 @@ shared_scripts {
 	'shared/utils.lua'
 }
 
-client_script "client/**/*"
+client_scripts {
+	"client/spectate.lua",
+	"client/main.lua"
+}
 
 server_scripts {
 	"server/webhooks.lua",
