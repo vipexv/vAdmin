@@ -63,5 +63,16 @@ Config = {
         ["Car Wipe"] = true
       }
     },
+  },
+  Embed = {
+    color = '1',
+    footer = {
+      text = '[V] Admin Menu',
+      icon_url = 'https://cdn.discordapp.com/attachments/839129248265666589/1154577728834654319/profile.jpg'
+    },
+    user = {
+      name = '[V] Admin Menu',
+      icon_url = 'https://cdn.discordapp.com/attachments/839129248265666589/1154577728834654319/profile.jpg'
+    }
   }
 }
