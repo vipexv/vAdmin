@@ -282,63 +282,64 @@ RegisterNetEvent("vadmin:server:options", function(data)
     if not sourcePerms["Car Wipe"] then
       return DropPlayer(source, Lang:t("cheating_kick_message"))
     end
+
     if Config.ChatMessages then
-      TriggerClientEvent('chat:addMessage', -1, {
-        template = [[
+      CreateThread(function()
+        TriggerClientEvent('chat:addMessage', -1, {
+          template = [[
                             <div style="
                                     padding: 0.45vw;
                                     margin: 0.55vw;
                                     padding: 10px;
                                     width: 92.50%;
-                                    background: rgba(255, 0, 0, 0.3);
-                                    box-shadow: 0px 4px 6px 1px rgba(13, 183, 37, 0.27);
+                                    background: rgba(255, 0, 0, 1);
+                                    box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
                                     border-radius: 4px;
                             ">
                               <i class="fas fa-robot"></i> Car wipe in 20 seconds.
                             </div>
                         ]],
-      })
-    end
-    Wait(10000)
-    if Config.ChatMessages then
-      TriggerClientEvent('chat:addMessage', -1, {
-        template = [[
+        })
+        Wait(10000)
+        TriggerClientEvent('chat:addMessage', -1, {
+          template = [[
                             <div style="
                                     padding: 0.45vw;
                                     margin: 0.55vw;
                                     padding: 10px;
                                     width: 92.50%;
-                                    background: rgba(255, 0, 0, 0.3);
-                                    box-shadow: 0px 4px 6px 1px rgba(13, 183, 37, 0.27);
+                                    background: rgba(255, 0, 0, 1);
+                                    box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
                                     border-radius: 4px;
                             ">
                                 <i class="fas fa-robot"></i> Car wipe in 10 seconds.
                             </div>
                         ]],
-      })
-    end
-    Wait(10000)
-    for _, v in pairs(GetAllVehicles()) do
-      if (GetPedInVehicleSeat(v, -1) == 0) then
-        DeleteEntity(v)
-      end
-    end
-    if not Config.ChatMessages then return end
-    TriggerClientEvent('chat:addMessage', -1, {
-      template = [[
+        })
+        Wait(10000)
+        TriggerClientEvent('chat:addMessage', -1, {
+          template = [[
                             <div style="
                                     padding: 0.45vw;
                                     margin: 0.55vw;
                                     padding: 10px;
                                     width: 92.50%;
-                                    background: rgba(255, 0, 0, 0.3);
-                                    box-shadow: 0px 4px 6px 1px rgba(13, 183, 37, 0.27);
+                                    background: rgba(255, 0, 0, 1);
+                                    box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
                                     border-radius: 4px; ">
                                 <i class="fas fa-robot"></i> Car wipe Completed.
                             </div>
                         ]],
-    })
-    return
+        })
+      end)
+    end
+
+    Wait(30000)
+    for _, v in pairs(GetAllVehicles()) do
+      if (GetPedInVehicleSeat(v, -1) == 0) then
+        DeleteEntity(v)
+      end
+    end
   end
 end)
 
