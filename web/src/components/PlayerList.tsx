@@ -90,18 +90,10 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [kickModalOpen, setKickModalOpen] = useState(false);
   const [banModalOpen, setBanModalOpen] = useState(false);
   const { toast } = useToast();
-  const [banID, setBanID] = useState("");
   const [banData, setBanData] = useState<BanData>({
     target_id: 0,
     length: "",
     reason: "",
-  });
-  const [offlineBanData, setOfflineBanData] = useState<OfflineBanData>({
-    length: "",
-    reason: "",
-    playerName: "",
-    identifiers: null,
-    tokens: null,
   });
   const [kickData, setKickData] = useState<KickData>({
     target_id: 0,
@@ -109,8 +101,6 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   });
   const [banLength, setBanLength] = useState("");
   const [banReason, setBanReason] = useState("");
-  const [offlineBanLength, setOfflineBanLength] = useState("");
-  const [offlineBanReason, setOffineBanReason] = useState("");
   const [kickReason, setKickReason] = useState("");
 
   const hideNui = () => {
@@ -121,14 +111,6 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     });
     setBanLength("");
     setBanReason("");
-    setOfflineBanData({
-      length: "",
-      reason: "",
-      identifiers: null,
-      playerName: "",
-      tokens: null,
-    });
-    setOfflineBanLength("");
     setKickReason("");
     setKickData({
       target_id: 0,
