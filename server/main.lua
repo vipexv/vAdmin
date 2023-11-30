@@ -407,7 +407,8 @@ RegisterNetEvent("VAdmin:Server:B", function(data)
       staff_member_name = GetPlayerName(source),
       staff_member_id = source,
       ban_reason = data.reason,
-      ban_length = data.length
+      ban_length = data.length,
+      ban_id = banID
     }))
 
   SaveBanList(banList)
