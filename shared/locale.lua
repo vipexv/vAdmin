@@ -1,4 +1,4 @@
--- Copy and paste from https://github.com/qbcore-framework/qb-core/blob/main/shared/locale.lua much love to them!
+-- Writen by QB-Framework team, https://github.com/qbcore-framework/qb-core/blob/main/shared/locale.lua much love to them!
 
 --- @class Locale
 Locale = {}
