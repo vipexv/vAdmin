@@ -284,9 +284,8 @@ RegisterNetEvent("vadmin:server:options", function(data)
     end
 
     if Config.ChatMessages then
-      CreateThread(function()
-        TriggerClientEvent('chat:addMessage', -1, {
-          template = [[
+      TriggerClientEvent('chat:addMessage', -1, {
+        template = [[
                             <div style="
                                     padding: 0.45vw;
                                     margin: 0.55vw;
@@ -296,42 +295,10 @@ RegisterNetEvent("vadmin:server:options", function(data)
                                     box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
                                     border-radius: 4px;
                             ">
-                              <i class="fas fa-robot"></i> Car wipe in 20 seconds.
+                              <i class="fas fa-robot"></i> Car wipe in 30 seconds.
                             </div>
                         ]],
-        })
-        Wait(10000)
-        TriggerClientEvent('chat:addMessage', -1, {
-          template = [[
-                            <div style="
-                                    padding: 0.45vw;
-                                    margin: 0.55vw;
-                                    padding: 10px;
-                                    width: 92.50%;
-                                    background: rgba(255, 0, 0, 1);
-                                    box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
-                                    border-radius: 4px;
-                            ">
-                                <i class="fas fa-robot"></i> Car wipe in 10 seconds.
-                            </div>
-                        ]],
-        })
-        Wait(10000)
-        TriggerClientEvent('chat:addMessage', -1, {
-          template = [[
-                            <div style="
-                                    padding: 0.45vw;
-                                    margin: 0.55vw;
-                                    padding: 10px;
-                                    width: 92.50%;
-                                    background: rgba(255, 0, 0, 1);
-                                    box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
-                                    border-radius: 4px; ">
-                                <i class="fas fa-robot"></i> Car wipe Completed.
-                            </div>
-                        ]],
-        })
-      end)
+      })
     end
 
     Wait(30000)
@@ -340,6 +307,23 @@ RegisterNetEvent("vadmin:server:options", function(data)
         DeleteEntity(v)
       end
     end
+    if not Config.ChatMessages then return end
+
+    TriggerClientEvent('chat:addMessage', -1, {
+      template = [[
+                            <div style="
+                                    padding: 0.45vw;
+                                    margin: 0.55vw;
+                                    padding: 10px;
+                                    width: 92.50%;
+                                    background: rgba(255, 0, 0, 1);
+                                    box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.5);
+                                    border-radius: 4px;
+                            ">
+                              <i class="fas fa-robot"></i> Car Wipe Completed.
+                            </div>
+                        ]],
+    })
   end
 end)
 
