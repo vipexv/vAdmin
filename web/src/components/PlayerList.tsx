@@ -31,7 +31,6 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-
 import Button from "@mui/joy/Button";
 import {
   DropdownMenu,
@@ -41,13 +40,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import Input from "@mui/joy/Input";
 import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -56,35 +53,35 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 
-type PlayerData = {
+interface PlayerData {
   name: string | null;
   id: number | null;
   identifiers: any;
   tokens: any;
-};
+}
 
 interface Props {
   playerList: any;
   sourcePerms: any;
   cached: boolean;
 }
-type BanData = {
+interface BanData {
   target_id: number;
   reason: string;
   length: string;
-};
-type OfflineBanData = {
+}
+interface OfflineBanData {
   reason: string;
   length: string;
   identifiers: any | null;
   playerName: string | null;
   tokens: any | null;
-};
+}
 
-type KickData = {
+interface KickData {
   target_id: number;
   reason: string;
-};
+}
 
 const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [kickModalOpen, setKickModalOpen] = useState(false);
@@ -102,7 +99,6 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [banLength, setBanLength] = useState("");
   const [banReason, setBanReason] = useState("");
   const [kickReason, setKickReason] = useState("");
-
   const hideNui = () => {
     setBanData({
       target_id: 0,
@@ -196,8 +192,10 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
       return;
     }
 
-    kickData.reason = kickReason;
-    kickData.target_id = player.id;
+    setKickData({
+      reason: kickReason,
+      target_id: player.id,
+    });
 
     fetchNui("vadmin:nui_cb:kick", kickData);
 
