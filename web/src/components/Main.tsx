@@ -119,7 +119,7 @@ const setupDebugData = () => {
     },
   ]);
 
-  const testPerms = {
+  const initialDebugPerms: PlayerMenuPermissionV2 = {
     "Car Wipe": true,
     Armor: true,
     "Player Names": true,
@@ -142,17 +142,26 @@ const setupDebugData = () => {
     id: index + 1,
     identifiers: [
       "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
-      // ... other identifiers ...
+      "xbl:2535413463113628",
+      "live:844425900550524",
+      "discord:470311257589809152",
+      "fivem:1124792",
+      "license2:6c5a04a27880f9ef14f177cd52b495d6d9517187",
     ],
     tokens: [
-      // ... your tokens ...
+      "3:6ee006eb015de6d96eeb4ffb186c6f914eb26710705cc84e390e0a710c2fc7da",
+      "2:9beaca997de990b97451bf48e45648e70dece18eaf70d4089806689838d97cc4",
+      "5:4c21ed333227a0780dbf446cf6ce463c52f1e128f6ee12cc94e1ce0cbb9c7501",
+      "4:89e1d1a48495d9eacee361c4c81aec7c0a4fca1ad6da7ef480edf9726d6a2f94",
+      "4:353da103a6cacd356b2d33d41fa554038a2606946661515ba94a98d599aaeca5",
+      "4:b14d1e1a4ed3aa2387d8f0f601eb94e9bd27c9ab42170e59b5bf9c0dfe244077",
     ],
   }));
 
   debugData([
     {
       action: "nui:adminperms",
-      data: testPerms,
+      data: initialDebugPerms,
     },
   ]);
 
