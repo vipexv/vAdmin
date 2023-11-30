@@ -234,7 +234,9 @@ end)
 RegisterNetEvent("VAdmin:Server:K", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Kick"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -335,7 +337,9 @@ RegisterNetEvent("vadmin:server:options", function(data)
   if data.clearChat then
     local sourcePerms = AdminData[tonumber(source)]
 
-    if not sourcePerms then return end
+    if not sourcePerms then
+      return DropPlayer(source, Lang:t("cheating_kick_message"))
+    end
 
     if not sourcePerms["Clear Chat"] then
       return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -347,7 +351,9 @@ RegisterNetEvent("vadmin:server:options", function(data)
   if data.carWipe then
     local sourcePerms = AdminData[tonumber(source)]
 
-    if not sourcePerms then return end
+    if not sourcePerms then
+      return DropPlayer(source, Lang:t("cheating_kick_message"))
+    end
 
     if not sourcePerms["Car Wipe"] then
       return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -415,7 +421,9 @@ end)
 RegisterNetEvent("VAdmin:Server:B", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Ban"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -548,7 +556,9 @@ end)
 RegisterNetEvent("vadmin:server:tp", function(info)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Teleport"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -598,7 +608,9 @@ end)
 RegisterNetEvent("vadmin:server:rev", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Revive"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -609,7 +621,9 @@ end)
 RegisterNetEvent("vadmin:server:frz", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Freeze"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -668,7 +682,9 @@ end)
 RegisterNetEvent("vadmin:server:offlineban", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Freeze"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -780,7 +796,9 @@ end)
 RegisterNetEvent("vadmin:server:spectate", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Spectate"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -828,7 +846,9 @@ end)
 RegisterNetEvent("vadmin:server:spectate:end", function()
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Spectate"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
@@ -846,7 +866,9 @@ end)
 RegisterNetEvent("vadmin:server:unban", function(banID)
   local sourcePerms = AdminData[tonumber(source)]
 
-  if not sourcePerms then return end
+  if not sourcePerms then
+    return DropPlayer(source, Lang:t("cheating_kick_message"))
+  end
 
   if not sourcePerms["Unban"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
