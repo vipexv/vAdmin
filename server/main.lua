@@ -1,5 +1,8 @@
+-- Online Players
 PlayerList = {}
+-- Offline Players
 PlayerCache = {}
+-- Online Staff and Their Permissions.
 AdminData = {}
 
 AddEventHandler("playerJoining", function(_srcString, _oldID)

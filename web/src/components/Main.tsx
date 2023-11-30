@@ -1,12 +1,16 @@
-// Spaghetti code up ahead!
-
 import React, { useState, useEffect } from "react";
-import "./Main.css";
+import { motion } from "framer-motion";
+import PlayerList from "./PlayerList";
+
+// Other React-related imports
+
 import { debugData } from "../utils/debugData";
 import { fetchNui } from "../utils/fetchNui";
 import { useNuiEvent } from "../hooks/useNuiEvent";
 import { isEnvBrowser } from "../utils/misc";
-import PlayerList from "./PlayerList";
+
+// Other utility functions
+
 import {
   CarFront,
   Cross,
@@ -20,7 +24,8 @@ import {
   X,
 } from "lucide-react";
 
-import { motion } from "framer-motion";
+// Other component imports
+
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -45,165 +50,136 @@ import {
 import Input from "@mui/joy/Input";
 import { Label } from "@/components/ui/label";
 
-debugData([
-  {
-    action: "setVisible",
-    data: true,
-  },
-]);
-
-const testPerms = {
-  "Car Wipe": true,
-  Armor: true,
-  "Player Names": true,
-  Spectate: true,
-  Heal: true,
-  "Clear Chat": true,
-  Kick: true,
-  Freeze: true,
-  Unban: true,
-  Revive: true,
-  Menu: true,
-  "Offline Ban": true,
-  Ban: true,
-  Teleport: true,
-  NoClip: true,
-};
-
-const examplePlayerData: PlayerData[] = Array.from(
-  { length: 100 },
-  (_, index) => ({
-    name: `Test Dummy ${index + 1}`,
-    id: index + 1,
-    identifiers: [
-      "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
-      "xbl:2535413463113628",
-      "live:844425900550524",
-      "discord:470311257589809152",
-      "fivem:1124792",
-      "license2:6c5a04a27880f9ef14f177cd52b495d6d9517187",
-    ],
-    tokens: [
-      "3:6ee006eb015de6d96eeb4ffb186c6f914eb26710705cc84e390e0a710c2fc7da",
-      "2:9beaca997de990b97451bf48e45648e70dece18eaf70d4089806689838d97cc4",
-      "5:4c21ed333227a0780dbf446cf6ce463c52f1e128f6ee12cc94e1ce0cbb9c7501",
-      "4:89e1d1a48495d9eacee361c4c81aec7c0a4fca1ad6da7ef480edf9726d6a2f94",
-      "4:353da103a6cacd356b2d33d41fa554038a2606946661515ba94a98d599aaeca5",
-      "4:b14d1e1a4ed3aa2387d8f0f601eb94e9bd27c9ab42170e59b5bf9c0dfe244077",
-    ],
-  })
-);
-
-debugData([
-  {
-    action: "nui:adminperms",
-    data: testPerms,
-  },
-]);
-
-debugData([
-  {
-    action: "nui:clist",
-    data: examplePlayerData,
-  },
-]);
-
-debugData([
-  {
-    action: "nui:plist",
-    data: examplePlayerData,
-  },
-]);
-
-interface Tabs {
+type Tabs = {
   Players: boolean;
   SelfOptions: boolean;
   Utilities: boolean;
   Cache: boolean;
   BanList: boolean;
-}
+};
 
-interface PlayerData {
-  name: string | null;
-  id: number | null;
-  identifiers: any;
-  tokens: any;
-}
+type PlayerMenuPermissionV2 = {
+  [key: string]: boolean;
+};
 
-interface BanData {
-  target_id: number;
-  reason: string;
-  length: string;
-}
-interface OfflineBanData {
-  reason: string;
-  length: string;
-  identifiers: any | null;
-  playerName: string | null;
-  tokens: any | null;
-}
-
-interface KickData {
-  target_id: number;
-  reason: string;
-}
-
-interface PlayerMenuPermissionV2 {
-  "Car Wipe": boolean;
-  Armor: boolean;
-  "Player Names": boolean;
-  Spectate: boolean;
-  Heal: boolean;
-  "Clear Chat": boolean;
-  Kick: boolean;
-  Freeze: boolean;
-  Unban: boolean;
-  Revive: boolean;
-  Menu: boolean;
-  "Offline Ban": boolean;
-  Ban: boolean;
-  Teleport: boolean;
-  NoClip: boolean;
-}
-
-interface selectedOptions {
+type selectedOptions = {
   health: boolean;
   armor: boolean;
   playerNames: boolean;
   carWipe: boolean;
   clearChat: boolean;
-}
+};
+
+type PlayerData = {
+  name: string;
+  id: number;
+  identifiers: string[];
+  tokens: string[];
+};
+
+const initialPlayerMenuPermissions: PlayerMenuPermissionV2 = {
+  "Car Wipe": false,
+  Armor: false,
+  "Player Names": false,
+  Spectate: false,
+  Heal: false,
+  "Clear Chat": false,
+  Kick: false,
+  Freeze: false,
+  Unban: false,
+  Revive: false,
+  Menu: false,
+  "Offline Ban": false,
+  Ban: false,
+  Teleport: false,
+  NoClip: false,
+};
+
+const initialTabsState: Tabs = {
+  Players: true,
+  SelfOptions: false,
+  Utilities: false,
+  Cache: false,
+  BanList: false,
+};
+
+const initialSelectedOptions: selectedOptions = {
+  health: false,
+  armor: false,
+  playerNames: false,
+  carWipe: false,
+  clearChat: false,
+};
+
+const setupDebugData = () => {
+  debugData([
+    {
+      action: "setVisible",
+      data: true,
+    },
+  ]);
+
+  const testPerms = {
+    "Car Wipe": true,
+    Armor: true,
+    "Player Names": true,
+    Spectate: true,
+    Heal: true,
+    "Clear Chat": true,
+    Kick: true,
+    Freeze: true,
+    Unban: true,
+    Revive: true,
+    Menu: true,
+    "Offline Ban": true,
+    Ban: true,
+    Teleport: true,
+    NoClip: true,
+  };
+
+  const examplePlayerData = Array.from({ length: 100 }, (_, index) => ({
+    name: `Test Dummy ${index + 1}`,
+    id: index + 1,
+    identifiers: [
+      "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
+      // ... other identifiers ...
+    ],
+    tokens: [
+      // ... your tokens ...
+    ],
+  }));
+
+  debugData([
+    {
+      action: "nui:adminperms",
+      data: testPerms,
+    },
+  ]);
+
+  debugData([
+    {
+      action: "nui:clist",
+      data: examplePlayerData,
+    },
+  ]);
+
+  debugData([
+    {
+      action: "nui:plist",
+      data: examplePlayerData,
+    },
+  ]);
+};
+
+setupDebugData();
 
 const Main: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [sourcePerms, setSourcePerms] = useState<PlayerMenuPermissionV2>({
-    "Car Wipe": false,
-    Armor: false,
-    "Player Names": false,
-    Spectate: false,
-    Heal: false,
-    "Clear Chat": false,
-    Kick: false,
-    Freeze: false,
-    Unban: false,
-    Revive: false,
-    Menu: false,
-    "Offline Ban": false,
-    Ban: false,
-    Teleport: false,
-    NoClip: false,
-  });
-
-  const [currentTab, setCurrentTab] = useState<Tabs>({
-    Players: true,
-    SelfOptions: false,
-    Utilities: false,
-    Cache: false,
-    BanList: false,
-  });
-
+  const [sourcePerms, setSourcePerms] = useState<PlayerMenuPermissionV2>(
+    initialPlayerMenuPermissions
+  );
+  const [currentTab, setCurrentTab] = useState<Tabs>(initialTabsState);
   const { toast } = useToast();
-
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [banID, setBanID] = useState("");
   const [cachedPlayers, setCachedPlayers] = useState<PlayerData[]>([]);
@@ -211,34 +187,16 @@ const Main: React.FC = () => {
     []
   );
   const [filteredCacheList, setFilteredCacheList] = useState<PlayerData[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<selectedOptions>({
-    health: false,
-    armor: false,
-    playerNames: false,
-    carWipe: false,
-    clearChat: false,
-  });
-
+  const [selectedOptions, setSelectedOptions] = useState<selectedOptions>(
+    initialSelectedOptions
+  );
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [cacheSearchQuery, setCacheSearchQuery] = useState<string>("");
 
-  useNuiEvent<PlayerData[]>("nui:plist", (data) => {
-    setPlayers(data);
-  });
-
-  useNuiEvent<PlayerMenuPermissionV2>("nui:adminperms", async (perms) => {
-    try {
-      setSourcePerms(perms);
-    } catch (error) {
-      console.error("Error updating state:", error);
-    }
-  });
-
-  useNuiEvent<PlayerData[]>("nui:clist", (cachedPlayers) => {
-    setCachedPlayers(cachedPlayers);
-  });
-
+  useNuiEvent<PlayerData[]>("nui:plist", setPlayers);
+  useNuiEvent<PlayerMenuPermissionV2>("nui:adminperms", setSourcePerms);
+  useNuiEvent<PlayerData[]>("nui:clist", setCachedPlayers);
   useNuiEvent<boolean>("setVisible", setVisible);
 
   useNuiEvent("nui:notify", (message: string) => {
@@ -250,50 +208,59 @@ const Main: React.FC = () => {
   });
 
   useEffect(() => {
-    try {
-      const filtered = players
-        ? Object.values(players).filter((player) => {
+    const filterPlayers = (data: PlayerData[], query: string) => {
+      return data
+        ? Object.values(data).filter((player) => {
             if (!player || !player.id || !player.name) return;
             const playerId = player.id?.toString().toLowerCase();
-            const query = searchQuery.toLowerCase();
             return (
               player.name.toLowerCase().includes(query) ||
               playerId.includes(query)
             );
           })
         : [];
-      setFilteredPlayerList(filtered);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [searchQuery]);
+    };
+
+    setFilteredPlayerList(filterPlayers(players, searchQuery));
+  }, [searchQuery, players]);
 
   useEffect(() => {
-    try {
-      const filtered = cachedPlayers
-        ? Object.values(cachedPlayers).filter((player) => {
+    const filterCachedPlayers = (data: PlayerData[], query: string) => {
+      return data
+        ? Object.values(data).filter((player) => {
             if (!player || !player.id || !player.name) return;
             const playerId = player.id?.toString().toLowerCase();
-            const query = cacheSearchQuery.toLowerCase();
             return (
               player.name.toLowerCase().includes(query) ||
               playerId.includes(query)
             );
           })
         : [];
-      setFilteredCacheList(filtered);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [cacheSearchQuery]);
+    };
+
+    setFilteredCacheList(filterCachedPlayers(cachedPlayers, cacheSearchQuery));
+  }, [cacheSearchQuery, cachedPlayers]);
+
+  useEffect(() => {
+    if (!visible) return;
+
+    const keyHandler = (e: KeyboardEvent) => {
+      if (["Escape"].includes(e.code)) {
+        if (!isEnvBrowser()) {
+          setCurrentTab(initialTabsState);
+          fetchNui("hideFrame");
+        } else setVisible(!visible);
+      }
+    };
+
+    window.addEventListener("keydown", keyHandler);
+
+    return () => window.removeEventListener("keydown", keyHandler);
+  }, [visible]);
 
   const fetchClient = () => {
     fetchNui("vadmin:client:options", selectedOptions);
-    selectedOptions.armor = false;
-    selectedOptions.health = false;
-    selectedOptions.playerNames = false;
-    selectedOptions.carWipe = false;
-    selectedOptions.clearChat = false;
+    setSelectedOptions(initialSelectedOptions);
   };
 
   const fetchUnban = () => {
@@ -309,37 +276,8 @@ const Main: React.FC = () => {
     hideNui();
   };
 
-  useEffect(() => {
-    if (!visible) return;
-
-    const keyHandler = (e: KeyboardEvent) => {
-      if (["Escape"].includes(e.code)) {
-        if (!isEnvBrowser()) {
-          setCurrentTab({
-            Players: true,
-            SelfOptions: false,
-            Utilities: false,
-            Cache: false,
-            BanList: false,
-          });
-          fetchNui("hideFrame");
-        } else setVisible(!visible);
-      }
-    };
-
-    window.addEventListener("keydown", keyHandler);
-
-    return () => window.removeEventListener("keydown", keyHandler);
-  }, [visible]);
-
   const hideNui = () => {
-    setCurrentTab({
-      Players: true,
-      SelfOptions: false,
-      Utilities: false,
-      Cache: false,
-      BanList: false,
-    });
+    setCurrentTab(initialTabsState);
     fetchNui("hideFrame");
   };
 

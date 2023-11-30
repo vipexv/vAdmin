@@ -21,7 +21,8 @@ server_scripts {
 	"server/webhooks.lua",
 	'server/sv_utils.lua',
 	'server/Classes/**/*',
-	"server/main.lua"
+	"server/main.lua",
+	"server/commands.lua"
 }
 
 files {
