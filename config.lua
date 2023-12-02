@@ -1,5 +1,5 @@
 Config = {
-  Debug = true,        -- Use only for development/debugging purposes, fills the client and server sided console with allot of debugging info.
+  Debug = false,       -- Use only for development/debugging purposes, fills the client and server sided console with allot of debugging info.
   KeyMapping = "F9",   -- The key to open the Admin Menu.
   ChatMessages = true, -- Messages that get sent to the chat once an action is triggered, such as a player is banned, kicked, offline banned and car wipes.
   DefaultPermissions = {
