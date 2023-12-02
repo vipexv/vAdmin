@@ -57,8 +57,7 @@ RegisterCommand("ban", function(source, args, rawCommand)
   local reason = table.concat(args, " ")
 
   if not Permissions.Ban then
-    return Notify(
-      "Insufficient permissions, if you are staff, please go ahead and open and close the menu to see if that fixes it.")
+    return Notify("Insufficient permissions.")
   end
 
   if not targetID then return Notify("Target id is null.") end
@@ -77,5 +76,106 @@ RegisterCommand("ban", function(source, args, rawCommand)
     length = "Permanent"
   }
 
-  TriggerServerEvent("VAdmin:Server:B", data)
+  TriggerServerEvent("vadmin:server:ban", data)
 end, false)
+
+RegisterCommand("goto", function(_source, args, rawCommand)
+  local targetID = args[1]
+
+
+  if not Permissions["Teleport"] then
+    return Notify("Insufficient permissions.")
+  end
+
+  if not targetID then
+    return Notify("Player ID is required.")
+  end
+
+  TriggerServerEvent("vadmin:server:tp", {
+    Option = "Goto",
+    id = targetID
+  })
+end)
+
+RegisterCommand("bring", function(_source, args, rawCommand)
+  local targetID = args[1]
+
+
+  if not Permissions["Teleport"] then
+    return Notify("Insufficient permissions.")
+  end
+
+  if not targetID then
+    return Notify("Target ID is required.")
+  end
+
+  TriggerServerEvent("vadmin:server:tp", {
+    Option = "Bring",
+    id = targetID
+  })
+end)
+
+RegisterCommand("kick", function(source, args, rawCommand)
+  local targetID = args[1]
+
+  table.remove(args, 1)
+
+  local reason = table.concat(args, " ")
+
+  if not Permissions["Kick"] then
+    return Notify("Insufficient permissions.")
+  end
+
+  if not targetID then
+    return Notify("Target ID is required.")
+  end
+
+  if not reason then
+    return Notify("Reason for the kick required.")
+  end
+
+  if tonumber(targetID) == tonumber(GetPlayerServerId(PlayerId())) then
+    return Notify("What the fluff dude, you can't kick yourself!")
+  end
+
+
+  TriggerServerEvent("vadmin:server:kick", {
+    target_id = targetID,
+    reason = reason
+  })
+end)
+
+
+-- Command Suggestions
+TriggerEvent('chat:addSuggestions', {
+  {
+    name = '/kick',
+    help = '[Admin Only]',
+    params = {
+      { name = "player", help = "Player ID (Required)" },
+      { name = "reason", help = "Input a reason for the kick (Required)" }
+    }
+  },
+  {
+    name = '/ban',
+    help = 'This will permanently ban the selected player. [Admin Only]',
+    params = {
+      { name = "player", help = "Player ID (Required)" },
+      { name = "reason", help = "Input a reason for the ban (Required)" }
+    }
+  },
+  {
+    name = '/goto',
+    help = 'Teleport to the selected player. [Admin Only]',
+    params = {
+      { name = "player", help = "Player ID (Required)" },
+    }
+  },
+  {
+    name = '/bring',
+    help = 'Bring the selected player to you. [Admin Only]',
+    params = {
+      { name = "player", help = "Player ID (Required)" },
+    }
+  }
+})

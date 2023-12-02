@@ -75,6 +75,7 @@ type PlayerData = {
   id: number;
   identifiers: string[];
   tokens: string[];
+  is_staff: boolean;
 };
 
 const initialPlayerMenuPermissions: PlayerMenuPermissionV2 = {
@@ -156,6 +157,7 @@ const setupDebugData = () => {
       "4:21312313124asda",
       "4:21312313124asda",
     ],
+    is_staff: true,
   }));
 
   debugData([

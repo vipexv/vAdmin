@@ -16,17 +16,20 @@ shared_scripts {
 }
 
 client_scripts {
+	"client/core.lua",
+	"client/events.lua",
+	"client/nui_callbacks.lua",
+	"client/playerNames.lua",
 	"client/cl_utils.lua",
 	"client/spectate.lua",
 	"client/commands.lua",
-	"client/main.lua"
 }
 
 server_scripts {
 	"server/webhooks.lua",
 	'server/sv_utils.lua',
 	'server/Classes/**/*',
-	"server/main.lua",
+	"server/core.lua",
 	"server/commands.lua"
 }
 

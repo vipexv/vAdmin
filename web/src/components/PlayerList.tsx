@@ -9,6 +9,7 @@ import {
   Gavel,
   Glasses,
   Heart,
+  ShieldCheck,
   Snowflake,
   Zap,
 } from "lucide-react";
@@ -58,6 +59,7 @@ interface PlayerData {
   id: number | null;
   identifiers: any;
   tokens: any;
+  is_staff: boolean;
 }
 
 interface Props {
@@ -213,14 +215,23 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
         {Object.values(playerList).map((player: any) => {
           if (!player) return;
           try {
-            const { displayName, pureName } = cleanPlayerName(player.name);
+            const { displayName, pureName } = cleanPlayerName(player);
             player.name = displayName;
           } catch (error) {
             console.log(error);
           }
           return (
             <DropdownMenu key={player.id}>
-              <DropdownMenuTrigger className="rounded text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
+              <DropdownMenuTrigger className="rounded flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
+                {player.is_staff ? (
+                  <ShieldCheck
+                    strokeWidth={2}
+                    size="19px"
+                    className="mr-1 text-blue-500"
+                  />
+                ) : (
+                  ""
+                )}
                 {player.name}{" "}
                 <span
                   className={`float-right text-xs ${
