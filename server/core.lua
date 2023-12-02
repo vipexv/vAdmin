@@ -39,7 +39,7 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
   Debug("[eventHandler:playerJoining] playerData variable: ", json.encode(playerData))
 
   if PlayerList[source] then
-    Debug("(Error) [eventHandler:playerJoining] Player is already in the [PlayerList] table.")
+    return Debug("(Error) [eventHandler:playerJoining] Player is already in the [PlayerList] table.")
   end
 
   AddPlayerToList(playerData)
