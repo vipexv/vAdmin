@@ -11,10 +11,10 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
     return
   end
 
-  local playerDetectedName = GetPlayerName(source)
+  local playerName = GetPlayerName(source)
 
-  if type(playerDetectedName) ~= "string" then
-    Debug("(Error) [eventHandler:playerJoining] Player name isn't a string, Player name type: ", type(playerDetectedName))
+  if type(playerName) ~= "string" then
+    Debug("(Error) [eventHandler:playerJoining] Player name isn't a string, Player name type: ", type(playerName))
     return
   end
 
@@ -111,6 +111,9 @@ end)
 --   return AdminData[tonumber(source)]
 -- end)
 
+---@param banIdentifiers {}
+---@param sourceIdentifiers {}
+---@return boolean
 local loopThroughIdentifiers = function(banIdentifiers, sourceIdentifiers)
   if not next(banIdentifiers) or not next(sourceIdentifiers) then
     return false
