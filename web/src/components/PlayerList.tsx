@@ -80,11 +80,6 @@ interface OfflineBanData {
   tokens: any | null;
 }
 
-interface KickData {
-  target_id: number;
-  reason: string;
-}
-
 const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [kickModalOpen, setKickModalOpen] = useState(false);
   const [banModalOpen, setBanModalOpen] = useState(false);
@@ -92,10 +87,6 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   const [banData, setBanData] = useState<BanData>({
     target_id: 0,
     length: "",
-    reason: "",
-  });
-  const [kickData, setKickData] = useState<KickData>({
-    target_id: 0,
     reason: "",
   });
   const [banLength, setBanLength] = useState("");
@@ -110,10 +101,6 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     setBanLength("");
     setBanReason("");
     setKickReason("");
-    setKickData({
-      target_id: 0,
-      reason: "",
-    });
     fetchNui("hideFrame");
   };
 
@@ -194,18 +181,14 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
       return;
     }
 
-    setKickData({
+    const data = {
       reason: kickReason,
       target_id: player.id,
-    });
+    };
 
-    fetchNui("vadmin:nui_cb:kick", kickData);
+    fetchNui("vadmin:nui_cb:kick", data);
 
     setKickReason("");
-    setKickData({
-      target_id: 0,
-      reason: "",
-    });
     hideNui();
   };
 

@@ -114,6 +114,7 @@ RegisterNuiCallback("vadmin:nui_cb:kick", function(data, cb)
     return Notify("What the fluff dude, you can't kick yourself :o")
   end
 
+  Debug("[vadmin:nui_cb:kick] Data Param:", json.encode(data))
   TriggerServerEvent("vadmin:server:kick", data)
   cb({})
 end)

@@ -63,7 +63,8 @@ RegisterNetEvent("vadmin:server:kick", function(data)
     return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
-  local targetName = GetPlayerName(data.target_id) or "Error Getting Player name"
+  print(json.encode(data))
+  local targetName = (GetPlayerName(data.target_id) or "Unknown")
   local targetId = data.target_id
 
   DropPlayer(data.target_id,
