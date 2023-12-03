@@ -14,7 +14,3 @@ Hello, this is a project which i have been working on for a little bit now, i wa
 
 
 Preview: [Youtube](https://youtu.be/QWMl0GIUCq8)
-
-
-Image Preview with more players:
-![image](https://github.com/vipexv/vAdmin/assets/101529155/ded519ae-a494-46d3-8edc-e15148622848)
