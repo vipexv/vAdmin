@@ -1,6 +1,11 @@
+
 ![v_admin_banner](https://github.com/vipexv/vAdmin/assets/101529155/eac6f15c-4e59-4313-a405-50c786a47975)
 
 # vAdmin
+![](https://img.shields.io/github/downloads/vipexv/vAdmin/total?logo=github)
+![](https://img.shields.io/github/downloads/vipexv/vAdmin/latest/total?logo=github)
+![](https://img.shields.io/github/contributors/vipexv/vAdmin?logo=github)
+![](https://img.shields.io/github/v/release/vipexv/vAdmin?logo=github) 
 
 Hello, this is a project which i have been working on for a little bit now, i wasn't planning on making it public but here we are, this is a NUI based Admin Menu built with React, Tailwind CSS and other technologies.
 
@@ -16,4 +21,3 @@ Preview: [Youtube](https://youtu.be/QWMl0GIUCq8)
 
 Image Preview with more players:
 ![image](https://github.com/vipexv/vAdmin/assets/101529155/ded519ae-a494-46d3-8edc-e15148622848)
-
