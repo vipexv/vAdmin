@@ -27,12 +27,14 @@
     "lucide-react": "^0.279.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-window": "^1.8.10",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
+    "@types/react-window": "^1.8.8",
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",

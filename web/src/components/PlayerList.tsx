@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./Main.css";
 import { fetchNui } from "../utils/fetchNui";
 import cleanPlayerName from "@/utils/cleanPlayerName";
+import { FixedSizeList } from "react-window";
 import {
   ArrowLeftRight,
   ArrowRightLeft,
@@ -191,18 +192,13 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
     setKickReason("");
     hideNui();
   };
-
   return (
     <>
       <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow text-white">
         {Object.values(playerList).map((player: any) => {
           if (!player) return;
-          try {
-            const { displayName, pureName } = cleanPlayerName(player);
-            player.name = displayName;
-          } catch (error) {
-            console.log(error);
-          }
+          const { displayName, pureName } = cleanPlayerName(player.name);
+          player.name = displayName;
           return (
             <DropdownMenu key={player.id}>
               <DropdownMenuTrigger className="rounded flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">

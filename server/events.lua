@@ -97,6 +97,7 @@ RegisterNetEvent("vadmin:server:kick", function(data)
       },
     }
   })
+
   if not Config.ChatMessages then return end
 
   TriggerClientEvent('chat:addMessage', -1, {

@@ -111,6 +111,7 @@ const initialSelectedOptions: selectedOptions = {
   carWipe: false,
   clearChat: false,
 };
+// #646cff
 
 const setupDebugData = () => {
   debugData([
@@ -298,7 +299,7 @@ const Main: React.FC = () => {
         <>
           <div className="w-screen h-screen flex flex-col gap-2 justify-center items-center">
             <motion.div
-              className="bg-black rounded boxshadow bg-opacity-80"
+              className="bg-[#1a1a1a] border bg-opacity-80 px-5 py-2 border-[#1a1a1a] rounded boxshadow"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{
