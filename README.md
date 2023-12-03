@@ -1,6 +1,3 @@
-
-![v_admin_banner](https://github.com/vipexv/vAdmin/assets/101529155/eac6f15c-4e59-4313-a405-50c786a47975)
-
 # vAdmin
 ![](https://img.shields.io/github/downloads/vipexv/vAdmin/total?logo=github)
 ![](https://img.shields.io/github/downloads/vipexv/vAdmin/latest/total?logo=github)
