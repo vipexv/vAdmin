@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PlayerList from "./PlayerList";
 
@@ -75,7 +75,7 @@ type PlayerData = {
   id: number;
   identifiers: string[];
   tokens: string[];
-  is_staff: boolean;
+  isStaff: boolean;
 };
 
 const initialPlayerMenuPermissions: PlayerMenuPermissionV2 = {
@@ -158,7 +158,7 @@ const setupDebugData = () => {
       "4:21312313124asda",
       "4:21312313124asda",
     ],
-    is_staff: true,
+    isStaff: true,
   }));
 
   debugData([
@@ -190,6 +190,7 @@ const Main: React.FC = () => {
   const [sourcePerms, setSourcePerms] = useState<PlayerMenuPermissionV2>(
     initialPlayerMenuPermissions
   );
+  const searchRef = useRef<HTMLInputElement>(null);
   const [currentTab, setCurrentTab] = useState<Tabs>(initialTabsState);
   const { toast } = useToast();
   const [players, setPlayers] = useState<PlayerData[]>([]);
@@ -254,6 +255,7 @@ const Main: React.FC = () => {
   }, [cacheSearchQuery, cachedPlayers]);
 
   useEffect(() => {
+    searchRef.current?.focus();
     if (!visible) return;
 
     const keyHandler = (e: KeyboardEvent) => {
@@ -499,6 +501,7 @@ const Main: React.FC = () => {
                         borderColor: "#059669",
                       }}
                       placeholder="Search..."
+                      ref={searchRef}
                       value={searchQuery}
                       onChange={(e) => {
                         setSearchQuery(e.target.value);

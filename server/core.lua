@@ -13,28 +13,13 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
 
   local playerName = GetPlayerName(source)
 
+
   if type(playerName) ~= "string" then
     Debug("(Error) [eventHandler:playerJoining] Player name isn't a string, Player name type: ", type(playerName))
     return
   end
 
-  local isStaff = false
-
-  for permissionIndex = 1, #Config.PermissionSystem do
-    local permission = Config.PermissionSystem[permissionIndex]
-    if IsPlayerAceAllowed(source, permission.AcePerm) then
-      isStaff = true
-      AdminData[tonumber(source)] = permission.AllowedPermissions
-
-      TriggerClientEvent("vadmin:cb:updatePermissions", source, permission.AllowedPermissions)
-
-      AdminData[tonumber(source)].id = source
-      Debug("Added joining player to the AdminData table: ", GetPlayerName(source), " AdminData Table: ",
-        json.encode(AdminData))
-    end
-  end
-
-  local playerData = CPlayer:new(source, isStaff)
+  local playerData = CPlayer:new(source)
 
   Debug("[eventHandler:playerJoining] playerData variable: ", json.encode(playerData))
 
@@ -70,21 +55,7 @@ SetTimeout(5000, function()
         return
       end
 
-      local isStaff = false
-
-      for permissionsIndex = 1, #Config.PermissionSystem do
-        local permission = Config.PermissionSystem[permissionsIndex]
-        if IsPlayerAceAllowed(player, permission.AcePerm) then
-          isStaff = true
-          AdminData[tonumber(player)] = permission.AllowedPermissions
-          TriggerClientEvent("vadmin:cb:updatePermissions", player, permission.AllowedPermissions)
-          AdminData[tonumber(player)].id = player
-          Debug("Added player to the AdminData table: ", GetPlayerName(player), " AdminData Table: ",
-            json.encode(AdminData))
-        end
-      end
-
-      local playerData = CPlayer:new(player, isStaff)
+      local playerData = CPlayer:new(player)
 
       Debug("[Thread] playerData variable: ", json.encode(playerData))
 

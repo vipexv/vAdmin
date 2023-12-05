@@ -11,7 +11,6 @@ RegisterNuiCallback("vadmin:client:unban", function(banID)
   TriggerServerEvent("vadmin:server:unban", banID)
 end)
 
-
 RegisterNUICallback("vadmin:client:offlineban", function(data, cb)
   if not next(data) then
     return Debug("(Error) [nuiCallback:vadmin:client:offlineban] first param is nil/null, returning.")

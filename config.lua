@@ -65,12 +65,13 @@ Config = {
   Embed = {
     color = '1',
     footer = {
-      text = '[V] Admin Menu',
-      icon_url = 'https://cdn.discordapp.com/attachments/839129248265666589/1154577728834654319/profile.jpg'
+      text = 'vAdmin | Logs',
+      icon_url = ''
     },
     user = {
-      name = '[V] Admin Menu',
-      icon_url = 'https://cdn.discordapp.com/attachments/839129248265666589/1154577728834654319/profile.jpg'
+      name = 'vAdmin',
+      icon_url =
+      'https://cdn.discordapp.com/attachments/839129248265666589/1178613078653415475/image2_1.jpg?ex=6576c7f7&is=656452f7&hm=41595ca2d7be4dc07895fabb7b04b9725f45c282292930c97e5ab5ebe4e5e89a&'
     }
   }
 }

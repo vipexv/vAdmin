@@ -60,7 +60,7 @@ interface PlayerData {
   id: number | null;
   identifiers: any;
   tokens: any;
-  is_staff: boolean;
+  isStaff: boolean;
 }
 
 interface Props {
@@ -194,7 +194,7 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
   };
   return (
     <>
-      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded boxshadow text-white">
+      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded text-white">
         {Object.values(playerList).map((player: any) => {
           if (!player) return;
           const { displayName, pureName } = cleanPlayerName(player.name);
@@ -202,7 +202,7 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
           return (
             <DropdownMenu key={player.id}>
               <DropdownMenuTrigger className="rounded flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
-                {player.is_staff ? (
+                {player.isStaff ? (
                   <ShieldCheck
                     strokeWidth={2}
                     size="19px"

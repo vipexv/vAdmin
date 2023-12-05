@@ -16,6 +16,7 @@ RegisterNetEvent("vadmin:spectate:start", function(targetServerId, targetCoords)
     return Notify("Cannot spectate yourself dummy!")
   end
 
+
   storedTargetPed = nil
   storedTargetPlayerId = nil
   storedTargetServerId = nil
@@ -26,6 +27,7 @@ RegisterNetEvent("vadmin:spectate:start", function(targetServerId, targetCoords)
   end
 
   prepareSpectatorPed(true)
+
 
 
   local coordsUnderTarget = calculateSpectatorCoords(targetCoords)
