@@ -35,8 +35,8 @@ server_scripts {
 }
 
 files {
-	'web/build/index.html',
-	'web/build/**/*',
+	'web/dist/index.html',
+	'web/dist/**/*',
 }
 
 -- dependency "ox_lib" -- Enable only if using ox_lib
