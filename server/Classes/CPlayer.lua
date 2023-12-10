@@ -11,12 +11,12 @@ function CPlayer:new(player)
 
   for i = 1, #Config.PermissionSystem do
     local permission = Config.PermissionSystem[i]
-    if IsPlayerAceAllowed(source, permission.AcePerm) then
+    if IsPlayerAceAllowed(player, permission.AcePerm) then
       isStaff = true
       AdminData[tonumber(player)] = permission.AllowedPermissions
       AdminData[tonumber(player)].id = player
       TriggerClientEvent("vadmin:cb:updatePermissions", player, permission.AllowedPermissions)
-      Debug("Added " .. GetPlayerName(source) .. "to the AdminData table.")
+      Debug("Added " .. GetPlayerName(player) .. "to the AdminData table.")
     end
   end
 

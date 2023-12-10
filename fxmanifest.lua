@@ -5,7 +5,7 @@ game 'gta5'
 
 author 'vipex [Discord: vipex.v]'
 description 'Advanced NUI Based Admin Menu.'
-ui_page 'web/build/index.html'
+ui_page 'web/dist/index.html'
 
 shared_scripts {
 	"config.lua",
