@@ -47,6 +47,7 @@ SaveBanList = function(banData)
   SaveResourceFile(GetCurrentResourceName(), "banlist.json", json.encode(banData, { indent = false }), -1)
 end
 
+---@param playerData PlayerData
 function AddPlayerToList(playerData)
   PlayerList[playerData.id] = playerData
 end

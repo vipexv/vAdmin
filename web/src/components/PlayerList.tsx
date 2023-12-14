@@ -2,28 +2,18 @@ import React, { useState } from "react";
 import "./Main.css";
 import { fetchNui } from "../utils/fetchNui";
 import cleanPlayerName from "@/utils/cleanPlayerName";
-import { FixedSizeList } from "react-window";
+import { useToast } from "./ui/use-toast";
 import {
   ArrowLeftRight,
   ArrowRightLeft,
   Fingerprint,
   Gavel,
   Glasses,
-  Heart,
   ShieldCheck,
   Snowflake,
   Zap,
 } from "lucide-react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -54,6 +44,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+
+import {
+  Select,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "./ui/select";
 
 interface PlayerData {
   name: string | null;

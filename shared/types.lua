@@ -1,0 +1,6 @@
+---@class PlayerData
+---@field name string
+---@field id number | string
+---@field identifiers {}
+---@field tokens {}
+---@field isStaff boolean

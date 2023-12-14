@@ -26,7 +26,6 @@ RegisterCommand("unban", function(source, args, _rawCommand)
     end
   end
 
-
   SaveBanList(banList)
 
   if found then
@@ -35,3 +34,4 @@ RegisterCommand("unban", function(source, args, _rawCommand)
     print("(Error) Player with that Ban ID not found!")
   end
 end)
+

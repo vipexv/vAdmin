@@ -4,16 +4,13 @@ RegisterNetEvent("vadmin:plist", function()
   end
 
 
-  -- Update it only for the player that called it.
-
+  -- Update it only for the player that called it. (Default)
   TriggerClientEvent("UIMessage", source, "nui:plist", PlayerList)
 
   -- Update it for everyone.
-
   -- TriggerClientEvent("UIMessage", -1, "nui:plist", PlayerList)
 
   -- Loop Through Admin's and update it for each one.
-
   -- for i = 1, #AdminData do
   --   local admin = AdminData[i]
   --   TriggerClientEvent("UIMessage", admin.id, "nui:plist", PlayerList)
@@ -26,7 +23,7 @@ RegisterNetEvent("vadmin:clist", function()
   end
 
 
-  -- Update it only for the player that called it.
+  -- Update it only for the player that called it. (Default)
   TriggerClientEvent("UIMessage", source, "nui:clist", PlayerCache)
 
   -- Update it for everyone.
