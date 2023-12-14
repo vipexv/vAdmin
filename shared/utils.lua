@@ -43,8 +43,6 @@ end
 
 --- Healthy, Happy, Successful.
 
-
-
 -- Feel free to re-write this function to use your notification system if you don't like the current one built with the admin menu.
 ---@param message string
 Notify = function(message)

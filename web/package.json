@@ -2,6 +2,7 @@
   "name": "vadmin",
   "homepage": "web/build",
   "private": true,
+  "license": "MIT",
   "version": "1.0.3",
   "scripts": {
     "start": "vite",

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+
 import "./Main.css";
+
 import { fetchNui } from "../utils/fetchNui";
+
 import cleanPlayerName from "@/utils/cleanPlayerName";
+
 import { useToast } from "./ui/use-toast";
+
 import {
   ArrowLeftRight,
   ArrowRightLeft,
@@ -23,7 +28,9 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+
 import Button from "@mui/joy/Button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +40,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Input from "@mui/joy/Input";
+
 import { Label } from "@/components/ui/label";
+
 import {
   AlertDialog,
   AlertDialogAction,

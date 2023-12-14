@@ -1,2 +1,5 @@
 # Build
 web/dist
+
+# Doesn't need to be changed for now.
+banlist.json
