@@ -13,4 +13,4 @@ Hello, this is a project which i have been working on for a little bit now, i wa
 4. If you would like to contribute, please go ahead and head over to the GitHub page and feel free to send a pull request.
 
 
-Preview: [Youtube](https://youtu.be/QWMl0GIUCq8)
+Preview: [Youtube](https://youtu.be/QWMl0GIUCq8) [v1.0.0]
