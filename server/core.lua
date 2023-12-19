@@ -25,18 +25,17 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
 		return Debug("(Error) [eventHandler:playerJoining] Player is already in the [PlayerList] table.")
 	end
 
-	AddPlayerToList(playerData)
+	PlayerList[tonumber(playerData.id)] = playerData
 end)
 
 AddEventHandler("playerDropped", function(reason)
 	if source <= 0 then
-		Debug("(Error) [eventHandler:playerDropped] Source is nil.")
-		return
+		return Debug("(Error) [eventHandler:playerDropped] Source is nil.")
 	end
 
 	if PlayerList[source] then
 		PlayerCache[source] = PlayerList[source]
-		RemovePlayerFromList(source)
+		PlayerList[tonumber(source)] = nil
 	else
 		Debug("(Error) [eventHandler:playerDropped] Player isn't in the [PlayerList] table, error removing the player.")
 	end

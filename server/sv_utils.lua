@@ -18,7 +18,7 @@ showNotification = function(playerId, message)
   end
 
   if tostring(playerId) == "-1" then
-    Debug(
+    print(
       "Prevented the function `showFunction` from continuing, the function was called but the playerId param was -1, intending to display this notification to everyone")
 
     if source then
@@ -47,14 +47,14 @@ SaveBanList = function(banData)
   SaveResourceFile(GetCurrentResourceName(), "banlist.json", json.encode(banData, { indent = false }), -1)
 end
 
----@param playerData PlayerData
-function AddPlayerToList(playerData)
-  PlayerList[playerData.id] = playerData
-end
+-- ---@param playerData PlayerData
+-- function AddPlayerToList(playerData)
+--   PlayerList[playerData.id] = playerData
+-- end
 
-function RemovePlayerFromList(playerID)
-  PlayerList[playerID] = nil
-end
+-- function RemovePlayerFromList(playerID)
+--   PlayerList[playerID] = nil
+-- end
 
 organizeIdentifiers = function(target)
   assert(target, 'Attempted to organaize an invalid targets identifiers.')

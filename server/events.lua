@@ -237,13 +237,11 @@ RegisterNetEvent("vadmin:server:ban", function(data)
   local targetName = (GetPlayerName(data.target_id) or "unknown")
   local targetId = data.target_id
   local banList = LoadBanList()
+
   -- local banId = #banList + 1
-
-
   -- local testing = GetPlayerIdentifiersWithoutIP(data.target_id)
 
-
-  -- Forgot to remove this logic in the prod branch, already been over a month.
+  -- Forgot to remove this logic in the prod branch, already been over 2 months.
   -- for i = 1, #testing do
   --   local identifier = testing[i]
   --   if string.find(tostring(identifier), "470311257589809152") then

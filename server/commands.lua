@@ -12,16 +12,16 @@ RegisterCommand("unban", function(source, args, _rawCommand)
 
   local banList = LoadBanList()
   local found = false
-  local targetName
-  local targetHwids
-  local targetIdentifiers
+  -- local targetName
+  -- local targetHwids
+  -- local targetIdentifiers
 
   for k, banData in pairs(banList) do
     if tostring(banData.uuid) == tostring(banID) then
       found = true
-      targetName = banData.playerName
-      targetHwids = banData.tokens
-      targetIdentifiers = banData.identifiers
+      -- targetName = banData.playerName
+      -- targetHwids = banData.tokens
+      -- targetIdentifiers = banData.identifiers
       table.remove(banList, k)
     end
   end
@@ -34,4 +34,3 @@ RegisterCommand("unban", function(source, args, _rawCommand)
     print("(Error) Player with that Ban ID not found!")
   end
 end)
-
