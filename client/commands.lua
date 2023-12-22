@@ -40,6 +40,7 @@ RegisterCommand('adminmenu', function()
   -- Standalone Solution for updating the player list and cache list.
   TriggerServerEvent("vadmin:plist")
   TriggerServerEvent("vadmin:clist")
+  TriggerServerEvent("vadmin:blist")
 
   if Permissions.Menu then
     toggleNuiFrame(true)

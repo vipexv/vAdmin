@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import PlayerList from "./PlayerList";
+import BanList from "./BanList";
 
 // Other React-related imports
 
@@ -14,6 +15,7 @@ import { isEnvBrowser } from "../utils/misc";
 import {
   CarFront,
   Cross,
+  Hammer,
   MoreHorizontal,
   ShieldCheck,
   ShieldHalf,
@@ -49,6 +51,19 @@ import {
 
 import Input from "@mui/joy/Input";
 import { Label } from "@/components/ui/label";
+
+interface Ban {
+  tokens: string[];
+  Length: number;
+  StaffMember: string;
+  Reason: string;
+  LengthString: string;
+  banDate: string;
+  playerName: string;
+  uuid: string;
+  UnbanDate: string;
+  identifiers: string[];
+}
 
 type Tabs = {
   Players: boolean;
@@ -199,13 +214,46 @@ const Main: React.FC = () => {
   const [filteredPlayerList, setFilteredPlayerList] = useState<PlayerData[]>(
     []
   );
+  const [banListSearchQuery, setBanListSearchQuery] = useState("");
   const [filteredCacheList, setFilteredCacheList] = useState<PlayerData[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<selectedOptions>(
     initialSelectedOptions
   );
+  const [filteredBanlist, setFilteredBanlist] = useState<Ban[]>([]);
+
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [cacheSearchQuery, setCacheSearchQuery] = useState<string>("");
+  const [activeBans, setActiveBans] = useState<Ban[]>([]);
+
+  useNuiEvent("nui:state:activeBans", setActiveBans);
+
+  // const activeBans: Ban[] = Array.from({ length: 100 }, (_, index) => ({
+  //   tokens: [
+  //     "2:91b99996378cd5b16ec214d54e850d5f265524a84620671ee34d594bdb154e65",
+  //     "5:f49c3a5268773ac5d8b26a350c9015c11bef14635cddf6ea6ede03bcbfd2a835",
+  //     "3:2d24e6be9b493d5d151bd09d80bb82a85e0de0202d7ea3e641316002605c5350",
+  //     "4:cc61f15f255b3638a9569c32bb4e16f5a7a80ba12d4bc5eec5fea71a08a95d92",
+  //     "4:91079bd7b386e9ff7ddb12280bbc2d69c3508bf9ca6eac16855ab50c8d149ea2",
+  //     "4:454ff596785cb8a5ae9d9661cc47163ee569a159e3ae94540a8e983ae2d2f3c9",
+  //   ],
+  //   Length: 1703274130,
+  //   StaffMember: "vipex",
+  //   Reason: "Not cool!",
+  //   LengthString: "6 Hours",
+  //   banDate: "12/22/23",
+  //   playerName: `Test Ban ${index}`,
+  //   uuid: `A${index}`,
+  //   UnbanDate: "12/22/23 (20:42:10)",
+  //   identifiers: [
+  //     "license:6c5a04a27880f9ef14f177cd52b495d6d9517187",
+  //     "xbl:2535413463113628",
+  //     "live:844425900550524",
+  //     "discord:470311257589809152",
+  //     "fivem:1124792",
+  //     "license2:6c5a04a27880f9ef14f177cd52b495d6d9517187",
+  //   ],
+  // }));
 
   useNuiEvent<PlayerData[]>("nui:plist", setPlayers);
   useNuiEvent<PlayerMenuPermissionV2>("nui:adminperms", setSourcePerms);
@@ -236,6 +284,25 @@ const Main: React.FC = () => {
 
     setFilteredPlayerList(filterPlayers(players, searchQuery));
   }, [searchQuery, players]);
+
+  useEffect(() => {
+    const filterBanList = (data: Ban[], query: string) => {
+      return data
+        ? Object.values(data).filter((player) => {
+            if (!player) return console.log("hey");
+            const searchValue = query.toLowerCase();
+            const playerId = player.uuid?.toString().toLowerCase();
+            return (
+              player.playerName.toLowerCase().includes(searchValue) ||
+              playerId.includes(searchValue)
+            );
+          })
+        : [];
+    };
+
+    setFilteredBanlist(filterBanList(activeBans, banListSearchQuery));
+    console.log(filteredBanlist);
+  }, [banListSearchQuery]);
 
   useEffect(() => {
     const filterCachedPlayers = (data: PlayerData[], query: string) => {
@@ -329,6 +396,25 @@ const Main: React.FC = () => {
                   }
                 >
                   <Users size="16px" className="mr-1" /> Players
+                </button>
+                <button
+                  className={`rounded transition p-2 flex justify-center items-center active:scale-90 ${
+                    currentTab.BanList ? "bg-slate-700 bg-opacity-50" : ""
+                  }`}
+                  style={{
+                    borderColor: "#059669",
+                  }}
+                  onClick={() =>
+                    setCurrentTab({
+                      Players: false,
+                      SelfOptions: false,
+                      Utilities: false,
+                      BanList: true,
+                      Cache: false,
+                    })
+                  }
+                >
+                  <Hammer size={"16px"} className="mr-1" /> Ban List
                 </button>
                 <DropdownMenu>
                   <DropdownMenuTrigger
@@ -533,6 +619,35 @@ const Main: React.FC = () => {
                 </motion.div>
               ) : currentTab.SelfOptions ? (
                 <></>
+              ) : currentTab.BanList ? (
+                <>
+                  <div className="flex justify-end items-center px-2 py-2">
+                    <input
+                      type="text"
+                      className="outline-none w-fit float-right py-1 px-2 mb-2 bg-transparent rounded font-inter focus:-translate-y-1 transition"
+                      style={{
+                        border: "2px solid #059669",
+                        borderColor: "#059669",
+                      }}
+                      placeholder="Search..."
+                      // ref={searchRef}
+                      value={banListSearchQuery}
+                      onChange={(e) => {
+                        setBanListSearchQuery(e.target.value);
+                      }}
+                    />
+                  </div>
+                  {!banListSearchQuery ? (
+                    <BanList banList={activeBans} sourcePerms={sourcePerms} />
+                  ) : (
+                    <>
+                      <BanList
+                        banList={filteredBanlist}
+                        sourcePerms={sourcePerms}
+                      />
+                    </>
+                  )}
+                </>
               ) : currentTab.Cache ? (
                 <>
                   <div className="flex justify-end items-center px-2 py-2">

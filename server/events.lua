@@ -36,6 +36,16 @@ RegisterNetEvent("vadmin:clist", function()
   -- end
 end)
 
+RegisterNetEvent("vadmin:blist", function()
+  if not source then
+    return Debug("(Error) [netEvent:vadmin:clist] source is nil/null")
+  end
+
+  local banlist = LoadBanList()
+
+  TriggerClientEvent("UIMessage", source, "nui:state:activeBans", banlist)
+end)
+
 RegisterNetEvent("vadmin:getPermissions", function()
   if not source then
     return Debug("(Error) [netEvent:vadmin:getPermissions] source is nil/null")
@@ -641,14 +651,14 @@ RegisterNetEvent("vadmin:server:spectate:end", function()
   end
 end)
 
-RegisterNetEvent("vadmin:server:unban", function(banID)
+RegisterNetEvent("vadmin:server:unban", function(data)
   local sourcePerms = AdminData[tonumber(source)]
 
   if not sourcePerms or not sourcePerms["Unban"] then
     return DropPlayer(source, Lang:t("cheating_kick_message"))
   end
 
-  if not banID then
+  if not data then
     return showNotification(source, "Ban ID cannot be null!")
   end
 
@@ -658,8 +668,12 @@ RegisterNetEvent("vadmin:server:unban", function(banID)
   local targetHwids
   local targetIdentifiers
 
+  if type(data) == "table" then
+    data = data.uuid
+  end
+
   for k, banData in pairs(banList) do
-    if tostring(banData.uuid) == tostring(banID) then
+    if tostring(banData.uuid) == tostring(data) then
       found = true
       targetName = banData.playerName
       targetHwids = banData.tokens

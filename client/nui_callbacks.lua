@@ -117,3 +117,11 @@ RegisterNuiCallback("vadmin:nui_cb:kick", function(data, cb)
   TriggerServerEvent("vadmin:server:kick", data)
   cb({})
 end)
+
+RegisterNuiCallback("vadmin:nui_cb:unban:global", function(data)
+  if not next(data) then
+    return Debug("(Error) [vadmin:nui_cb:unbanPage] data param is null.")
+  end
+
+  TriggerServerEvent("vadmin:server:unban", data)
+end)

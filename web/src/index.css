@@ -7,6 +7,15 @@
   display: none;
 }
 
+:root {
+  color-scheme: only light !important;
+}
+
+body {
+  color-scheme: only light !important;
+  background-color: transparent !important;
+}
+
 .font-inter {
   font-family: "Inter";
 }
