@@ -16,7 +16,8 @@ AddEventHandler("playerJoining", function(_srcString, _oldID)
 	local playerName = GetPlayerName(source)
 
 	if type(playerName) ~= "string" then
-		return Debug("(Error) [eventHandler:playerJoining] Player name isn't a string, Player name type: ", type(playerName))
+		return Debug("(Error) [eventHandler:playerJoining] Player name isn't a string, Player name type: ",
+			type(playerName))
 	end
 
 	local playerData = CPlayer:new(source)
@@ -82,7 +83,7 @@ end)
 ---@param sourceIdentifiers {}
 ---@return boolean
 local loopThroughIdentifiers = function(banIdentifiers, sourceIdentifiers)
-	if not next(banIdentifiers) or not next(sourceIdentifiers) then
+	if not banIdentifiers or not next(sourceIdentifiers) then
 		return false
 	end
 
@@ -104,7 +105,7 @@ end
 ---@param sourceTokens {}
 ---@return boolean
 local loopThroughTokens = function(banTokens, sourceTokens)
-	if not next(banTokens) or not next(sourceTokens) then
+	if not banTokens or not next(sourceTokens) then
 		return false
 	end
 
