@@ -668,6 +668,7 @@ RegisterNetEvent("vadmin:server:unban", function(data)
   local targetHwids
   local targetIdentifiers
 
+  -- Unbans from the new BanList feature in  the NUI always send the table full of data for the ban.
   if type(data) == "table" then
     data = data.uuid
   end

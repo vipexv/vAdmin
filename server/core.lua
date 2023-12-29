@@ -48,8 +48,7 @@ SetTimeout(5000, function()
 		for i = 1, #Players do
 			local player = Players[i]
 			if PlayerList[player] then
-				Debug("(Error) [Thread:InitPlayerList] Player is already in the PlayerList table.")
-				return
+				return Debug("(Error) [Thread:InitPlayerList] Player is already in the PlayerList table.")
 			end
 
 			local playerData = CPlayer:new(player)
