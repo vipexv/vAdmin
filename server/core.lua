@@ -82,7 +82,7 @@ end)
 ---@param sourceIdentifiers {}
 ---@return boolean
 local loopThroughIdentifiers = function(banIdentifiers, sourceIdentifiers)
-	if not banIdentifiers or not next(sourceIdentifiers) then
+	if not banIdentifiers or not sourceIdentifiers then
 		return false
 	end
 
@@ -104,7 +104,7 @@ end
 ---@param sourceTokens {}
 ---@return boolean
 local loopThroughTokens = function(banTokens, sourceTokens)
-	if not banTokens or not next(sourceTokens) then
+	if not banTokens or not sourceTokens then
 		return false
 	end
 
