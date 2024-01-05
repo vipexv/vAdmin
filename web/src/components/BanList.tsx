@@ -1,30 +1,25 @@
-import React, { useState } from "react";
-import "./Main.css";
-import { fetchNui } from "../utils/fetchNui";
-import cleanPlayerName from "@/utils/cleanPlayerName";
-import { randomId } from "@mantine/hooks";
-import { Pagination, Text } from "@mantine/core";
-import { useToast } from "./ui/use-toast";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import Button from "@mui/joy/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Input from "@mui/joy/Input";
-import { Label } from "@/components/ui/label";
+import { Pagination } from "@mantine/core";
+import Button from "@mui/joy/Button";
+import { CircleSlash, Fingerprint, ShieldOff } from "lucide-react";
+import React, { useState } from "react";
+import { fetchNui } from "../utils/fetchNui";
+import "./Main.css";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,15 +30,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
-import {
-  Select,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-} from "./ui/select";
-import { VariableSizeList } from "react-window";
-import { Fingerprint, ShieldOff } from "lucide-react";
 
 interface PlayerData {
   name: string | null;
@@ -105,7 +91,7 @@ const BanList: React.FC<Props> = ({ banList, sourcePerms }) => {
   const items = data[activePage - 1]?.map((player: Ban, index: number) => (
     <>
       <DropdownMenu key={index}>
-        <DropdownMenuTrigger className="rounded flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
+        <DropdownMenuTrigger className="rounded max-h-[40px] flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
           {player.playerName}{" "}
           <span
             className={`float-right text-xs bg-green-600
@@ -248,8 +234,8 @@ const BanList: React.FC<Props> = ({ banList, sourcePerms }) => {
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center font-inter font-bold p-2 rounded">
-            Empty :o
+          <div className="flex justify-center items-center gap-1 font-inter font-bold p-2 rounded">
+            <CircleSlash size={16} strokeWidth={2.25} /> Empty
           </div>
         </>
       )}

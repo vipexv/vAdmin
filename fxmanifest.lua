@@ -28,6 +28,7 @@ client_scripts {
 server_scripts {
 	"server/webhooks.lua",
 	'server/sv_utils.lua',
+	"server/modules/**/*",
 	'server/Classes/**/*',
 	"server/events.lua",
 	"server/core.lua",

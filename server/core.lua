@@ -53,8 +53,6 @@ SetTimeout(5000, function()
 
 			local playerData = CPlayer:new(player)
 
-			Debug("[Thread] playerData variable: ", json.encode(playerData))
-
 			PlayerList[tonumber(player)] = playerData
 		end
 	end)

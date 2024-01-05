@@ -23,10 +23,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
 
 import Button from "@mui/joy/Button";
@@ -56,10 +56,10 @@ import {
 
 import {
   Select,
-  SelectValue,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "./ui/select";
 
 interface PlayerData {
@@ -208,7 +208,7 @@ const PlayerList: React.FC<Props> = ({ playerList, cached, sourcePerms }) => {
           player.name = displayName;
           return (
             <DropdownMenu key={player.id}>
-              <DropdownMenuTrigger className="rounded flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
+              <DropdownMenuTrigger className="rounded max-h-[40px] flex items-center justify-between text-left p-2 font-semibold bg-black outline-none whitespace-break-spaces">
                 {player.isStaff ? (
                   <ShieldCheck
                     strokeWidth={2}

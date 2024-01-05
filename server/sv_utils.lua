@@ -47,6 +47,16 @@ SaveBanList = function(banData)
   SaveResourceFile(GetCurrentResourceName(), "banlist.json", json.encode(banData, { indent = false }), -1)
 end
 
+function GetDiscordID(source)
+  local returnValue = nil
+  for idIndex = 1, GetNumPlayerIdentifiers(source) do
+    if GetPlayerIdentifier(source, idIndex) ~= nil and GetPlayerIdentifier(source, idIndex):sub(1, #("discord:")) == "discord:" then
+      returnValue = GetPlayerIdentifier(source, idIndex):gsub("discord:", "")
+    end
+  end
+  return returnValue
+end
+
 -- ---@param playerData PlayerData
 -- function AddPlayerToList(playerData)
 --   PlayerList[playerData.id] = playerData
@@ -84,27 +94,31 @@ organizeIdentifiers = function(target)
 end
 
 discordLog = function(args)
-  if (not args or type(args) ~= 'table') then return end
+  if (not args or type(args) ~= 'table') then
+    return Debug(
+      "[discordLog] func was called, but the first param is either null or not a table.")
+  end
 
   local embed = {
-    color = Config?.Embed?.color,
+    color = Config.Embed.color,
     type = 'rich',
-    title = args?.title or '',
-    description = args?.description or '',
+    title = args.title or '',
+    description = args.description or '',
     timestamp = os.date('!%Y-%m-%dT%H:%M:%S'),
-    footer = Config?.Embed?.footer or {},
+    footer = Config.Embed.footer or {},
     image = { url = "https://i.imgur.com/XuuQq8V.png" } -- [V] Admin Menu Banner
   }
 
-  if type(args?.fields) == 'table' and #args?.fields >= 1 then
-    embed.fields = args?.fields
+  if type(args.fields) == 'table' and #args.fields >= 1 then
+    embed.fields = args.fields
   end
 
 
-  PerformHttpRequest(args?.webhook, function(err, text, headers) end, 'POST', json.encode({
-    username = Config?.Embed?.user?.name,
-    avatar_url = Config?.Embed?.user?.icon_url,
+  PerformHttpRequest(args.webhook, function(err, text, headers)
+    Debug(err, text, headers)
+  end, 'POST', json.encode({
+    username = Config.Embed.user.name,
+    avatar_url = Config.Embed.user.icon_url,
     Embeds = { embed }
-  }), { ['Content-Type'] = 'application/json'
-  })
+  }), { ['Content-Type'] = 'application/json' })
 end

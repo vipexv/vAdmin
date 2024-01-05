@@ -16,7 +16,7 @@ function CPlayer:new(player)
       AdminData[tonumber(player)] = permission.AllowedPermissions
       AdminData[tonumber(player)].id = player
       TriggerClientEvent("vadmin:cb:updatePermissions", player, permission.AllowedPermissions)
-      Debug("Added " .. GetPlayerName(player) .. "to the AdminData table.")
+      Debug("Added " .. GetPlayerName(player) .. " to the AdminData table.")
     end
   end
 
@@ -25,7 +25,7 @@ function CPlayer:new(player)
     id = player,
     identifiers = GetPlayerIdentifiersWithoutIP(player),
     tokens = GetPlayerTokens(player),
-    isStaff = isStaff
+    isStaff = isStaff,
   }
 
   setmetatable(obj, self)

@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import PlayerList from "./PlayerList";
+import React, { useEffect, useRef, useState } from "react";
 import BanList from "./BanList";
+import PlayerList from "./PlayerList";
 
 // Other React-related imports
 
+import { useNuiEvent } from "../hooks/useNuiEvent";
 import { debugData } from "../utils/debugData";
 import { fetchNui } from "../utils/fetchNui";
-import { useNuiEvent } from "../hooks/useNuiEvent";
 import { isEnvBrowser } from "../utils/misc";
 
 // Other utility functions
@@ -28,18 +28,17 @@ import {
 
 // Other component imports
 
-import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
 
-import Button from "@mui/joy/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,9 +47,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Button from "@mui/joy/Button";
 
-import Input from "@mui/joy/Input";
 import { Label } from "@/components/ui/label";
+import Input from "@mui/joy/Input";
 
 interface Ban {
   tokens: string[];
@@ -154,7 +154,7 @@ const setupDebugData = () => {
     NoClip: true,
   };
 
-  const examplePlayerData = Array.from({ length: 100 }, (_, index) => ({
+  const examplePlayerData = Array.from({ length: 2 }, (_, index) => ({
     name: `Test Dummy ${index + 1}`,
     id: index + 1,
     identifiers: [
@@ -594,7 +594,7 @@ const Main: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded">
+                  <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden h-[60vh] w-[50vw] z-20 rounded">
                     {!!players && !searchQuery && (
                       <PlayerList
                         playerList={players}
@@ -605,7 +605,7 @@ const Main: React.FC = () => {
                   </div>
                   {searchQuery && (
                     <>
-                      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded">
+                      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden h-[60vh] w-[50vw] z-20 rounded">
                         {
                           <PlayerList
                             playerList={filteredPlayerList}
@@ -665,7 +665,7 @@ const Main: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden max-h-[60vh] w-[50vw] z-20 rounded text-white">
+                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden h-[60vh] w-[50vw] z-20 rounded text-white">
                     {!cacheSearchQuery && (
                       <PlayerList
                         playerList={cachedPlayers}
