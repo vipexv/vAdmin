@@ -14,6 +14,10 @@ local error_codes_defined = {
     [502] = 'Error - Discord API may be down?...'
 };
 
+if Config.UseDiscordRestAPI and not SVConfig["Bot Token"] or not SVConfig["Guild ID"] then
+    print("Please configure your Bot Token/Guild ID over at the sv_config.lua file to utilize the Discord Rest API.")
+end
+
 
 local discordRequest = function(method, endpoint, jsondata, reason)
     local data = nil
