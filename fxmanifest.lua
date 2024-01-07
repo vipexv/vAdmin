@@ -26,6 +26,7 @@ client_scripts {
 }
 
 server_scripts {
+	"sv_config.lua",
 	"server/webhooks.lua",
 	'server/sv_utils.lua',
 	"server/modules/**/*",

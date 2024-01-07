@@ -1,7 +1,8 @@
 Config = {
-  Debug = true,       -- Use only for development/debugging purposes, fills the client and server sided console with allot of debugging info.
-  KeyMapping = "F9",   -- The key to open the Admin Menu.
-  ChatMessages = true, -- Messages that get sent to the chat once an action is triggered, such as a player is banned, kicked, offline banned and car wipes.
+  Debug = true,              -- Use only for development/debugging purposes, fills the client and server sided console with allot of debugging info.
+  KeyMapping = "F9",         -- The key to open the Admin Menu.
+  ChatMessages = true,       -- Messages that get sent to the chat once an action is triggered, such as a player is banned, kicked, offline banned and car wipes.
+  UseDiscordRestAPI = false, -- Replaces the ACE PermissionSystem with one relying on the Discord REST API where players get their permission based on their roles.
   DefaultPermissions = {
     Menu = false,
     Kick = false,
@@ -22,7 +23,8 @@ Config = {
   PermissionSystem = {
     -- Revive isn't really a thing since this script is standalone,the back end logic for it is there but i removed the front-end option for it, could be re-added in the future if i decide to add optional support for frameworks.
     {
-      AcePerm = "vadmin.owner",
+      AcePerm = "vadmin.owner",      -- Will only utilize this if you don't have the UseDiscordRestAPI bool enabled
+      RoleID = "839129247951224874", -- Only works if you have UseDiscordRestAPI bool enabled and you have your Bot Token and Guild ID configured in sv_config.lua .
       AllowedPermissions = {
         Menu = true,
         Kick = true,
@@ -42,7 +44,8 @@ Config = {
       }
     },
     {
-      AcePerm = "vadmin.moderator",
+      AcePerm = "vadmin.moderator",  -- Will only utilize this if you don't have the UseDiscordRestAPI bool enabled
+      RoleID = "839129247918194736", -- Only works if you have UseDiscordRestAPI bool enabled and you have your Bot Token and Guild ID configured in sv_config.lua .
       AllowedPermissions = {
         Menu = true,
         Kick = true,

@@ -594,7 +594,7 @@ const Main: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden h-[60vh] w-[50vw] z-20 rounded">
+                  <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60dvh] w-[50vw] z-20 rounded">
                     {!!players && !searchQuery && (
                       <PlayerList
                         playerList={players}
@@ -605,7 +605,7 @@ const Main: React.FC = () => {
                   </div>
                   {searchQuery && (
                     <>
-                      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden h-[60vh] w-[50vw] z-20 rounded">
+                      <div className="grid grid-cols-4 gap-5 mt-1 px-1 overflow-y-scroll overflow-x-hidden max-h-[60dvh] w-[50vw] z-20 rounded">
                         {
                           <PlayerList
                             playerList={filteredPlayerList}
@@ -665,7 +665,7 @@ const Main: React.FC = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden h-[60vh] w-[50vw] z-20 rounded text-white">
+                  <div className="grid grid-cols-4 gap-5 mt-2 px-1 overflow-y-scroll overflow-x-hidden min-max-h-[60dvh] w-[50vw] z-20 rounded text-white">
                     {!cacheSearchQuery && (
                       <PlayerList
                         playerList={cachedPlayers}
