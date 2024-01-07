@@ -27,19 +27,19 @@ function CPlayer:new(player)
   else
     local discordRoles = GetDiscordRoles(discordId, player)
 
-    if not discordRoles then return Debug("[func:CPlayer:new] discordRoles is somehow nil, what the flip :o") end
-
-    for i = 1, #discordRoles do
-      local discordRoleId = discordRoles[i]
-      for u = 1, #Config.PermissionSystem do
-        local permission = Config.PermissionSystem[u]
-        if discordRoleId == permission.RoleID then
-          isStaff = true
-          AdminData[tonumber(player)] = permission.AllowedPermissions
-          AdminData[tonumber(player)].id = player
-          TriggerClientEvent("vadmin:cb:updatePermissions", player, permission.AllowedPermissions)
-          Debug(("[func:CPlayer:new] (DiscordAPI) %s (ID - %s) was authenticated as staff."):format(
-            playerName, player))
+    if discordRoles then
+      for i = 1, #discordRoles do
+        local discordRoleId = discordRoles[i]
+        for u = 1, #Config.PermissionSystem do
+          local permission = Config.PermissionSystem[u]
+          if discordRoleId == permission.RoleID then
+            isStaff = true
+            AdminData[tonumber(player)] = permission.AllowedPermissions
+            AdminData[tonumber(player)].id = player
+            TriggerClientEvent("vadmin:cb:updatePermissions", player, permission.AllowedPermissions)
+            Debug(("[func:CPlayer:new] (DiscordAPI) %s (ID - %s) was authenticated as staff."):format(
+              playerName, player))
+          end
         end
       end
     end
