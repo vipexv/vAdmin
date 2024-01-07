@@ -18,7 +18,6 @@ if Config.UseDiscordRestAPI and not SVConfig["Bot Token"] or not SVConfig["Guild
     print("Please configure your Bot Token/Guild ID over at the sv_config.lua file to utilize the Discord Rest API.")
 end
 
-
 local discordRequest = function(method, endpoint, jsondata, reason)
     local data = nil
     PerformHttpRequest(("https://discord.com/api/%s"):format(endpoint), function(err, resultData, resultHeaders)
