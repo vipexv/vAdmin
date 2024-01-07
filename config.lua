@@ -23,8 +23,8 @@ Config = {
   PermissionSystem = {
     -- Revive isn't really a thing since this script is standalone,the back end logic for it is there but i removed the front-end option for it, could be re-added in the future if i decide to add optional support for frameworks.
     {
-      AcePerm = "vadmin.owner",      -- Will only utilize this if you don't have the UseDiscordRestAPI bool enabled
-      RoleID = "839129247951224874", -- Only works if you have UseDiscordRestAPI bool enabled and you have your Bot Token and Guild ID configured in sv_config.lua .
+      AcePerm = "vadmin.owner", -- Will only utilize this if you don't have the UseDiscordRestAPI bool enabled
+      RoleID = "",              -- Only works if you have UseDiscordRestAPI bool enabled and you have your Bot Token and Guild ID configured in sv_config.lua .
       AllowedPermissions = {
         Menu = true,
         Kick = true,
@@ -44,8 +44,8 @@ Config = {
       }
     },
     {
-      AcePerm = "vadmin.moderator",  -- Will only utilize this if you don't have the UseDiscordRestAPI bool enabled
-      RoleID = "839129247918194736", -- Only works if you have UseDiscordRestAPI bool enabled and you have your Bot Token and Guild ID configured in sv_config.lua .
+      AcePerm = "vadmin.moderator", -- Will only utilize this if you don't have the UseDiscordRestAPI bool enabled
+      RoleID = "",                  -- Only works if you have UseDiscordRestAPI bool enabled and you have your Bot Token and Guild ID configured in sv_config.lua .
       AllowedPermissions = {
         Menu = true,
         Kick = true,
