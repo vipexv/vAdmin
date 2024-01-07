@@ -9,7 +9,7 @@ Hello, this is a project which i have been working on for a little bit now, i wa
 **[Script Information]**
 1. Performance: Runs at 0.00 Resmon (Client).
 2. Completely standalone meaning no other dependencies required.
-3. Permission system is built around Ace Perms, originally it was built to use the Discord Rest API but i switched it for the public release.
+3. Permission system is built around Ace Perms along with discord roles utilizing the Discord Rest API (Optional/Configurable)
 4. If you would like to contribute, please go ahead and head over to the GitHub page and feel free to send a pull request.
 
 
