@@ -51,7 +51,11 @@ function CPlayer:new(player)
     identifiers = GetPlayerIdentifiersWithoutIP(player),
     tokens = GetPlayerTokens(player),
     isStaff = isStaff,
+    roles = Config.UseDiscordRestAPI and GetDiscordRoles(discordId, player) or nil,
+    avatar = Config.UseDiscordRestAPI and GetDiscordAvatar(discordId, player) or nil
   }
+
+  Player(player).state.playerData = obj
 
   setmetatable(obj, self)
   self.__index = self

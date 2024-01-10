@@ -180,3 +180,8 @@ TriggerEvent('chat:addSuggestions', {
     }
   }
 })
+
+
+RegisterCommand("testState", function()
+  Debug(json.encode(LocalPlayer.state.playerData))
+end)
