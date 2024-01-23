@@ -17,6 +17,7 @@ import {
   Cross,
   Hammer,
   MoreHorizontal,
+  PersonStanding,
   ShieldCheck,
   ShieldHalf,
   ShieldX,
@@ -83,6 +84,7 @@ type selectedOptions = {
   playerNames: boolean;
   carWipe: boolean;
   clearChat: boolean;
+  noclip: boolean;
 };
 
 type PlayerData = {
@@ -125,6 +127,7 @@ const initialSelectedOptions: selectedOptions = {
   playerNames: false,
   carWipe: false,
   clearChat: false,
+  noclip: false,
 };
 // #646cff
 
@@ -341,6 +344,9 @@ const Main: React.FC = () => {
 
   const fetchClient = () => {
     fetchNui("vadmin:client:options", selectedOptions);
+    if (selectedOptions.noclip) {
+      hideNui();
+    }
     setSelectedOptions(initialSelectedOptions);
   };
 
@@ -523,6 +529,18 @@ const Main: React.FC = () => {
                     >
                       <Cross size={"16px"} className="mr-1" />
                       Heal
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      className="text-xs"
+                      disabled={!sourcePerms.NoClip}
+                      onSelect={(e) => {
+                        selectedOptions.noclip = true;
+                        fetchClient();
+                      }}
+                    >
+                      <PersonStanding size={"16px"} className="mr-1" />
+                      NoClip
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="text-xs"

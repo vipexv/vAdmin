@@ -16,11 +16,12 @@ shared_scripts {
 }
 
 client_scripts {
+	"client/cl_utils.lua",
+	"client/modules/**/*",
 	"client/core.lua",
 	"client/events.lua",
 	"client/nui_callbacks.lua",
 	"client/playerNames.lua",
-	"client/cl_utils.lua",
 	"client/spectate.lua",
 	"client/commands.lua",
 }

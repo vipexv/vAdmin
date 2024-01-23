@@ -1,3 +1,27 @@
+RegisterCommand("noclip2", function()
+  if not next(Permissions) then
+    TriggerServerEvent("vadmin:getPermissions")
+
+    Wait(500)
+
+    if not next(Permissions) then
+      return Debug("(Error) (command:adminmenu) srcPermissions is null, returning.")
+    end
+
+    if not Permissions.NoClip then
+      return Notify("What the fluff dude, you don't have perms :o")
+    end
+
+    UIMessage("nui:adminperms", Permissions)
+  end
+
+  if not Permissions.NoClip then
+    return Notify("What the fluff dude, you don't have perms :o")
+  end
+
+  ToggleNoClip()
+end)
+
 RegisterCommand('adminmenu', function()
   UIMessage("nui:adminperms", Permissions)
   if not next(Permissions) then

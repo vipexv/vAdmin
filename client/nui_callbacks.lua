@@ -60,13 +60,24 @@ RegisterNuiCallback("vadmin:client:options", function(data, cb)
     SetEntityHealth(ped, GetEntityMaxHealth(ped))
     return
   end
+
   if data.armor then
     SetPedArmour(ped, 100)
     return
   end
+
   if data.playerNames then
     State.playerNames = not State.playerNames
     createGamerTagThread()
+    return
+  end
+
+  if data.noclip then
+    if not Permissions.NoClip then
+      return Notify("What the fluff dude, you don't have perms :o")
+    end
+
+    ToggleNoClip()
     return
   end
 
