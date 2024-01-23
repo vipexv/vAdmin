@@ -75,7 +75,7 @@ jobs:
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
           title: ${{ env.RELEASE_VERSION }}
           prerelease: false
-          files: vReports.zip
+          files: vAdmin.zip
 
         env:
           CI: false
