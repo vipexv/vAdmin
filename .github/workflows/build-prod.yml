@@ -63,7 +63,7 @@ jobs:
           ls
           mkdir -p ./temp/vAdmin
           mkdir -p ./temp/vAdmin/web/
-          cp ./{LICENSE,README.md,fxmanifest.lua,config.lua,sv_config.lua, banlist.json} ./temp/vAdmin
+          cp ./{LICENSE,README.md,fxmanifest.lua,config.lua,sv_config.lua,banlist.json} ./temp/vAdmin
           cp -r ./{client,locales,server,shared} ./temp/vAdmin
           cp -r ./web/dist ./temp/vAdmin/web/
           cd ./temp && zip -r ../vAdmin.zip ./vAdmin
