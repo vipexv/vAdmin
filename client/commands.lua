@@ -1,4 +1,4 @@
-RegisterCommand("noclip2", function()
+RegisterCommand("noclip", function()
   if not next(Permissions) then
     TriggerServerEvent("vadmin:getPermissions")
 
