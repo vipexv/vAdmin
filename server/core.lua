@@ -34,12 +34,7 @@ AddEventHandler("playerDropped", function(reason)
 		return Debug("(Error) [eventHandler:playerDropped] Source is nil.")
 	end
 
-	if PlayerList[source] then
-		PlayerCache[source] = PlayerList[source]
-		PlayerList[tonumber(source)] = nil
-	else
-		Debug("(Error) [eventHandler:playerDropped] Player isn't in the [PlayerList] table, error removing the player.")
-	end
+	CPlayer:remove(source)
 end)
 
 SetTimeout(5000, function()

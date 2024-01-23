@@ -62,6 +62,17 @@ function CPlayer:new(player)
   return obj
 end
 
-function CPlayer:displayInfo()
-  Debug(("Data: %s"):format(json.encode(self)))
+function CPlayer:remove(playerId)
+  if not playerId then return Debug("[CPlayer:remove] first param is null.") end
+
+  if PlayerList[playerId] then
+    PlayerCache[playerId] = PlayerList[playerId]
+    PlayerList[playerId] = nil
+    Debug("Player found in the PlayerList table and was removed.")
+  end
+
+  if AdminData[playerId] then
+    AdminData[playerId] = nil
+    Debug("Player found in the AdminData table and was removed.")
+  end
 end
