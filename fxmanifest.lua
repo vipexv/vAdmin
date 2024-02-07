@@ -1,7 +1,8 @@
 fx_version "cerulean"
-lua54 'yes'
 game 'gta5'
 
+lua54 'yes'
+use_experimental_fxv2_oal "yes"
 
 author 'vipex [Discord: vipex.v]'
 description 'Advanced NUI Based Admin Menu.'
@@ -9,7 +10,6 @@ ui_page 'web/dist/index.html'
 
 shared_scripts {
 	"config.lua",
-	-- "@ox_lib/init.lua", -- Enable only if using ox_lib
 	"shared/locale.lua",
 	"locales/en.lua",
 	'shared/utils.lua'
@@ -41,5 +41,3 @@ files {
 	'web/dist/index.html',
 	'web/dist/**/*',
 }
-
--- dependency "ox_lib" -- Enable only if using ox_lib
