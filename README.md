@@ -1,4 +1,4 @@
-Note: This script is no longer being maintained, the code quality just isn't the best, i plan on completely remaking this when i get the chance to.
+**Note: This script is no longer being maintained, the code quality just isn't the best, i plan on completely remaking this when i get the chance to.**
 
 # vAdmin
 ![](https://img.shields.io/github/downloads/vipexv/vAdmin/total?logo=github)
